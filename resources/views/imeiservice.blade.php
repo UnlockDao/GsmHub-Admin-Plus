@@ -44,14 +44,14 @@
                                                 <td>@if($v->imei->pricefromapi == 1) API @else Manual @endif</td>
                                                 <td>@if($v->nhacungcap ==! null){{$v->nhacungcap->name}}@endif</td>
                                                 @if($v->imei->pricefromapi == 1)
-                                                    <td>{{$v->imei->api_credit}}</td>
+                                                    <td><?php echo number_format($v->imei->api_credit); ?></td>
                                                 @else
-                                                    <td>{{$v->gianhap}}</td>
+                                                    <td><?php echo number_format($v->gianhap); ?></td>
                                                 @endif
 
 
-                                                <td>{{$v->imei->purchase_cost}}</td>
-                                                <td>{{$v->imei->credit}}</td>
+                                                <td><?php echo number_format($v->imei->purchase_cost); ?></td>
+                                                <td><?php echo number_format($v->imei->credit,2); ?></td>
                                                 @foreach($usergroup as $u)
                                                     @foreach($v->imei->clientgroupprice as $cl)
                                                         @if($cl->currency == 'USD' && $cl->service_type == 'imei' && $cl->group_id == $u->id )
