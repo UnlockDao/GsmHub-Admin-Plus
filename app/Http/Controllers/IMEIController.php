@@ -99,7 +99,7 @@ class IMEIController extends Controller
 
         $imeiservice = Imeiservice::find($imei->id_imei);
 
-        $pricegroup = Clientgroupprice::orderBy('group_id', 'desc')->where('currency', 'USD')->where('service_id', $imeiservice->id)->get();
+        $pricegroup = Clientgroupprice::orderBy('group_id', 'desc')->where('currency', 'USD')->where('service_type', 'imei')->where('service_id', $imeiservice->id)->get();
         return view('edit.editimei', compact('imei', 'nhacungcap', 'clien', 'pricegroup'));
     }
 
@@ -154,7 +154,7 @@ class IMEIController extends Controller
             $y = $u - $getimei->credit;
             $currencies = Currencie::where('display_currency', 'Yes')->get();
             foreach ($currencies as $c) {
-                $updategiause = Clientgroupprice::where('group_id', $idclient)->where('currency', $c->currency_code)->where('service_id', $serverid)->update(['discount' => $y * $c->exchange_rate_static]);
+                $updategiause = Clientgroupprice::where('group_id', $idclient)->where('service_type', 'imei')->where('currency', $c->currency_code)->where('service_id', $serverid)->update(['discount' => $y * $c->exchange_rate_static]);
             }
         }
         return;
