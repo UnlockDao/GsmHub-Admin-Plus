@@ -35,6 +35,8 @@ Route::get('imei', 'IMEIController@imei');
 Route::get('imei/{id}', 'IMEIController@show');
 //cập nhập giá nhập, giá bản lẻ tự động
 Route::post('imei/{id}', 'IMEIController@edit');
+//cập nhập nhà cung cấp
+Route::post('updatesupplier/{id}', 'IMEIController@updatesupplier');
 
 //chiết khấu phần trăm từng user
 Route::get('chietkhau', 'ClientController@index');
@@ -44,5 +46,6 @@ Route::post('pchietkhau/{id}', 'ClientController@edit');
 //thêm sửa xóa nhà cung cấp, phí giao dịch, tỉ giá
 Route::get('supplier', 'SupplierController@index');
 Route::post('supplier/{id}', 'SupplierController@edit');
+
 Route::get('supplier/{id}', 'SupplierController@show');
 

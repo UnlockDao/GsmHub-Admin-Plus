@@ -52,11 +52,6 @@
 
                                                 <td>{{$v->imei->purchase_cost}}</td>
                                                 <td>{{$v->imei->credit}}</td>
-                                            <!--<td>@foreach($v->imei->clientgroupprice as $cl)
-                                                    @if($cl->currency == 'USD' && $cl->service_type == 'imei' && $cl->group_id == 19 )
-                                                        <?php echo $v->imei->credit + $cl->discount ?>
-                                                    @endif
-                                                @endforeach</td>-->
                                                 @foreach($usergroup as $u)
                                                     @foreach($v->imei->clientgroupprice as $cl)
                                                         @if($cl->currency == 'USD' && $cl->service_type == 'imei' && $cl->group_id == $u->id )

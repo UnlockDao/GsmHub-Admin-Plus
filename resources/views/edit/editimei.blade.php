@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-
+@if($imei->id_nhacungcap ==!null)
     <div class="container-fluid">
 
         <div class="row">
@@ -113,7 +113,44 @@
         }, false);
 
     </script>
+@else
+    <div class="container-fluid">
 
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-icon card-header-rose">
+                        <div class="card-icon">
+                            <i class="material-icons">edit</i>
+                        </div>
+                        <h4 class="card-title ">Edit {{$imei->imei->service_name}} </h4>
+
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ url('updatesupplier') }}/{{$imei->id}}" method="POST" enctype="multipart/form-data"
+                              onsubmit="return checkForm(this);">
+                            {{ csrf_field() }}
+                            <div class="col-md-12">
+                                <strong>Supplier</strong>
+                                <select name="id_nhacungcap" class="form-control">
+                                    @foreach($nhacungcap as $v)
+                                        <option value="{{$v->id}}"
+                                                @if($imei->id_nhacungcap == $v->id) selected @endif>{{$v->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <input class="btn btn-primary pull-right" type="submit" name="myButton" value="Edit">
+                            <div class="clearfix"></div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+@endif
 
 @endsection
 

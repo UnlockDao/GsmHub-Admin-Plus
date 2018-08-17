@@ -28,7 +28,7 @@ class IMEIController extends Controller
     {
 
         //xử lí get dữ liệu về data tạm
-        $imei_service = Imeiservice::get();
+        $imei_service = Imeiservice::orderBy('id')->get();
         foreach ($imei_service as $v) {
             $check = Imeiservicepricing::where('id_imei', $v->id)->first();
             if ($check == null) {
@@ -154,6 +154,16 @@ class IMEIController extends Controller
             $updategiause = Clientgroupprice::where('group_id', $idclient)->where('currency', 'USD')->where('service_id', $serverid)->update(['discount' => $y]);
         }
         return;
+    }
+
+    public function updatesupplier($id, Request $request)
+    {
+
+        $imei = Imeiservicepricing::find($id);
+        $imei->id_nhacungcap = $request->id_nhacungcap;
+        $imei->save();
+
+        return back();
     }
 
 }
