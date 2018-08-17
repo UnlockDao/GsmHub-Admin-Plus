@@ -23,15 +23,15 @@
                                        onkeyup="VNtoUSD();" onclick="Enabled=true;Chietkhau();" autocomplete="off">
                             </div>
                             <div class="col-md-12">
-                                <strong>Purchase Cost (Net)</strong>
+                                <strong>Purchase Cost </strong>
                                 <input type="text" name="gianhap" id="gianhap" class="form-control"
-                                       value="{{$imei->gianhap}}" placeholder="Giá nhập" autocomplete="off">
+                                       value="@if($imei->imei->pricefromapi == 1){{$imei->imei->api_credit}} @else{{$imei->gianhap}}@endif" placeholder="Giá nhập" autocomplete="off">
                             </div>
                             <div class="col-md-12">
                                 <strong>User</strong>
                                 <input type="text" name="giabanle" id="usd" onchange="Chietkhau();"
                                        onkeyup="USDtoVND();" class="form-control" onclick="Enabled=true;Chietkhau();"
-                                       value="<?php echo $imei->imei->credit + $imei->imei->clientgroupprice[0]->discount  ?>"
+                                       value="<?php if($imei->imei->clientgroupprice == null){ echo $imei->imei->credit + $imei->imei->clientgroupprice[0]->discount;  }else{ echo $imei->imei->credit;}?>"
                                        placeholder="Giá bán lẻ" autocomplete="off">
                             </div>
                             <div class="col-md-12">
