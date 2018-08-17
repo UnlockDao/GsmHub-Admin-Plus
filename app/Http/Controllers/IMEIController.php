@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Clientgroup;
 use App\Clientgroupprice;
+use App\Currencie;
 use App\Imeiservice;
 use App\Imeiservicegroup;
 use App\Imeiservicepricing;
@@ -151,7 +152,10 @@ class IMEIController extends Controller
 
             $u = $request->input('giabanle' . $idclient);
             $y = $u - $getimei->credit;
-            $updategiause = Clientgroupprice::where('group_id', $idclient)->where('currency', 'USD')->where('service_id', $serverid)->update(['discount' => $y]);
+            $currencies = Currencie::where('display_currency', 'Yes')->get();
+            foreach ($currencies as $c) {
+                $updategiause = Clientgroupprice::where('group_id', $idclient)->where('currency', $c->currency_code)->where('service_id', $serverid)->update(['discount' => $y * $c->exchange_rate_static]);
+            }
         }
         return;
     }
