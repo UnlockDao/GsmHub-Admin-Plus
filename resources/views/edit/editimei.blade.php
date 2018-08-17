@@ -20,7 +20,7 @@
                             <div class="col-md-12">
                                 <strong>USD To VND</strong>
                                 <input type="text" id="vnd" class="form-control" value="" placeholder="Giá nhập"
-                                       onkeyup="VNtoUSD();" autocomplete="off">
+                                       onkeyup="VNtoUSD();" onclick="Enabled=true;Chietkhau();" autocomplete="off">
                             </div>
                             <div class="col-md-12">
                                 <strong>Purchase Cost (Net)</strong>
@@ -30,7 +30,7 @@
                             <div class="col-md-12">
                                 <strong>User</strong>
                                 <input type="text" name="giabanle" id="usd" onchange="Chietkhau();"
-                                       onkeyup="USDtoVND();" class="form-control"
+                                       onkeyup="USDtoVND();" class="form-control" onclick="Enabled=true;Chietkhau();"
                                        value="<?php echo $imei->imei->credit + $imei->imei->clientgroupprice[0]->discount  ?>"
                                        placeholder="Giá bán lẻ" autocomplete="off">
                             </div>
@@ -48,7 +48,7 @@
                                 <div class="col-md-12">
                                     <strong>{{$c->chietkhau->group_name}}</strong>
                                     <input type="text" name="giabanle{{$c->group_id}}" id="chietkhau{{$c->group_id}}"
-                                           class="form-control"
+                                           class="form-control" onclick="Enabled=false;Chietkhau();"
                                            value="<?php echo $imei->imei->credit + $c->discount  ?>"
                                            placeholder="Giá bán lẻ" autocomplete="off">
                                 </div>
@@ -88,24 +88,32 @@
             document.getElementById('vnd').value = b;
         }
 
-        function Chietkhau() {
-            var user, gianhap;
-            //lấy giá nhập tiền usd
-            gianhap = document.getElementById("gianhap").value;
-            var tigiagoc = 22000;
-            //gọi dữ liệu nhà cung cấp (tỉ giá, phí )
-            var tigianhap = {{$imei->nhacungcap->tigia}};
-            var phigd = {{$imei->nhacungcap->phi}};
-            //tính giá đã bao gồm phí chuyển đổi
-            var giaphi = (tigianhap * gianhap) / tigiagoc + ((gianhap / 100) * phigd);
+        var Enabled=true;
+        function Chietkhau()
+        {
+            if(Enabled == true)
+            {
+                var user, gianhap;
+                //lấy giá nhập tiền usd
+                gianhap = document.getElementById("gianhap").value;
+                var tigiagoc = 22000;
+                //gọi dữ liệu nhà cung cấp (tỉ giá, phí )
+                var tigianhap = {{$imei->nhacungcap->tigia}};
+                var phigd = {{$imei->nhacungcap->phi}};
+                //tính giá đã bao gồm phí chuyển đổi
+                var giaphi = (tigianhap * gianhap) / tigiagoc + ((gianhap / 100) * phigd);
 
-            //Lấy text từ thẻ input title
-            user = document.getElementById("usd").value;
+                //Lấy text từ thẻ input title
+                user = document.getElementById("usd").value;
 
-            @foreach($clien as $pri)
-                result{{$pri->id}} = (user - (((user - giaphi) / 100) *{{$pri->chietkhau}}));
-            document.getElementById('chietkhau{{$pri->id}}').value = result{{$pri->id}};
-            @endforeach
+                @foreach($clien as $pri)
+                    result{{$pri->id}} = (user - (((user - giaphi) / 100) *{{$pri->chietkhau}}));
+                document.getElementById('chietkhau{{$pri->id}}').value = result{{$pri->id}};
+                @endforeach
+            }else
+            {
+
+            }
         }
 
         document.addEventListener('DOMContentLoaded', function () {
