@@ -44,13 +44,13 @@
                                                 <td>@if($v->imei->pricefromapi == 1) API @else Manual @endif</td>
                                                 <td>@if($v->nhacungcap ==! null){{$v->nhacungcap->name}}@endif</td>
                                                 @if($v->imei->pricefromapi == 1)
-                                                    <td><?php echo number_format($v->imei->api_credit); ?></td>
+                                                    <td><?php echo number_format($v->imei->api_credit,2); ?></td>
                                                 @else
-                                                    <td><?php echo number_format($v->gianhap); ?></td>
+                                                    <td><?php echo number_format($v->gianhap,2); ?></td>
                                                 @endif
 
 
-                                                <td><?php echo number_format($v->imei->purchase_cost); ?></td>
+                                                <td><?php echo number_format($v->imei->purchase_cost,2); ?></td>
                                                 <td><?php echo number_format($v->imei->credit,2); ?></td>
                                                 @foreach($usergroup as $u)
                                                     @foreach($v->imei->clientgroupprice as $cl)
@@ -59,7 +59,6 @@
                                                         @endif
                                                     @endforeach
                                                 @endforeach
-
 
                                                 <td>@if($v->imei->status == 'active')<a
                                                             class="material-icons fancybox fancybox.iframe"
