@@ -43,34 +43,12 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <input class="btn btn-primary pull-right" type="submit" name="myButton"
-                                   onClick="parent.$.fancybox.close();" value="Edit">
-                            <div class="clearfix"></div>
-                        </form>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header card-header-icon card-header-rose">
-                        <div class="card-icon">
-                            <i class="material-icons">edit</i>
-                        </div>
-                        <h4 class="card-title ">Edit Manual</h4>
-
-                    </div>
-                    <div class="card-body">
-                        <form action="{{ url('manualimei') }}/{{$imei->id}}" method="POST" enctype="multipart/form-data"
-                              onsubmit="return checkForm(this);">
-                            {{ csrf_field() }}
+                            <hr>
                             @foreach($pricegroup as $c)
                                 <div class="col-md-12">
                                     <strong>{{$c->chietkhau->group_name}}</strong>
-                                    <input type="text" name="giabanle" id="chietkhau{{$c->group_id}}" class="form-control"
+                                    <input type="text" name="giabanle{{$c->group_id}}" id="chietkhau{{$c->group_id}}"
+                                           class="form-control"
                                            value="<?php echo $imei->imei->credit + $c->discount  ?>"
                                            placeholder="Giá bán lẻ" autocomplete="off">
                                 </div>
@@ -130,7 +108,7 @@
             @endforeach
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             USDtoVND();
         }, false);
 

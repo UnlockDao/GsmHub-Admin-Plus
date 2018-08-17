@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Clientgroup;
 use App\Clientgroupprice;
 use App\Imeiservice;
-use App\Imeiservicepricing;
 use App\Imeiservicegroup;
+use App\Imeiservicepricing;
 use App\Supplier;
 use Illuminate\Http\Request;
 
@@ -98,7 +98,7 @@ class IMEIController extends Controller
 
         $imeiservice = Imeiservice::find($imei->id_imei);
 
-        $pricegroup = Clientgroupprice::orderBy('group_id','desc')->where('currency', 'USD')->where('service_id', $imeiservice->id)->get();
+        $pricegroup = Clientgroupprice::orderBy('group_id', 'desc')->where('currency', 'USD')->where('service_id', $imeiservice->id)->get();
         return view('edit.editimei', compact('imei', 'nhacungcap', 'clien', 'pricegroup'));
     }
 
@@ -142,11 +142,16 @@ class IMEIController extends Controller
             $giaphi = ($tigianhap * $gia) / $tigiagoc + (($gia / 100) * $phigd);
             //cập nhập giá gốc vào data
             $updatetigia = Imeiservice::where('id', $imeidata->imei->id)->update(['purchase_cost' => $giaphi]);
+
             //tính chiết khấu từng nhóm user
-            $getgiauser = ($giabanle - ((($giabanle - $giaphi) / 100) * $u->chietkhau)) - $getimei->credit;
+            // $getgiauser = ($giabanle - ((($giabanle - $giaphi) / 100) * $u->chietkhau)) - $getimei->credit;
             // cập nhập giá cho user
-            $updategiause = Clientgroupprice::where('group_id', $idclient)->where('currency', 'USD')->where('service_id', $serverid)->update(['discount' => $getgiauser]);
+            // $updategiause = Clientgroupprice::where('group_id', $idclient)->where('currency', 'USD')->where('service_id', $serverid)->update(['discount' => $getgiauser]);
             // $updategiause = Clientgroupprice::where('group_id', $idclient)->where('currency', 'VND')->where('service_id', $serverid)->update(['discount' => $getgiauser]);
+
+            $u = $request->input('giabanle' . $idclient);
+            $y = $u - $getimei->credit;
+            $updategiause = Clientgroupprice::where('group_id', $idclient)->where('currency', 'USD')->where('service_id', $serverid)->update(['discount' => $y]);
         }
         return;
     }
