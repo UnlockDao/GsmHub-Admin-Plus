@@ -83,11 +83,11 @@
                                                 <td><?php echo number_format($v->imei->purchase_cost, 2); ?></td>
                                                 <td><?php echo number_format($v->imei->credit, 2); ?></td>
                                                 @foreach($usergroup as $u)
-                                                    @foreach($v->imei->clientgroupprice as $cl)
+                                                    <td>  @foreach($v->imei->clientgroupprice as $cl)
                                                         @if($cl->currency == 'USD' && $cl->service_type == 'imei' && $cl->group_id == $u->id )
-                                                            <td> <?php echo number_format($v->imei->credit + $cl->discount, 2); ?> </td>
+                                                            <?php echo number_format($v->imei->credit + $cl->discount, 2); ?>
                                                         @endif
-                                                    @endforeach
+                                                    @endforeach</td>
                                                 @endforeach
 
                                                 <td>@if($v->imei->status == 'active')<a
