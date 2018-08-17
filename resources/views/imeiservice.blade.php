@@ -13,6 +13,9 @@
                             <div class="card-icon">
                                 <i class="material-icons">monetization_on</i>
                             </div>
+                            <button type="button" onclick="tableToExcel('testTable', 'W3C Example Table')"
+                                    class="btn btn-info pull-right"><i class="material-icons">cloud_download</i>
+                            </button>
                             <h3 class="card-title ">IMEI Services</h3>
 
                         </div>
