@@ -67,6 +67,9 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('source/jquery.fancybox.css?v=2.1.5') }}" media="screen" />
 <script type="text/javascript">
     $(document).ready(function() {
+        $('body').addClass('sidebar-mini');
+        md.misc.sidebar_mini_active = true;
+
         $(".fancybox").fancybox({
             type: 'iframe',
             afterClose: function () { // USE THIS IT IS YOUR ANSWER THE KEY WORD IS "afterClose"
