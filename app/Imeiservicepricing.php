@@ -14,7 +14,7 @@ class Imeiservicepricing extends Model
 
 	    public function imei()
     {
-        return $this->belongsTo('App\Imeiservice','id_imei','id');
+        return $this->belongsTo('App\Imeiservice','id','id');
     }
     public function nhacungcap()
     {

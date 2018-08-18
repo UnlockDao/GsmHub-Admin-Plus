@@ -1,5 +1,29 @@
 @extends('layouts.header')
 @section('content')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            $(document).on("click", ".status", function () {
+                var ida = $(this).parent().attr('id');
+                var url = '';
+                if ($(this).prop('checked') == true) {
+                    url = 'imei/status/active';
+                }
+                else if ($(this).prop('checked') == false) {
+                    url = 'imei/status/inactive';
+                }
+                $.ajax({
+                    url: url,
+                    type: 'get',
+                    data: 'id=' + ida,
+                    success: function (result) {
+                    },
+                    error: function(result) {
+                        alert('error');
+                    }
+                });
+            });
+        }, false);
+    </script>
     <div class="container-fluid">
         <?php
         $tigiagoc = 22000;
@@ -57,8 +81,8 @@
                                     </tr>
                                     @foreach($imei_service as $v)
                                         @if($v->imei->imei_service_group_id == $g->id)
-                                            <tr id="{{$v->id_imei}}">
-                                                <td>{{$v->id_imei}}</td>
+                                            <tr id="{{$v->id}}">
+                                                <td>{{$v->id}}</td>
                                                 <td @if($v->imei->status == 'soft_deleted' )style="text-decoration: line-through;"@endif>{{$v->imei->service_name}}</td>
                                                 <td>@if($v->imei->pricefromapi == 1)<span
                                                             class="badge badge-pill badge-success">API<span>  @else<span
@@ -66,8 +90,8 @@
                                                 </td>
                                                 <td>
                                                     <div class="togglebutton">
-                                                        <label>
-                                                            <input type="checkbox" @if($v->imei->status == 'active' )checked="" @endif>
+                                                        <label id="{{$v->id}}">
+                                                            <input class="status" id="check{{$v->id}}" type="checkbox" @if($v->imei->status == 'active' )checked="" @endif>
                                                             <span class="toggle"></span>
                                                         </label>
                                                     </div>

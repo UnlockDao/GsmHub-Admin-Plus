@@ -37,6 +37,8 @@ Route::get('imei/{id}', 'IMEIController@show');
 Route::post('imei/{id}', 'IMEIController@edit');
 //cập nhập nhà cung cấp
 Route::post('updatesupplier/{id}', 'IMEIController@updatesupplier');
+//cập nhập status
+Route::get('imei/{squirrel}/{any}', 'IMEIController@status');
 
 //chiết khấu phần trăm từng user
 Route::get('chietkhau', 'ClientController@index');

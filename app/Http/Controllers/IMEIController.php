@@ -31,13 +31,13 @@ class IMEIController extends Controller
         //xử lí get dữ liệu về data tạm
         $imei_service = Imeiservice::orderBy('id')->get();
         foreach ($imei_service as $v) {
-            $check = Imeiservicepricing::where('id_imei', $v->id)->first();
+            $check = Imeiservicepricing::where('id', $v->id)->first();
             if ($check == null) {
                 $imei_service = new Imeiservicepricing();
-                $imei_service->id_imei = $v->id;
+                $imei_service->id = $v->id;
                 $imei_service->save();
             } else {
-                $imei_serviceud = Imeiservicepricing::where('id_imei', $v->id)->update(['id_imei' => $v->id]);
+                $imei_serviceud = Imeiservicepricing::where('id', $v->id)->update(['id' => $v->id]);
             }
         }
         return $imei_service;
@@ -84,12 +84,6 @@ class IMEIController extends Controller
     public function show($id)
     {
 
-//        $bakimei= Imeiservicepricing::get();
-//        $clien= Clientgroup::get();
-//        $imei = Imeiservice::where('currency', 'USD')->where('group_id', '19')->find($bakimei->id_imei);
-//        $nhacungcap = Supplier::get();
-//        return view('edit.editimei', compact('imei', 'nhacungcap','clien'));
-
         $clien = Clientgroup::get();
         $imei = Imeiservicepricing::with('nhacungcap')->with(['imei' => function ($query) {
         }, 'imei.clientgroupprice' => function ($query) {
@@ -97,9 +91,9 @@ class IMEIController extends Controller
         }])->find($id);
         $nhacungcap = Supplier::get();
 
-        $imeiservice = Imeiservice::find($imei->id_imei);
+        $imeiservice = Imeiservice::find($id);
 
-        $pricegroup = Clientgroupprice::orderBy('group_id', 'desc')->where('currency', 'USD')->where('service_type', 'imei')->where('service_id', $imeiservice->id)->get();
+        $pricegroup = Clientgroupprice::orderBy('group_id', 'desc')->where('currency', 'USD')->where('service_type', 'imei')->where('service_id', $id)->get();
         return view('edit.editimei', compact('imei', 'nhacungcap', 'clien', 'pricegroup'));
     }
 
@@ -112,14 +106,10 @@ class IMEIController extends Controller
         $imei->gianhap = $gia;
         $imei->id_nhacungcap = $request->id_nhacungcap;
         $imei->save();
-
-        //lấy id imei server
-        $serverid = $imei->imei->id;
         //lấy dữ liệu nhập thủ công
         $giabanle = $request->giabanle;
-
         //lấy dữ liệu imei server
-        $getimei = Imeiservice::find($serverid);
+        $getimei = Imeiservice::find($id);
         //đặt tỉ  giá gốc
         $tigiagoc = 22000;
 
@@ -154,10 +144,14 @@ class IMEIController extends Controller
             $y = $u - $getimei->credit;
             $currencies = Currencie::where('display_currency', 'Yes')->get();
             foreach ($currencies as $c) {
-                $updategiause = Clientgroupprice::where('group_id', $idclient)->where('service_type', 'imei')->where('currency', $c->currency_code)->where('service_id', $serverid)->update(['discount' => $y * $c->exchange_rate_static]);
+                $updategiause = Clientgroupprice::where('group_id', $idclient)
+                    ->where('service_type', 'imei')
+                    ->where('currency', $c->currency_code)
+                    ->where('service_id', $id)
+                    ->update(['discount' => $y * $c->exchange_rate_static]);
             }
         }
-        return;
+        return ;
     }
 
     public function updatesupplier($id, Request $request)
@@ -168,6 +162,18 @@ class IMEIController extends Controller
         $imei->save();
 
         return back();
+    }
+    public function status($par = NULL, $par2 = NULL)
+    {
+        if ($par == "status") {
+            $id = $_GET['id'];
+            $imei = Imeiservice::find($id);
+            $imei->status=$par2;
+            $imei->save();
+            echo $par2;
+            exit();
+        }
+        return ;
     }
 
 }

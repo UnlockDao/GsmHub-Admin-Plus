@@ -25,13 +25,13 @@
                             <div class="col-md-12">
                                 <strong>Purchase Cost </strong>
                                 <input type="text" name="gianhap" id="gianhap" class="form-control"
-                                       value="@if($imei->imei->pricefromapi == 1){{$imei->imei->api_credit}} @else{{$imei->gianhap}}@endif" placeholder="Giá nhập" autocomplete="off">
+                                       value="@if($imei->imei->pricefromapi == 1){{$imei->imei->api_credit}} @else {{$imei->gianhap}} @endif" placeholder="Giá nhập" autocomplete="off">
                             </div>
                             <div class="col-md-12">
                                 <strong>User</strong>
                                 <input type="text" name="giabanle" id="usd" onchange="Chietkhau();"
                                        onkeyup="USDtoVND();" class="form-control" onclick="Enabled=true;Chietkhau();"
-                                       value="<?php if($imei->imei->clientgroupprice == null){ echo $imei->imei->credit + $imei->imei->clientgroupprice[0]->discount;  }else{ echo $imei->imei->credit;}?>"
+                                       value="<?php echo $imei->imei->credit + $imei->imei->clientgroupprice[0]->discount?>"
                                        placeholder="Giá bán lẻ" autocomplete="off">
                             </div>
                             <div class="col-md-12">
@@ -45,6 +45,7 @@
                             </div>
                             <hr>
                             @foreach($pricegroup as $c)
+                                @if($c->chietkhau ==! null)
                                 <div class="col-md-12">
                                     <strong>{{$c->chietkhau->group_name}}</strong>
                                     <input type="text" name="giabanle{{$c->group_id}}" id="chietkhau{{$c->group_id}}"
@@ -52,6 +53,7 @@
                                            value="<?php echo $imei->imei->credit + $c->discount  ?>"
                                            placeholder="Giá bán lẻ" autocomplete="off">
                                 </div>
+                                @endif
                             @endforeach
                             <input class="btn btn-primary pull-right" type="submit" name="myButton"
                                    onClick="parent.$.fancybox.close();" value="Edit">
