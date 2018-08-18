@@ -80,7 +80,7 @@
                                         <td></td>
                                     </tr>
                                     @foreach($imei_service as $v)
-                                        @if($v->imei->imei_service_group_id == $g->id)
+                                        @if($v->imei->imei_service_group_id == $g->id )
                                             <tr id="{{$v->id}}">
                                                 <td>{{$v->id}}</td>
                                                 <td @if($v->imei->status == 'soft_deleted' )style="text-decoration: line-through;"@endif>{{$v->imei->service_name}}</td>

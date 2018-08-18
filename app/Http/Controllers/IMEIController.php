@@ -40,7 +40,7 @@ class IMEIController extends Controller
                 $imei_serviceud = Imeiservicepricing::where('id', $v->id)->update(['id' => $v->id]);
             }
         }
-        return $imei_service;
+        return redirect('/imei');
     }
 
     public function imei(Request $request)
@@ -83,8 +83,22 @@ class IMEIController extends Controller
 
     public function show($id)
     {
-
         $clien = Clientgroup::get();
+        $pg = Clientgroupprice::where('service_id', $id)->get();
+        foreach ($pg as $p) {
+            foreach ($clien as $c) {
+                $check = Clientgroupprice::where('group_id', $c->id)->where('service_id', $id)->first();
+                if ($check == null) {
+                    $newx = new Clientgroupprice();
+                    $newx->service_id = $id;
+                    $newx->group_id = $c->id;
+                    $newx->currency = 'USD';
+                    $newx->save();
+                }
+            }
+        }
+
+
         $imei = Imeiservicepricing::with('nhacungcap')->with(['imei' => function ($query) {
         }, 'imei.clientgroupprice' => function ($query) {
             $query->where('currency', 'USD')->where('group_id', '19');
@@ -94,7 +108,10 @@ class IMEIController extends Controller
         $imeiservice = Imeiservice::find($id);
 
         $pricegroup = Clientgroupprice::orderBy('group_id', 'desc')->where('currency', 'USD')->where('service_type', 'imei')->where('service_id', $id)->get();
-        return view('edit.editimei', compact('imei', 'nhacungcap', 'clien', 'pricegroup'));
+
+        $price = Clientgroupprice::where('currency', 'USD')->where('group_id', '19')->where('service_id', $id)->first();
+
+        return view('edit.editimei', compact('imei', 'nhacungcap', 'clien', 'pricegroup','price'));
     }
 
     public function edit($id, Request $request)
@@ -151,7 +168,7 @@ class IMEIController extends Controller
                     ->update(['discount' => $y * $c->exchange_rate_static]);
             }
         }
-        return ;
+        return;
     }
 
     public function updatesupplier($id, Request $request)
@@ -163,17 +180,18 @@ class IMEIController extends Controller
 
         return back();
     }
+
     public function status($par = NULL, $par2 = NULL)
     {
         if ($par == "status") {
             $id = $_GET['id'];
             $imei = Imeiservice::find($id);
-            $imei->status=$par2;
+            $imei->status = $par2;
             $imei->save();
             echo $par2;
             exit();
         }
-        return ;
+        return;
     }
 
 }

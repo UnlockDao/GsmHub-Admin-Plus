@@ -22,11 +22,11 @@
     <div class="sidebar" data-color="rose" data-background-color="black"
          data-image="{{ asset('assets/img/sidebar-1.jpg') }}">
         <div class="logo">
-            <a href="" class="simple-text logo-mini">
+            <a href="{{ url('bak') }}" class="simple-text logo-mini">
                 SU
             </a>
 
-            <a href="" class="simple-text logo-normal">
+            <a href="{{ url('') }}" class="simple-text logo-normal">
                 S-Unlock
             </a>
         </div>

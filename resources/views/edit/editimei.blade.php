@@ -31,7 +31,7 @@
                                 <strong>User</strong>
                                 <input type="text" name="giabanle" id="usd" onchange="Chietkhau();"
                                        onkeyup="USDtoVND();" class="form-control" onclick="Enabled=true;Chietkhau();"
-                                       value="<?php echo $imei->imei->credit + $imei->imei->clientgroupprice[0]->discount?>"
+                                       value="<?php echo $imei->imei->credit + $price->discount?>"
                                        placeholder="Giá bán lẻ" autocomplete="off">
                             </div>
                             <div class="col-md-12">
