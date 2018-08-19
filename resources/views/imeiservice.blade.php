@@ -16,6 +16,7 @@
                     type: 'get',
                     data: 'id=' + ida,
                     success: function (result) {
+                        $.notify({icon: "notifications", message: result});
                     },
                     error: function(result) {
                         alert('error');

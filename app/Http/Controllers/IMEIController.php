@@ -55,30 +55,7 @@ class IMEIController extends Controller
     public function json()
     {
 
-        //data kiểm tra dữ liệu qua json
-        $serverid = 1;
-        $giabanle = 43.18;
-        $gia = 34;
-
-
-        $getimei = Imeiservice::get();
-        $tigiagoc = 22000;
-//        $imeidata = Imeiservicepricing::with('nhacungcap')->with(['imei' => function ($query) {
-//        }, 'imei.clientgroupprice' => function ($query) {
-//            $query->where('currency', 'USD')->where('group_id', '19');
-//        }])->find($serverid);
-//
-//        $tigianhap = $imeidata->nhacungcap->tigia;
-//        $phigd = $imeidata->nhacungcap->phi;
-//        $giaphi = ($tigianhap * $gia) / $tigiagoc + (($gia / 100) * $phigd);
-//
-//        $updatetigia = Imeiservice::where('id', $imeidata->imei->id)->update(['purchase_cost' => $giaphi]);
-//
-//        $getgiauser = $giabanle - $getimei->credit;
-//
-//        $updategiause = Clientgroupprice::where('group_id', '19')->where('currency', 'USD')->where('service_id', $serverid)->update(['discount' => $getgiauser]);
-
-        return $getimei;
+        return ;
     }
 
     public function show($id)
@@ -111,7 +88,7 @@ class IMEIController extends Controller
 
         $price = Clientgroupprice::where('currency', 'USD')->where('group_id', '19')->where('service_id', $id)->first();
 
-        return view('edit.editimei', compact('imei', 'nhacungcap', 'clien', 'pricegroup','price'));
+        return view('edit.editimei', compact('imei', 'nhacungcap', 'clien', 'pricegroup', 'price'));
     }
 
     public function edit($id, Request $request)
@@ -133,30 +110,17 @@ class IMEIController extends Controller
         //gọi nhóm user
         $group_user = Clientgroup::get();
 
+        //gọi dữ liệu nhà cung cấp (tỉ giá, phí )
+        $tigianhap = $imei->nhacungcap->tigia;
+        $phigd = $imei->nhacungcap->phi;
+        //tính giá đã bao gồm phí chuyển đổi
+        $giaphi = ($tigianhap * $gia) / $tigiagoc + (($gia / 100) * $phigd);
+        //cập nhập giá gốc vào data
+        $updatetigia = Imeiservice::where('id', $id)->update(['purchase_cost' => $giaphi,'credit' => $request->credit]);
+
         //ghi dữ liệu giá vào nhóm user
         foreach ($group_user as $u) {
-            //gọi id nhóm user
             $idclient = $u->id;
-            // tìm nhà cung cấp lấy chiết khấu, phần trăm
-            $imeidata = Imeiservicepricing::with('nhacungcap')->with(['imei' => function ($query) {
-            }, 'imei.clientgroupprice' => function ($query) use ($idclient) {
-                $query->where('currency', 'USD')->where('group_id', $idclient);
-            }])->find($id);
-
-            //gọi dữ liệu nhà cung cấp (tỉ giá, phí )
-            $tigianhap = $imeidata->nhacungcap->tigia;
-            $phigd = $imeidata->nhacungcap->phi;
-            //tính giá đã bao gồm phí chuyển đổi
-            $giaphi = ($tigianhap * $gia) / $tigiagoc + (($gia / 100) * $phigd);
-            //cập nhập giá gốc vào data
-            $updatetigia = Imeiservice::where('id', $imeidata->imei->id)->update(['purchase_cost' => $giaphi]);
-
-            //tính chiết khấu từng nhóm user
-            // $getgiauser = ($giabanle - ((($giabanle - $giaphi) / 100) * $u->chietkhau)) - $getimei->credit;
-            // cập nhập giá cho user
-            // $updategiause = Clientgroupprice::where('group_id', $idclient)->where('currency', 'USD')->where('service_id', $serverid)->update(['discount' => $getgiauser]);
-            // $updategiause = Clientgroupprice::where('group_id', $idclient)->where('currency', 'VND')->where('service_id', $serverid)->update(['discount' => $getgiauser]);
-
             $u = $request->input('giabanle' . $idclient);
             $y = $u - $getimei->credit;
             $currencies = Currencie::where('display_currency', 'Yes')->get();
@@ -188,7 +152,11 @@ class IMEIController extends Controller
             $imei = Imeiservice::find($id);
             $imei->status = $par2;
             $imei->save();
-            echo $par2;
+            if ($par2 == 'active') {
+                echo 'Active IMEI Services';
+            } else {
+                echo 'Disable IMEI Services';
+            }
             exit();
         }
         return;
