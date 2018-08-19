@@ -14,7 +14,7 @@
 
                     </div>
                     <div class="card-body">
-                        <form action="{{ url('pchietkhau') }}/{{$client->id}}" method="POST" enctype="multipart/form-data" onsubmit="return checkForm(this);">
+                        <form action="{{ url('clientgroup') }}/{{$client->id}}" method="POST" enctype="multipart/form-data" onsubmit="return checkForm(this);">
                             {{ csrf_field() }}
                             <div class="col-md-12">
                                 <strong>Phần trăm chiết khấu</strong>

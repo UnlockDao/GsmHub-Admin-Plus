@@ -32,7 +32,7 @@
                                         <td>{{$v->group_name}}</td>
                                         <td>{{$v->chietkhau}}</td>
                                         <td><a class="material-icons "
-                                               href="{{ asset('') }}chietkhau/{{$v->id}}">edit</a></td>
+                                               href="{{ asset('') }}clientgroup/{{$v->id}}">edit</a></td>
                                     </tr>
                                 @endforeach
                                 </tbody>

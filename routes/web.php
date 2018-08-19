@@ -18,17 +18,12 @@ Route::get('/', function () {
 });
 Route::get('/logout', function () {
     Auth::logout();
-    return redirect('home');
+    return redirect('imei');
 });
 
 Auth::routes();
 //trang chủ
-Route::get('home', 'HomeController@index');
-
 //imeiserver
-//cập nhập dữ liệu data tạm
-Route::get('bak', 'IMEIController@index');
-Route::get('json', 'IMEIController@json');
 //hiển thị danh sách dịch vụ, tiền tệ
 Route::get('imei', 'IMEIController@imei');
 //hiển thị dịch vụ theo id
@@ -41,9 +36,9 @@ Route::post('updatesupplier/{id}', 'IMEIController@updatesupplier');
 Route::get('imei/{squirrel}/{any}', 'IMEIController@status');
 
 //chiết khấu phần trăm từng user
-Route::get('chietkhau', 'ClientController@index');
-Route::get('chietkhau/{id}', 'ClientController@show');
-Route::post('pchietkhau/{id}', 'ClientController@edit');
+Route::get('clientgroup', 'ClientController@index');
+Route::get('clientgroup/{id}', 'ClientController@show');
+Route::post('clientgroup/{id}', 'ClientController@edit');
 
 //thêm sửa xóa nhà cung cấp, phí giao dịch, tỉ giá
 Route::get('supplier', 'SupplierController@index');

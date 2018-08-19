@@ -31,19 +31,19 @@
     <ul class="nav">
         <li class="nav-item ">
             <a class="nav-link" href="{{ url('imei') }}">
-                <i class="material-icons">card_giftcard</i>
+                <i class="material-icons">drag_indicator</i>
                 <p>IMEI Service</p>
             </a>
         </li>
         <li class="nav-item ">
             <a class="nav-link" href="{{ url('supplier') }}">
-                <i class="material-icons">card_giftcard</i>
+                <i class="material-icons">account_balance</i>
                 <p>Supplier</p>
             </a>
         </li>
     <li class="nav-item ">
-        <a class="nav-link" href="{{ url('chietkhau') }}">
-            <i class="material-icons">card_giftcard</i>
+        <a class="nav-link" href="{{ url('clientgroup') }}">
+            <i class="material-icons">group</i>
             <p>User Group</p>
         </a>
     </li>

@@ -11,16 +11,21 @@ use Illuminate\Http\Request;
 class ClientController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index(Request $request)
     {
         $client = Clientgroup::get();
-        return view('chietkhau', compact('client'));
+        return view('clientgroup', compact('client'));
     }
 
     public function show($id)
     {
         $client = Clientgroup::find($id);
-        return view('edit.editck',compact('client'));
+        return view('edit.editclientgroup',compact('client'));
     }
 
     public function edit($id,Request $request)
@@ -29,6 +34,6 @@ class ClientController extends Controller
         $client->chietkhau= $request->chietkhau;
 
         $client->save();
-        return back();
+        return redirect('/clientgroup');
     }
 }
