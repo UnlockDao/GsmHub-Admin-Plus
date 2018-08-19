@@ -12,8 +12,8 @@
 
     <link href="{{ asset('assets/css/material-dashboard.min.css?v=2.0.1') }}" rel="stylesheet"/>
     <!--     Fonts and icons     -->
-    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
-    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300|Material+Icons' rel='stylesheet'
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,300|Material+Icons' rel='stylesheet'
           type='text/css'>
     <script src="{{ asset('excel/tableToExcel.js') }}"></script>
 </head>
@@ -37,7 +37,7 @@
 <script src="{{ asset('assets/js/material-dashboard.js?v=2.0.1') }}"></script>
 <!-- Forms Validations Plugin -->
 <script src="{{ asset('assets/js/plugins/jquery.validate.min.js') }}"></script>
-<!--  Notifications Plugin, full documentation here: http://bootstrap-notify.remabledesigns.com/    -->
+<!--  Notifications Plugin, full documentation here: https://bootstrap-notify.remabledesigns.com/    -->
 <script src="{{ asset('assets/js/plugins/bootstrap-notify.js') }}"></script>
 <!--  DataTables.net Plugin, full documentation here: https://datatables.net/    -->
 <script src="{{ asset('assets/js/plugins/jquery.datatables.js') }}"></script>
