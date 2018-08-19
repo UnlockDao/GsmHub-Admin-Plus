@@ -31,13 +31,20 @@
                                 <div class="col-md-12">
                                     <strong>Purchase Cost </strong>
                                     <input type="text" name="gianhap" id="gianhap" class="form-control"
+                                           onchange="Purchasenet();"
                                            value="@if($imei->imei->pricefromapi == 1){{$imei->imei->api_credit}}@elseif($imei->gianhap == null){{$imei->imei->purchase_cost}}@else{{$imei->gianhap}}@endif"
                                            placeholder="Giá nhập" autocomplete="off">
                                 </div>
                                 <div class="col-md-12">
+                                    <strong>Purchase Cost(Net) </strong>
+                                    <input type="text" name="purchasenet" id="purchasenet" class="form-control"
+                                           value=""
+                                           placeholder="Purchase Cost(Net)" autocomplete="off" readonly>
+                                </div>
+                                <div class="col-md-12">
                                     <strong>User</strong>
                                     <input type="text" name="giabanle" id="usd" onchange="Chietkhau();"
-                                           onkeyup="USDtoVND();" class="form-control"
+                                           onkeyup="USDtoVND();" class="form-control" readonly
                                            onclick="Enabled=true;Chietkhau();"
                                            value="<?php
                                            if ($price == null) {
@@ -84,24 +91,35 @@
         </div>
 
         <script>
+            //gọi dữ liệu nhà cung cấp (tỉ giá, phí )
+            var tigianhap = {{$imei->nhacungcap->tigia}};
+            var phigd = {{$imei->nhacungcap->phi}};
+            var tigiagoc = 22000;
+
+
             function VNtoUSD() {
                 var vnd, usd;
                 //Lấy text từ thẻ input title
                 vnd = document.getElementById("vnd").value;
                 vnd = vnd.replace(/\`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi, '.');
                 document.getElementById('vnd').value = vnd;
-                var b = parseFloat(vnd) / 22000;
-                result = b;
+                var result = parseFloat(vnd) / tigiagoc;
                 document.getElementById('usd').value = result;
             }
 
+            function Purchasenet() {
+                var gianhap = document.getElementById("gianhap").value;
+                var giaphi = (tigianhap * gianhap) / tigiagoc + ((gianhap / 100) * phigd);
+                document.getElementById('purchasenet').value = giaphi;
+                Chietkhau();
+            }
+
             function USDtoVND() {
-                var vnd, usd;
-                //Lấy text từ thẻ input title
+                var usd;
                 usd = document.getElementById("usd").value;
                 usd = usd.replace(/\`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi, '.');
                 document.getElementById('usd').value = usd;
-                var b = parseFloat(usd) * 22000;
+                var b = parseFloat(usd) * tigiagoc;
                 document.getElementById('vnd').value = b;
             }
 
@@ -109,30 +127,20 @@
 
             function Chietkhau() {
                 if (Enabled == true) {
-                    var user, gianhap;
-                    //lấy giá nhập tiền usd
-                    gianhap = document.getElementById("gianhap").value;
-                    var tigiagoc = 22000;
-                    //gọi dữ liệu nhà cung cấp (tỉ giá, phí )
-                    var tigianhap = {{$imei->nhacungcap->tigia}};
-                    var phigd = {{$imei->nhacungcap->phi}};
                     //tính giá đã bao gồm phí chuyển đổi
-                    var giaphi = (tigianhap * gianhap) / tigiagoc + ((gianhap / 100) * phigd);
-
-                    //Lấy text từ thẻ input title
-                    user = document.getElementById("usd").value;
-
+                    var giaphi = document.getElementById("purchasenet").value;
+                    //Lấy giá trị từ giá bán lẻ
+                    var user = document.getElementById("usd").value;
                     @foreach($clien as $pri)
                         result{{$pri->id}} = (user - (((user - giaphi) / 100) *{{$pri->chietkhau}}));
                     document.getElementById('chietkhau{{$pri->id}}').value = result{{$pri->id}};
                     @endforeach
-                } else {
-
                 }
             }
 
             document.addEventListener('DOMContentLoaded', function () {
                 USDtoVND();
+                Purchasenet();
             }, false);
 
         </script>

@@ -45,6 +45,18 @@ class IMEIController extends Controller
 
     public function imei(Request $request)
     {
+        $imei_service = Imeiservice::orderBy('id')->get();
+        foreach ($imei_service as $v) {
+            $check = Imeiservicepricing::where('id', $v->id)->first();
+            if ($check == null) {
+                $imei_service = new Imeiservicepricing();
+                $imei_service->id = $v->id;
+                $imei_service->save();
+            } else {
+                $imei_serviceud = Imeiservicepricing::where('id', $v->id)->update(['id' => $v->id]);
+            }
+        }
+
         $group = Imeiservicegroup::get();
         $imei_service = Imeiservicepricing::get();
         $usergroup = Clientgroup::where('status', 'active')->orderBy('chietkhau')->get();
@@ -52,11 +64,6 @@ class IMEIController extends Controller
         return view('imeiservice', compact('imei_service', 'group', 'usergroup'));
     }
 
-    public function json()
-    {
-
-        return ;
-    }
 
     public function show($id)
     {
@@ -102,22 +109,11 @@ class IMEIController extends Controller
         $imei->save();
         //lấy dữ liệu nhập thủ công
         $giabanle = $request->giabanle;
+        $updatetigia = Imeiservice::where('id', $id)->update(['purchase_cost' => $request->purchasenet,'credit' => $request->credit]);
         //lấy dữ liệu imei server
         $getimei = Imeiservice::find($id);
-        //đặt tỉ  giá gốc
-        $tigiagoc = 22000;
-
         //gọi nhóm user
         $group_user = Clientgroup::get();
-
-        //gọi dữ liệu nhà cung cấp (tỉ giá, phí )
-        $tigianhap = $imei->nhacungcap->tigia;
-        $phigd = $imei->nhacungcap->phi;
-        //tính giá đã bao gồm phí chuyển đổi
-        $giaphi = ($tigianhap * $gia) / $tigiagoc + (($gia / 100) * $phigd);
-        //cập nhập giá gốc vào data
-        $updatetigia = Imeiservice::where('id', $id)->update(['purchase_cost' => $giaphi,'credit' => $request->credit]);
-
         //ghi dữ liệu giá vào nhóm user
         foreach ($group_user as $u) {
             $idclient = $u->id;
