@@ -43,7 +43,7 @@
     <!--===============================================================================================-->
 
 
-    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300|Material+Icons' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,300|Material+Icons' rel='stylesheet' type='text/css'>
     <!-- Add jQuery library -->
     <script type="text/javascript" src="lib/jquery-1.10.2.min.js"></script>
 
