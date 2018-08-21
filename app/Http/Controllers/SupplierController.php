@@ -51,6 +51,15 @@ class SupplierController extends Controller
         return redirect('/supplier');
     }
 
+    public function add(Request $request){
+        $supplier = new Supplier();
+        $supplier->name = $request->name;
+        $supplier->phi = $request->phi;
+        $supplier->tigia = $request->tigia;
+        $supplier->save();
+        return back();
+    }
+
     public function update(){
         // cập nhập giá theo user
         $currencies = Currencie::where('display_currency', 'Yes')->get();

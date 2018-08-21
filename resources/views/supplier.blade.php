@@ -1,52 +1,88 @@
 @extends('layouts.header')
 @section('content')
     <div class="container-fluid">
-
-
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-lg-12 col-md-12">
                 <div class="card">
-                    <div class="card-header card-header-icon card-header-rose">
-                        <div class="card-icon">
-                            <i class="material-icons">monetization_on</i>
+                    <div class="card-header card-header-tabs card-header-rose">
+                        <div class="nav-tabs-navigation">
+                            <div class="nav-tabs-wrapper">
+                                <ul class="nav nav-tabs" data-tabs="tabs">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" href="#profile" data-toggle="tab">
+                                            <i class="material-icons">list</i>
+                                            Supplier
+                                            <div class="ripple-container"></div></a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#cat" data-toggle="tab">
+                                            <i class="material-icons">code</i>
+                                            Add Supplier
+                                            <div class="ripple-container"></div><div class="ripple-container"></div></a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
-                        <button type="button" onclick="tableToExcel('testTable', 'W3C Example Table')"
-                                class="btn btn-info pull-right"><i class="material-icons">cloud_download</i>
-                        </button>
-                        <h4 class="card-title ">Supplier</h4>
-
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="testTable" class="table">
-                                <thead class="text-primary">
-                                <th width="2%">ID</th>
-                                <th>Source</th>
-                                <th> Mony </th>
-                                <th> Phí GD </th>
-                                <th> Sửa </th>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="profile">
+                                <div class="table-responsive">
+                                    <table id="testTable" class="table">
+                                        <thead class="text-primary">
+                                        <th width="2%">ID</th>
+                                        <th>Source</th>
+                                        <th>Exchange rate </th>
+                                        <th> Transaction fee</th>
+                                        <th> Edit </th>
 
-                                </thead>
-                                <tbody>
-                                @foreach($supplier as $v)
-                                    <tr>
-                                        <td>{{$v->id}}</td>
-                                        <td>{{$v->name}}</td>
-                                        <td><?php echo number_format($v->tigia) ?></td>
-                                        <td>{{$v->phi}} %</td>
-                                        <td><a class="material-icons " href="{{ asset('') }}supplier/{{$v->id}}">edit</a></td>
-                                        </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($supplier as $v)
+                                            <tr>
+                                                <td>{{$v->id}}</td>
+                                                <td>{{$v->name}}</td>
+                                                <td><?php echo number_format($v->tigia) ?></td>
+                                                <td>{{$v->phi}} %</td>
+                                                <td><a class="material-icons " href="{{ asset('') }}supplier/{{$v->id}}">edit</a></td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="cat">
+                                <form action="{{ url('addsupplier') }}" method="POST" enctype="multipart/form-data" onsubmit="return checkForm(this);">
+                                    {{ csrf_field() }}
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group bmd-form-group">
+                                                <label class="bmd-label-floating"></label>
+                                                <input type="text" name="name" placeholder="Name" class="form-control" autocomplete="off" required="">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group bmd-form-group">
+                                                <label class="bmd-label-floating"></label>
+                                                <input type="text" name="tigia" placeholder="Exchange rate" class="form-control" autocomplete="off" required="">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group bmd-form-group">
+                                                <label class="bmd-label-floating"></label>
+                                                <input type="number" name="phi" placeholder="Transaction fee" class="form-control" autocomplete="off" required="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-rose pull-right">Add</button>
+                                    <div class="clearfix"></div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
-
-
         </div>
 
 
