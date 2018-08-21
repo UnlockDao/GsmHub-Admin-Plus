@@ -19,7 +19,7 @@
     <div class="sidebar" data-color="rose" data-background-color="black"
          data-image="{{ asset('assets/img/sidebar-1.jpg') }}">
         <div class="logo">
-            <a href="{{ url('bak') }}" class="simple-text logo-mini">
+            <a href="{{ url('') }}" class="simple-text logo-mini">
                 SU
             </a>
 

@@ -11,9 +11,15 @@
 |
 */
 
+use App\Http\Controllers\SQL;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
+    $sql = new SQL();
+    $sql->Admin();
+    $sql->clientGroup();
+    $sql->createSupplier();
+    $sql->imeiPricing();
     return redirect('imei');
 });
 Route::get('/logout', function () {
