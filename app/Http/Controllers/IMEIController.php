@@ -23,6 +23,7 @@ class IMEIController extends Controller
     {
         $this->middleware('auth');
     }
+
     /**
      * Show the application dashboard.
      *
@@ -85,7 +86,7 @@ class IMEIController extends Controller
             }
         }
 
-        $exchangerate = Currencie::where('currency_code','VND')->first();
+        $exchangerate = Currencie::where('currency_code', 'VND')->first();
 
         $imei = Imeiservicepricing::with('nhacungcap')->with(['imei' => function ($query) {
         }, 'imei.clientgroupprice' => function ($query) {
@@ -99,7 +100,7 @@ class IMEIController extends Controller
 
         $price = Clientgroupprice::where('currency', 'USD')->where('group_id', '19')->where('service_id', $id)->first();
 
-        return view('edit.editimei', compact('imei', 'nhacungcap', 'clien', 'pricegroup', 'price','exchangerate'));
+        return view('edit.editimei', compact('imei', 'nhacungcap', 'clien', 'pricegroup', 'price', 'exchangerate'));
     }
 
     public function edit($id, Request $request)
@@ -113,7 +114,7 @@ class IMEIController extends Controller
         $imei->save();
         //lấy dữ liệu nhập thủ công
         $giabanle = $request->giabanle;
-        $updatetigia = Imeiservice::where('id', $id)->update(['purchase_cost' => $request->purchasenet,'credit' => $request->credit]);
+        $updatetigia = Imeiservice::where('id', $id)->update(['purchase_cost' => $request->purchasenet, 'credit' => $request->credit]);
         //lấy dữ liệu imei server
         $getimei = Imeiservice::find($id);
         //gọi nhóm user
@@ -141,6 +142,15 @@ class IMEIController extends Controller
         $imei = Imeiservicepricing::find($id);
         $imei->id_nhacungcap = $request->id_nhacungcap;
         $imei->save();
+
+        //tính giá + phí
+        $exchangerate = Currencie::where('currency_code', 'VND')->first();
+        $imeiprice = Imeiservicepricing::where('id_nhacungcap', $request->id_nhacungcap)->find($id);
+        if ($imeiprice->imei->api_id == !null && $imeiprice->imei->apiserverservices == !null) {
+            $giaphi = ($imeiprice->nhacungcap->tigia * $imeiprice->imei->apiserverservices->credits) / $exchangerate->exchange_rate_static + (($imeiprice->imei->apiserverservices->credits / 100) * $imeiprice->nhacungcap->phi);
+            $updategiaphi = Imeiservice::where('id', $id)->update(['purchase_cost' => $giaphi]);
+        }
+
 
         return back();
     }
