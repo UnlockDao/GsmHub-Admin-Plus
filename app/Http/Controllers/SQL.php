@@ -30,9 +30,9 @@ class SQL extends Migration
                 $table->integer('id_nhacungcap')->nullable();
                 $table->double('gianhap')->nullable();
             });
-            Schema::table('client_group_price', function (Blueprint $table) {
-                $table->double('discount')->change();
-            });
+//            Schema::table('client_group_price', function (Blueprint $table) {
+//                $table->double('discount')->change();
+//            });
         }
     }
 

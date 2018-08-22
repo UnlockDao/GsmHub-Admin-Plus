@@ -52,3 +52,10 @@ Route::post('supplier/{id}', 'SupplierController@edit');
 Route::post('addsupplier', 'SupplierController@add');
 Route::get('supplier/{id}', 'SupplierController@show');
 
+
+//thêm sửa xóa currencie
+Route::get('currencie', 'CurrencieController@index');
+Route::post('currencie/{id}', 'CurrencieController@edit');
+Route::post('addcurrencie', 'CurrencieController@add');
+Route::get('currencie/{id}', 'CurrencieController@show');
+Route::get('currencie/{squirrel}/{any}', 'CurrencieController@status');

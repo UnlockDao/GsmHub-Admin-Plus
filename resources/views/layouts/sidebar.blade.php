@@ -47,6 +47,12 @@
             <p>User Group</p>
         </a>
     </li>
+    <li class="nav-item ">
+        <a class="nav-link" href="{{ url('currencie') }}">
+            <i class="material-icons">credit_card</i>
+            <p>Currency</p>
+        </a>
+    </li>
 
 
 </ul>
