@@ -16,9 +16,9 @@ class Imeiservice extends Model
     {
         return $this->hasMany('App\Clientgroupprice','service_id','id');
     }
-	    public function tigia()
+	    public function apiserverservices()
     {
-        return $this->belongsTo('App\Apiserver','id_tigia','id');
+        return $this->belongsTo('App\Apiserverservices','api_id','id');
     }
 }
 

@@ -32,7 +32,7 @@
                                     <strong>Purchase Cost </strong>
                                     <input type="text" name="gianhap" id="gianhap" class="form-control"
                                            onchange="Purchasenet();"
-                                           value="@if($imei->imei->pricefromapi == 1){{$imei->imei->api_credit}}@elseif($imei->gianhap == null){{$imei->imei->purchase_cost}}@else{{$imei->gianhap}}@endif"
+                                           value="@if($imei->imei->apiserverservices ==! null){{$imei->imei->apiserverservices->credits}}@elseif($imei->gianhap == null){{$imei->imei->purchase_cost}}@else{{$imei->gianhap}}@endif"
                                            placeholder="Giá nhập" autocomplete="off">
                                 </div>
                                 <div class="col-md-12">

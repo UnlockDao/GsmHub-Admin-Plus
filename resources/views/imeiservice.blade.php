@@ -80,7 +80,7 @@
                                             <tr id="{{$v->id}}">
                                                 <td>{{$v->id}}</td>
                                                 <td @if($v->imei->status == 'soft_deleted' )style="text-decoration: line-through;"@endif>{{$v->imei->service_name}}</td>
-                                                <td>@if($v->imei->pricefromapi == 1)<span
+                                                <td>@if($v->imei->api_id ==! null)<span
                                                             class="badge badge-pill badge-success">API<span>  @else<span
                                                                     class="badge badge-pill badge-info">Manual<span>  @endif
                                                 </td>
@@ -93,8 +93,8 @@
                                                     </div>
                                                 </td>
                                                 <td>@if($v->nhacungcap ==! null){{$v->nhacungcap->name}}@endif</td>
-                                                @if($v->imei->pricefromapi == 1)
-                                                    <td><?php echo number_format($v->imei->api_credit, 2); ?></td>
+                                                @if($v->imei->api_id ==! null)
+                                                    <td>@if($v->imei->apiserverservices ==! null)<?php echo number_format($v->imei->apiserverservices->credits, 2); ?>@endif</td>
                                                 @else
                                                     <td><?php echo number_format($v->gianhap, 2); ?></td>
                                                 @endif
