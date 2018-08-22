@@ -47,8 +47,22 @@ class IMEIController extends Controller
         return redirect('/imei');
     }
 
+    public function checkapi(){
+        $exchangerate = Currencie::where('currency_code','VND')->first();
+        $checkapi = Imeiservicepricing::get();
+        foreach($checkapi as $c){
+            if($c->imei->api_id ==! null){
+                if($c->nhacungcap ==! null){
+                $giaphi = ($c->nhacungcap->tigia * $c->imei->apiserverservices->credits) / $exchangerate->exchange_rate_static + (($c->imei->apiserverservices->credits / 100) * $c->nhacungcap->phi);
+                $updategiaphi = Imeiservice::where('id', $c->id)->update(['purchase_cost' => $giaphi]);
+                }
+            }
+        }
+    }
+
     public function imei(Request $request)
     {
+        $this->checkapi();
         $imei_service = Imeiservice::orderBy('id')->get();
         foreach ($imei_service as $v) {
             $check = Imeiservicepricing::where('id', $v->id)->first();
