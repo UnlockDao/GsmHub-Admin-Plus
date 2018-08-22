@@ -57,6 +57,12 @@ class IMEIController extends Controller
                 $updategiaphi = Imeiservice::where('id', $c->id)->update(['purchase_cost' => $giaphi]);
                 }
             }
+            elseif($c->imei->gianhap ==! null){
+                if($c->nhacungcap ==! null) {
+                    $giaphi = ($c->nhacungcap->tigia * $c->imei->gianhap) / $exchangerate->exchange_rate_static + (($c->imei->gianhap / 100) * $c->nhacungcap->phi);
+                    $updategiaphi = Imeiservice::where('id', $c->id)->update(['purchase_cost' => $giaphi]);
+                }
+            }
         }
     }
 
