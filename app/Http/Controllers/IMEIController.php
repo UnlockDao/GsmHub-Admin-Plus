@@ -64,7 +64,7 @@ class IMEIController extends Controller
                 }
             }
         }
-        $checkenableapi = Imeiservice::where('pricefromapi','1')->get();
+        $checkenableapi = Imeiservice::where('pricefromapi','<>','0')->get();
         foreach ($checkenableapi as $ci){
             $updateenableapi  = Imeiservice::where('id', $ci->id)->update(['pricefromapi' => '0']);
         }
