@@ -85,6 +85,7 @@ class IMEIController extends Controller
             }
         }
 
+        $exchangerate = Currencie::where('currency_code','VND')->first();
 
         $imei = Imeiservicepricing::with('nhacungcap')->with(['imei' => function ($query) {
         }, 'imei.clientgroupprice' => function ($query) {
@@ -98,7 +99,7 @@ class IMEIController extends Controller
 
         $price = Clientgroupprice::where('currency', 'USD')->where('group_id', '19')->where('service_id', $id)->first();
 
-        return view('edit.editimei', compact('imei', 'nhacungcap', 'clien', 'pricegroup', 'price'));
+        return view('edit.editimei', compact('imei', 'nhacungcap', 'clien', 'pricegroup', 'price','exchangerate'));
     }
 
     public function edit($id, Request $request)

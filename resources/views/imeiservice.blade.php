@@ -26,11 +26,6 @@
         }, false);
     </script>
     <div class="container-fluid">
-        <?php
-        $tigiagoc = 22000;
-        $giaphi = '';
-        ?>
-
         <div class="row">
             <div class="col-md-12">
                 <div class="card">

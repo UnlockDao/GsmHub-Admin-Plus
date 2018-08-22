@@ -34,6 +34,7 @@ class SupplierController extends Controller
 
     public function edit($id, Request $request)
     {
+        $exchangerate = Currencie::where('currency_code','VND')->first();
 
         $supplier = Supplier::find($id);
         $supplier->phi = $request->phi;
@@ -43,7 +44,7 @@ class SupplierController extends Controller
         $imeiprice = Imeiservicepricing::where('id_nhacungcap',$id)->get();
         foreach ($imeiprice as $i){
             if($i->gianhap ==! null){
-                $giaphi = ($request->tigia * $i->gianhap) / 22000 + (($i->gianhap / 100) * $request->phi);
+                $giaphi = ($request->tigia * $i->gianhap) / $exchangerate->exchange_rate_static + (($i->gianhap / 100) * $request->phi);
                 $updategiaphi = Imeiservice::where('id', $i->id)->update(['purchase_cost' => $giaphi]);
             }
         }

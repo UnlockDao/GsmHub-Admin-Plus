@@ -94,7 +94,7 @@
             //gọi dữ liệu nhà cung cấp (tỉ giá, phí )
             var tigianhap = {{$imei->nhacungcap->tigia}};
             var phigd = {{$imei->nhacungcap->phi}};
-            var tigiagoc = 22000;
+            var tigiagoc = {{$exchangerate->exchange_rate_static}};
 
 
             function VNtoUSD() {
