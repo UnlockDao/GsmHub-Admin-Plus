@@ -18,7 +18,30 @@
                     success: function (result) {
                         $.notify({icon: "notifications", message: result});
                     },
-                    error: function(result) {
+                    error: function (result) {
+                        alert('error');
+                    }
+                });
+            });
+
+
+            $(document).on("click", ".defaultcurrency", function () {
+                var ida = $(this).parent().attr('id');
+                var url = '';
+                if ($(this).prop('checked') == true) {
+                    url = 'defaultcurrency/status/yes';
+                }
+                else if ($(this).prop('checked') == false) {
+                    url = 'defaultcurrency/status/no';
+                }
+                $.ajax({
+                    url: url,
+                    type: 'get',
+                    data: 'id=' + ida,
+                    success: function (result) {
+                        $.notify({icon: "notifications", message: result});
+                    },
+                    error: function (result) {
                         alert('error');
                     }
                 });
@@ -50,6 +73,7 @@
                                 <th>Exchange Rate</th>
                                 <th>Status</th>
                                 <th>Display</th>
+                                <th>Default</th>
                                 <th>Edit</th>
 
                                 </thead>
@@ -61,12 +85,24 @@
                                         <td>{{$v->currency_name}}</td>
                                         <td>{{$v->exchange_rate_static}}</td>
                                         <td>{{$v->status}}</td>
-                                        <td><div class="togglebutton">
+                                        <td>
+                                            <div class="togglebutton">
                                                 <label id="{{$v->id}}">
-                                                    <input class="status" id="check{{$v->id}}" type="checkbox" @if($v->display_currency == 'Yes' )checked="" @endif>
+                                                    <input class="status" id="check{{$v->id}}" type="checkbox"
+                                                           @if($v->display_currency == 'Yes' )checked="" @endif>
                                                     <span class="toggle"></span>
                                                 </label>
-                                            </div></td>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-check">
+                                                <label class="form-check-label" id="{{$v->id}}">
+                                                    <input class="form-check-input defaultcurrency" id="defaultcurrency{{$v->id}}" type="checkbox" @if($v->currenciepricing ==! null  )checked @endif>
+                                                      <span class="form-check-sign">
+                                                     <span class="check"></span> </span>
+                                                </label>
+                                            </div>
+                                        </td>
                                         <td><a class="material-icons "
                                                href="{{ asset('') }}currencie/{{$v->id}}">edit</a></td>
                                     </tr>
@@ -82,7 +118,6 @@
 
 
     </div>
-
 
 
 

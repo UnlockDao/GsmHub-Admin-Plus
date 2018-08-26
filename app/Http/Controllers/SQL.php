@@ -66,4 +66,21 @@ class SQL extends Migration
 
     }
 
+    public function currencyPricing()
+    {
+        if (!Schema::hasTable('currency_pricing')) {
+            Schema::create('currency_pricing', function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('type');
+                $table->integer('currency_id');
+
+            });
+            DB::table('currency_pricing')->insert([
+                'type' => '1',
+                'currency_id' => '145'
+            ]);
+        }
+
+    }
+
 }

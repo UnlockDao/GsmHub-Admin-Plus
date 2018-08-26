@@ -20,6 +20,7 @@ Route::get('/', function () {
     $sql->clientGroup();
     $sql->createSupplier();
     $sql->imeiPricing();
+    $sql->currencyPricing();
     return redirect('imei');
 });
 Route::get('/logout', function () {
@@ -59,3 +60,4 @@ Route::post('currencie/{id}', 'CurrencieController@edit');
 Route::post('addcurrencie', 'CurrencieController@add');
 Route::get('currencie/{id}', 'CurrencieController@show');
 Route::get('currencie/{squirrel}/{any}', 'CurrencieController@status');
+Route::get('defaultcurrency/{squirrel}/{any}', 'CurrencieController@defaultcurrency');

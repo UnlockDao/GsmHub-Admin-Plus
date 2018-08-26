@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Clientgroup;
 use App\Clientgroupprice;
 use App\Currencie;
+use App\Currenciepricing;
 use App\Http\Requests;
 use App\Imeiservice;
 use App\Imeiservicepricing;
@@ -58,4 +59,15 @@ class CurrencieController extends Controller
         return;
     }
 
+    public function defaultcurrency($par = NULL, $par2 = NULL)
+    {
+        $id = $_GET['id'];
+        if ($par2 == 'yes') {
+            $defaultcurrency = Currenciepricing::where('type','1')->update(['currency_id' => $id]);
+            echo 'Change Default Currency';
+        }
+
+        exit();
+        return;
+    }
 }

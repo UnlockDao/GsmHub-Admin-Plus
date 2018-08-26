@@ -14,7 +14,7 @@
           type='text/css'>
     <script src="{{ asset('excel/tableToExcel.js') }}"></script>
 </head>
-<body class="">
+<body class="sidebar-mini">
 <div class="wrapper">
     <div class="sidebar" data-color="rose" data-background-color="black"
          data-image="{{ asset('assets/img/sidebar-1.jpg') }}">
@@ -65,9 +65,6 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('source/jquery.fancybox.css?v=2.1.5') }}" media="screen"/>
 <script type="text/javascript">
     $(document).ready(function () {
-        $('body').addClass('sidebar-mini');
-        md.misc.sidebar_mini_active = true;
-
         $(".fancybox").fancybox({
             type: 'iframe',
             afterClose: function () { // USE THIS IT IS YOUR ANSWER THE KEY WORD IS "afterClose"
@@ -77,5 +74,10 @@
         });
     });
 
+</script>
+<script type="text/javascript">
+    $('.defaultcurrency').on('change', function () {
+        $('.defaultcurrency').not(this).prop('checked', false);
+    });
 </script>
 </html>

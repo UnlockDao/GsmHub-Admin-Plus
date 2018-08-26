@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Clientgroup;
 use App\Clientgroupprice;
 use App\Currencie;
+use App\Currenciepricing;
 use App\Imeiservice;
 use App\Imeiservicegroup;
 use App\Imeiservicepricing;
@@ -109,8 +110,8 @@ class IMEIController extends Controller
                 }
             }
         }
-
-        $exchangerate = Currencie::where('currency_code', 'VND')->first();
+        $defaultcurrency = Currenciepricing::where('type','1')->first();
+        $exchangerate = Currencie::find($defaultcurrency->currency_id);
 
         $imei = Imeiservicepricing::with('nhacungcap')->with(['imei' => function ($query) {
         }, 'imei.clientgroupprice' => function ($query) {
