@@ -44,7 +44,7 @@
                                 <div class="col-md-12">
                                     <strong>User</strong>
                                     <input type="text" name="giabanle" id="usd" onchange="Chietkhau();"
-                                           onkeyup="USDtoVND();" class="form-control" readonly
+                                           onkeyup="USDtoVND();" class="form-control" 
                                            onclick="Enabled=true;Chietkhau();"
                                            value="<?php
                                            if ($price == null) {
