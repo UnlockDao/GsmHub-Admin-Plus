@@ -110,12 +110,16 @@ class IMEIController extends Controller
                 }
             }
         }
+
+        //find default currency
         $defaultcurrency = Currenciepricing::where('type','1')->first();
         $exchangerate = Currencie::find($defaultcurrency->currency_id);
+        //find default price ck 0
+        $cliendefault = Clientgroup::where('chietkhau','0')->first();
 
         $imei = Imeiservicepricing::with('nhacungcap')->with(['imei' => function ($query) {
-        }, 'imei.clientgroupprice' => function ($query) {
-            $query->where('currency', 'USD')->where('group_id', '19');
+        }, 'imei.clientgroupprice' => function ($query) use ($cliendefault) {
+            $query->where('currency', 'USD')->where('group_id', $cliendefault->id);
         }])->find($id);
         $nhacungcap = Supplier::get();
 
@@ -123,7 +127,7 @@ class IMEIController extends Controller
 
         $pricegroup = Clientgroupprice::orderBy('group_id', 'desc')->where('currency', 'USD')->where('service_type', 'imei')->where('service_id', $id)->get();
 
-        $price = Clientgroupprice::where('currency', 'USD')->where('group_id', '19')->where('service_id', $id)->first();
+        $price = Clientgroupprice::where('currency', 'USD')->where('group_id', $cliendefault->id)->where('service_id', $id)->first();
 
         return view('edit.editimei', compact('imei', 'nhacungcap', 'clien', 'pricegroup', 'price', 'exchangerate'));
     }
