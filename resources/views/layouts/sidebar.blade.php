@@ -5,7 +5,7 @@
     <div class="user-info">
         <a data-toggle="collapse" href="#collapseExample" class="username">
                     <span>
-                       Admin
+                       {{Auth::user()->user_name}}
                       <b class="caret"></b>
                     </span>
         </a>

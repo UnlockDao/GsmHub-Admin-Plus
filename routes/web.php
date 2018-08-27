@@ -13,7 +13,8 @@
 
 use App\Http\Controllers\SQL;
 use Illuminate\Support\Facades\Auth;
-
+Route::get('login','Auth\LoginController@getLogin')->name('login');
+Route::post('login','Auth\LoginController@postLogin')->name('login');
 Route::get('/', function () {
     $sql = new SQL();
     $sql->Admin();
@@ -27,8 +28,6 @@ Route::get('/logout', function () {
     Auth::logout();
     return redirect('imei');
 });
-
-Auth::routes();
 //trang chủ
 //imeiserver
 //hiển thị danh sách dịch vụ, tiền tệ

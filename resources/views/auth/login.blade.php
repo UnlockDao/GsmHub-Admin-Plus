@@ -55,23 +55,11 @@
     <div class="container-login100">
         <div class="wrap-login100">
             <div class="login100-pic js-tilt" data-tilt>
-                <img src="jslogin/images/img-01.png" alt="IMG">
+                <img src="/jslogin/images/img-01.png" alt="IMG">
             </div>
 
-            <form class="form-horizontal" method="POST" action="{{ route('login') }}">
+            <form class="form-horizontal" method="POST" action="{{ url('login') }}">
                 {{ csrf_field() }}
-
-                @if ($errors->has('email'))
-                    <script>
-                        $(document).ready(function () {
-                            $.notify({
-                                icon: "notifications",
-                                message: "Sai mật khẩu hoặc tài khoản"
-                            });
-                        });
-                    </script>
-
-                @endif
                 <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                     <label>Tài khoản</label>
 
