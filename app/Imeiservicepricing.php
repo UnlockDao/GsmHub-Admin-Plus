@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Imeiservicepricing extends Model
 {
-    protected $table = 'imei_service_pricing';
+    protected $table = 'adminplus_imei_service';
     public $timestamps = false;
 
 	    public function imei()
@@ -18,7 +18,7 @@ class Imeiservicepricing extends Model
     }
     public function nhacungcap()
     {
-        return $this->belongsTo('App\Supplier','id_nhacungcap','id');
+        return $this->belongsTo('App\Supplier','id_supplier','id');
     }
 }
 

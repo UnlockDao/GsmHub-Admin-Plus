@@ -18,11 +18,11 @@
                             {{ csrf_field() }}
                             <div class="col-md-12">
                                 <strong>Tỉ giá</strong>
-                                <input type="text" name="tigia"  class="form-control" value="{{$supplier->tigia}}" placeholder="%" autocomplete="off" required>
+                                <input type="text" name="exchangerate"  class="form-control" value="{{$supplier->exchangerate}}" placeholder="%" autocomplete="off" required>
                             </div>
                             <div class="col-md-12">
                                 <strong>Phí GD</strong>
-                                <input type="text" name="phi"  class="form-control" value="{{$supplier->phi}}" placeholder="%" autocomplete="off" required>
+                                <input type="text" name="transactionfee"  class="form-control" value="{{$supplier->transactionfee}}" placeholder="%" autocomplete="off" required>
                             </div>
                             <input class="btn btn-primary pull-right" type="submit" name="myButton" value="Sửa">
                             <div class="clearfix"></div>

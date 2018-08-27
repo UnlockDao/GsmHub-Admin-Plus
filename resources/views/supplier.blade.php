@@ -42,8 +42,8 @@
                                             <tr>
                                                 <td>{{$v->id}}</td>
                                                 <td>{{$v->name}}</td>
-                                                <td><?php echo number_format($v->tigia) ?></td>
-                                                <td>{{$v->phi}} %</td>
+                                                <td><?php echo number_format($v->exchangerate) ?></td>
+                                                <td>{{$v->transactionfee}} %</td>
                                                 <td><a class="material-icons " href="{{ asset('') }}supplier/{{$v->id}}">edit</a></td>
                                             </tr>
                                         @endforeach
@@ -64,13 +64,13 @@
                                         <div class="col-md-12">
                                             <div class="form-group bmd-form-group">
                                                 <label class="bmd-label-floating"></label>
-                                                <input type="text" name="tigia" placeholder="Exchange rate" class="form-control" autocomplete="off" required="">
+                                                <input type="text" name="exchangerate" placeholder="Exchange rate" class="form-control" autocomplete="off" required="">
                                             </div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="form-group bmd-form-group">
                                                 <label class="bmd-label-floating"></label>
-                                                <input type="number" name="phi" placeholder="Transaction fee" class="form-control" autocomplete="off" required="">
+                                                <input type="number" name="transactionfee" placeholder="Transaction fee" class="form-control" autocomplete="off" required="">
                                             </div>
                                         </div>
                                     </div>

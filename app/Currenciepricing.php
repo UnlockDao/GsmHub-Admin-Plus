@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Currenciepricing extends Model
 {
-    protected $table = 'currency_pricing';
+    protected $table = 'adminplus_currency';
     public $timestamps = false;
 
 }

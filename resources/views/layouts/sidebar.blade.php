@@ -1,6 +1,6 @@
 <div class="user">
     <div class="photo">
-        <img src="{{ url('assets/avatar/avatar.jpg') }}" />
+        <img src="{{ url('jslogin\images\img-011.png') }}" />
     </div>
     <div class="user-info">
         <a data-toggle="collapse" href="#collapseExample" class="username">
@@ -14,13 +14,13 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#">
                         <span class="sidebar-mini"> T </span>
-                        <span class="sidebar-normal"> Hồ sơ </span>
+                        <span class="sidebar-normal"> Info </span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('/logout') }}">
                         <span class="sidebar-mini"> O </span>
-                        <span class="sidebar-normal"> Đăng xuất </span>
+                        <span class="sidebar-normal"> Logout </span>
                     </a>
                 </li>
             </ul>

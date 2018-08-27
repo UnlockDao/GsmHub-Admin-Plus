@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    @if($imei->id_nhacungcap ==!null)
+    @if($imei->id_supplier ==!null)
         <div class="container-fluid">
 
             <div class="row">
@@ -30,9 +30,9 @@
                                 </div>
                                 <div class="col-md-12">
                                     <strong>Purchase Cost </strong>
-                                    <input type="text" name="gianhap" id="gianhap" class="form-control"
+                                    <input type="text" name="purchasecost" id="purchasecost" class="form-control"
                                            onchange="Purchasenet();"
-                                           value="@if($imei->imei->apiserverservices ==! null){{$imei->imei->apiserverservices->credits}}@elseif($imei->gianhap == null){{$imei->imei->purchase_cost}}@else{{$imei->gianhap}}@endif"
+                                           value="@if($imei->imei->apiserverservices ==! null){{$imei->imei->apiserverservices->credits}}@elseif($imei->purchasecost == null){{$imei->imei->purchase_cost}}@else{{$imei->purchasecost}}@endif"
                                            placeholder="Giá nhập" autocomplete="off">
                                 </div>
                                 <div class="col-md-12">
@@ -57,10 +57,10 @@
                                 </div>
                                 <div class="col-md-12">
                                     <strong>Supplier</strong>
-                                    <select name="id_nhacungcap" class="form-control">
+                                    <select name="id_supplier" class="form-control">
                                         @foreach($nhacungcap as $v)
                                             <option value="{{$v->id}}"
-                                                    @if($imei->id_nhacungcap == $v->id) selected @endif>{{$v->name}}</option>
+                                                    @if($imei->id_supplier == $v->id) selected @endif>{{$v->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -92,9 +92,9 @@
 
         <script>
             //gọi dữ liệu nhà cung cấp (tỉ giá, phí )
-            var tigianhap = {{$imei->nhacungcap->tigia}};
-            var phigd = {{$imei->nhacungcap->phi}};
-            var tigiagoc = {{$exchangerate->exchange_rate_static}};
+            var tipurchasecost = {{$imei->nhacungcap->exchangerate}};
+            var transactionfeegd = {{$imei->nhacungcap->transactionfee}};
+            var exchangerategoc = {{$exchangerate->exchange_rate_static}};
 
 
             function VNtoUSD() {
@@ -103,14 +103,14 @@
                 vnd = document.getElementById("vnd").value;
                 vnd = vnd.replace(/\`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi, '.');
                 document.getElementById('vnd').value = vnd;
-                var result = parseFloat(vnd) / tigiagoc;
+                var result = parseFloat(vnd) / exchangerategoc;
                 document.getElementById('usd').value = result;
             }
 
             function Purchasenet() {
-                var gianhap = document.getElementById("gianhap").value;
-                var giaphi = (tigianhap * gianhap) / tigiagoc + ((gianhap / 100) * phigd);
-                document.getElementById('purchasenet').value = giaphi;
+                var purchasecost = document.getElementById("purchasecost").value;
+                var giatransactionfee = (tipurchasecost * purchasecost) / exchangerategoc + ((purchasecost / 100) * transactionfeegd);
+                document.getElementById('purchasenet').value = giatransactionfee;
                 Chietkhau();
             }
 
@@ -119,7 +119,7 @@
                 usd = document.getElementById("usd").value;
                 usd = usd.replace(/\`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi, '.');
                 document.getElementById('usd').value = usd;
-                var b = parseFloat(usd) * tigiagoc;
+                var b = parseFloat(usd) * exchangerategoc;
                 document.getElementById('vnd').value = b;
             }
 
@@ -128,11 +128,11 @@
             function Chietkhau() {
                 if (Enabled == true) {
                     //tính giá đã bao gồm phí chuyển đổi
-                    var giaphi = document.getElementById("purchasenet").value;
+                    var giatransactionfee = document.getElementById("purchasenet").value;
                     //Lấy giá trị từ giá bán lẻ
                     var user = document.getElementById("usd").value;
                     @foreach($clien as $pri)
-                        result{{$pri->id}} = (user - (((user - giaphi) / 100) *{{$pri->chietkhau}}));
+                        result{{$pri->id}} = (user - (((user - giatransactionfee) / 100) *{{$pri->chietkhau}}));
                     document.getElementById('chietkhau{{$pri->id}}').value = result{{$pri->id}};
                     @endforeach
                 }
@@ -164,10 +164,10 @@
                                 {{ csrf_field() }}
                                 <div class="col-md-12">
                                     <strong>Supplier</strong>
-                                    <select name="id_nhacungcap" class="form-control">
+                                    <select name="id_supplier" class="form-control">
                                         @foreach($nhacungcap as $v)
                                             <option value="{{$v->id}}"
-                                                    @if($imei->id_nhacungcap == $v->id) selected @endif>{{$v->name}}</option>
+                                                    @if($imei->id_supplier == $v->id) selected @endif>{{$v->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>

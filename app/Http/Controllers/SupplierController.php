@@ -37,15 +37,15 @@ class SupplierController extends Controller
         $exchangerate = Currencie::where('currency_code','VND')->first();
 
         $supplier = Supplier::find($id);
-        $supplier->phi = $request->phi;
-        $supplier->tigia = $request->tigia;
+        $supplier->transactionfee = $request->transactionfee;
+        $supplier->exchangerate = $request->exchangerate;
         $supplier->save();
         //cập nhập phí+ tỉ giá
-        $imeiprice = Imeiservicepricing::where('id_nhacungcap',$id)->get();
+        $imeiprice = Imeiservicepricing::where('id_supplier',$id)->get();
         foreach ($imeiprice as $i){
-            if($i->gianhap ==! null){
-                $giaphi = ($request->tigia * $i->gianhap) / $exchangerate->exchange_rate_static + (($i->gianhap / 100) * $request->phi);
-                $updategiaphi = Imeiservice::where('id', $i->id)->update(['purchase_cost' => $giaphi]);
+            if($i->purchasecost ==! null){
+                $giatransactionfee = ($request->exchangerate * $i->purchasecost) / $exchangerate->exchange_rate_static + (($i->purchasecost / 100) * $request->transactionfee);
+                $updategiatransactionfee = Imeiservice::where('id', $i->id)->update(['purchase_cost' => $giatransactionfee]);
             }
         }
         $this->update();
@@ -55,8 +55,8 @@ class SupplierController extends Controller
     public function add(Request $request){
         $supplier = new Supplier();
         $supplier->name = $request->name;
-        $supplier->phi = $request->phi;
-        $supplier->tigia = $request->tigia;
+        $supplier->transactionfee = $request->transactionfee;
+        $supplier->exchangerate = $request->exchangerate;
         $supplier->save();
         return back();
     }

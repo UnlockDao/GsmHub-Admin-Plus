@@ -96,7 +96,7 @@
                                                 @if($v->imei->api_id ==! null)
                                                     <td>@if($v->imei->apiserverservices ==! null)<?php echo number_format($v->imei->apiserverservices->credits, 2); ?>@endif</td>
                                                 @else
-                                                    <td><?php echo number_format($v->gianhap, 2); ?></td>
+                                                    <td><?php echo number_format($v->purchasecost, 2); ?></td>
                                                 @endif
 
 

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Kế Toán</title>
+    <title>Pricing | S-Unlock</title>
     <link href="{{ asset('assets/css/material-dashboard.min.css?v=2.0.1') }}" rel="stylesheet"/>
     <!--     Fonts and icons     -->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
