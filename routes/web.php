@@ -17,7 +17,6 @@ Route::get('login','Auth\LoginController@getLogin')->name('login');
 Route::post('login','Auth\LoginController@postLogin')->name('login');
 Route::get('/', function () {
     $sql = new SQL();
-    $sql->Admin();
     $sql->clientGroup();
     $sql->createSupplier();
     $sql->imeiPricing();
