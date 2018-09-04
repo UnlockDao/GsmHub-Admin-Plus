@@ -48,34 +48,33 @@ class IMEIController extends Controller
         return redirect('/imei');
     }
 
-    public function checkapi(){
-        $exchangerate = Currencie::where('currency_code','VND')->first();
-        $checkapi = Imeiservicepricing::get();
-        foreach($checkapi as $c){
-            if($c->imei->api_id ==! null){
-                if($c->nhacungcap ==! null){
-                $giatransactionfee = ($c->nhacungcap->exchangerate * $c->imei->apiserverservices->credits) / $exchangerate->exchange_rate_static + (($c->imei->apiserverservices->credits / 100) * $c->nhacungcap->transactionfee);
-                $updategiatransactionfee = Imeiservice::where('id', $c->id)->update(['purchase_cost' => $giatransactionfee]);
-                }
+    public function imei(Request $request)
+    {
+        $this->checkdelete();
+        $this->checkimei();
+        $this->checkapi();
+        $group = Imeiservicegroup::get();
+        $imei_service = Imeiservicepricing::get();
+        $usergroup = Clientgroup::where('status', 'active')->orderBy('chietkhau')->get();
+
+        return view('imeiservice', compact('imei_service', 'group', 'usergroup'));
+    }
+
+    public function checkdelete()
+    {
+        $imei_services = Imeiservicepricing::get();
+        foreach ($imei_services as $v) {
+            $check = Imeiservice::where('id', $v->id)->first();
+            if ($check == null) {
+                Imeiservicepricing::where('id', $v->id)->delete();
             }
-            elseif($c->imei->purchasecost ==! null){
-                if($c->nhacungcap ==! null) {
-                    $giatransactionfee = ($c->nhacungcap->exchangerate * $c->imei->purchasecost) / $exchangerate->exchange_rate_static + (($c->imei->purchasecost / 100) * $c->nhacungcap->transactionfee);
-                    $updategiatransactionfee = Imeiservice::where('id', $c->id)->update(['purchase_cost' => $giatransactionfee]);
-                }
-            }
-        }
-        $checkenableapi = Imeiservice::where('pricefromapi','<>','0')->get();
-        foreach ($checkenableapi as $ci){
-            $updateenableapi  = Imeiservice::where('id', $ci->id)->update(['pricefromapi' => '0']);
         }
     }
 
-    public function imei(Request $request)
+    public function checkimei()
     {
-        $this->checkapi();
-        $imei_service = Imeiservice::orderBy('id')->get();
-        foreach ($imei_service as $v) {
+        $imei_services = Imeiservice::orderBy('id')->get();
+        foreach ($imei_services as $v) {
             $check = Imeiservicepricing::where('id', $v->id)->first();
             if ($check == null) {
                 $imei_service = new Imeiservicepricing();
@@ -85,14 +84,30 @@ class IMEIController extends Controller
                 $imei_serviceud = Imeiservicepricing::where('id', $v->id)->update(['id' => $v->id]);
             }
         }
-
-        $group = Imeiservicegroup::get();
-        $imei_service = Imeiservicepricing::get();
-        $usergroup = Clientgroup::where('status', 'active')->orderBy('chietkhau')->get();
-
-        return view('imeiservice', compact('imei_service', 'group', 'usergroup'));
     }
 
+    public function checkapi()
+    {
+        $exchangerate = Currencie::where('currency_code', 'VND')->first();
+        $checkapi = Imeiservicepricing::get();
+        foreach ($checkapi as $c) {
+            if ($c->imei->api_id == !null) {
+                if ($c->nhacungcap == !null) {
+                    $giatransactionfee = ($c->nhacungcap->exchangerate * $c->imei->apiserverservices->credits) / $exchangerate->exchange_rate_static + (($c->imei->apiserverservices->credits / 100) * $c->nhacungcap->transactionfee);
+                    $updategiatransactionfee = Imeiservice::where('id', $c->id)->update(['purchase_cost' => $giatransactionfee]);
+                }
+            } elseif ($c->imei->purchasecost == !null) {
+                if ($c->nhacungcap == !null) {
+                    $giatransactionfee = ($c->nhacungcap->exchangerate * $c->imei->purchasecost) / $exchangerate->exchange_rate_static + (($c->imei->purchasecost / 100) * $c->nhacungcap->transactionfee);
+                    $updategiatransactionfee = Imeiservice::where('id', $c->id)->update(['purchase_cost' => $giatransactionfee]);
+                }
+            }
+        }
+        $checkenableapi = Imeiservice::where('pricefromapi', '<>', '0')->get();
+        foreach ($checkenableapi as $ci) {
+            $updateenableapi = Imeiservice::where('id', $ci->id)->update(['pricefromapi' => '0']);
+        }
+    }
 
     public function show($id)
     {
@@ -112,10 +127,10 @@ class IMEIController extends Controller
         }
 
         //find default currency
-        $defaultcurrency = Currenciepricing::where('type','1')->first();
+        $defaultcurrency = Currenciepricing::where('type', '1')->first();
         $exchangerate = Currencie::find($defaultcurrency->currency_id);
         //find default price ck 0
-        $cliendefault = Clientgroup::where('chietkhau','0')->first();
+        $cliendefault = Clientgroup::where('chietkhau', '0')->first();
 
         $imei = Imeiservicepricing::with('nhacungcap')->with(['imei' => function ($query) {
         }, 'imei.clientgroupprice' => function ($query) use ($cliendefault) {
