@@ -21,7 +21,8 @@ class ServerserviceController extends Controller
         $this->checkServer();
         $server_service_group = Serverservicegroup::get();
         $serverservice = Serverservice::get();
-        return view('serverservice', compact('serverservice','server_service_group'));
+        $clientgroup = Clientgroup::get();
+        return view('serverservice', compact('serverservice','server_service_group','clientgroup'));
     }
 
     public function checkServer()
