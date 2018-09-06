@@ -36,6 +36,17 @@ class SQL extends Migration
         }
     }
 
+    public function servicePricing()
+    {
+        if (!Schema::hasTable('adminplus_service_service')) {
+            Schema::create('adminplus_service_service', function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('id_supplier')->nullable();
+                $table->double('purchasecost')->nullable();
+            });
+        }
+    }
+
     public function clientGroup()
     {
         if (!Schema::hasColumn('client_group', 'chietkhau'))

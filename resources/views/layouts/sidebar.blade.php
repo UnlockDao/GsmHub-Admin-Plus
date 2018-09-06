@@ -36,6 +36,12 @@
             </a>
         </li>
         <li class="nav-item ">
+            <a class="nav-link" href="{{ url('serverservice') }}">
+                <i class="material-icons">view_comfy</i>
+                <p>Server Service</p>
+            </a>
+        </li>
+        <li class="nav-item ">
             <a class="nav-link" href="{{ url('supplier') }}">
                 <i class="material-icons">account_balance</i>
                 <p>Supplier</p>
