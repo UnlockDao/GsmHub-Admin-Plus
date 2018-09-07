@@ -16,6 +16,10 @@ use Illuminate\Http\Request;
 
 class ServerserviceController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function index(Request $request)
     {
@@ -104,6 +108,7 @@ class ServerserviceController extends Controller
         $purchasecostnet->save();
         $clientgroup = Clientgroup::get();
         $range = Serverserviceclientgroupcredit::get();
+        $currencies = Currencie::where('display_currency', 'Yes')->get();
         foreach ($range as $ra) {
             foreach ($clientgroup as $cli) {
                 $u = $request->input('client_group_' . $cli->id . '_' . $ra->id);
@@ -118,7 +123,10 @@ class ServerserviceController extends Controller
             }
             $c = $request->input('credit_'.$ra->id);
             if ($c == !null) {
-                $credit= Serverserviceusercredit::where('server_service_range_id',$ra->id)->where('currency','USD')->update(['credit' => $c]);
+                foreach ($currencies as $cu) {
+                    $credit= Serverserviceusercredit::where('server_service_range_id',$ra->id)->where('currency',$cu->currency_code)->update(['credit' => $c * $cu->exchange_rate_static]);
+                }
+
             }
         }
         return back();

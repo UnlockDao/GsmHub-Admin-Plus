@@ -41,8 +41,6 @@ class IMEIController extends Controller
                 $imei_service = new Imeiservicepricing();
                 $imei_service->id = $v->id;
                 $imei_service->save();
-            } else {
-                $imei_serviceud = Imeiservicepricing::where('id', $v->id)->update(['id' => $v->id]);
             }
         }
         return redirect('/imei');
@@ -80,8 +78,6 @@ class IMEIController extends Controller
                 $imei_service = new Imeiservicepricing();
                 $imei_service->id = $v->id;
                 $imei_service->save();
-            } else {
-                $imei_serviceud = Imeiservicepricing::where('id', $v->id)->update(['id' => $v->id]);
             }
         }
     }

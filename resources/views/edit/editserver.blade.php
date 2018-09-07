@@ -97,7 +97,7 @@
                                                 <td>{{$serverservicequantityrange->id}}</td>
                                                 <td>{{$serverservicequantityrange->from_range}}
                                                     - {{$serverservicequantityrange->to_range}}</td>
-                                                <td>@foreach($serverservicequantityrange->serverserviceusercredit as $serverserviceusercredit)@if($serverserviceusercredit->currency == 'USD')<input class="form-control" name="credit_{{$serverservicequantityrange->id}}" value="{{number_format($serverserviceusercredit->credit,2)}}" type="text">@endif @endforeach</td>
+                                                <td>@foreach($serverservicequantityrange->serverserviceusercredit as $serverserviceusercredit)@if($serverserviceusercredit->currency == 'USD')<input class="form-control" name="credit_{{$serverservicequantityrange->id}}" autocomplete="off" value="{{number_format($serverserviceusercredit->credit,2)}}" type="text">@endif @endforeach</td>
                                                 @foreach($clientgroup as $cg)
                                                     <td>@foreach($serverservicequantityrange->serverserviceclientgroupcredit as $serverserviceclientgroupcredit)
                                                             @if($serverserviceclientgroupcredit->currency=='USD' && $serverserviceclientgroupcredit->client_group_id==$cg->id )
@@ -170,18 +170,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
         @else
             <div class="container-fluid">
                 <div class="row">
@@ -223,7 +211,6 @@
                                                         @endif
                                                     @endforeach</td>
                                                 <td>{{ number_format($a->purchase_cost, 2) }}</td>
-
                                                 @foreach($server_service_type_wise_groupprice as $s)
                                                     <td>
                                                        <input
@@ -233,13 +220,9 @@
                                                                     type="text"
                                                                     autocomplete="off"
                                                                     value="{{ number_format($s->amount, 2) }}">
-
                                                     </td>
                                                 @endforeach
-
-
                                             </tr>
-
                                         @endforeach
                                         </tbody>
                                     </table>
@@ -250,11 +233,8 @@
                                 </form>
                             </div>
                         </div>
-
                     </div>
                 </div>
-
-
             </div>
 
 
