@@ -214,7 +214,7 @@ $(window).resize(function() {
     seq = seq2 = 0;
 
     setTimeout(function() {
-        demo.initDashboardPageCharts();
+
     }, 500);
 });
 

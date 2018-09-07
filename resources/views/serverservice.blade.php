@@ -91,7 +91,7 @@
                                                     </div>
                                                 </td>
                                                 <td>@if($v->servicepricing->nhacungcap ==! null){{$v->servicepricing->nhacungcap->name}}@endif</td>
-                                                <td>@if($v->api_id ==! null){{number_format($v->api_credit,2)}}@elseif($v->servicepricing->purchasecost == null){{number_format($v->purchase_cost,2)}}@else{{number_format($v->servicepricing->purchasecost,2)}}@endif</td>
+                                                <td>@if($v->api_id ==! null){{number_format($v->apiserverservices->credits,2)}}@elseif($v->servicepricing->purchasecost == null){{number_format($v->purchase_cost,2)}}@else{{number_format($v->servicepricing->purchasecost,2)}}@endif</td>
                                                 <td>{{number_format($v->purchase_cost,2)}}</td>
                                                 <td></td>
                                                 <td></td>

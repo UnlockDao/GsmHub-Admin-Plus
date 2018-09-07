@@ -27,6 +27,10 @@ class Serverservice extends Model
     {
         return $this->belongsTo('App\Serviceservicepricing','id','id');
     }
+    public function apiserverservices()
+    {
+        return $this->belongsTo('App\Apiserverservices','api_id','id');
+    }
 
 }
 

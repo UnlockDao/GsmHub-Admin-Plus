@@ -19,6 +19,7 @@ class ServerserviceController extends Controller
     public function index(Request $request)
     {
         $this->checkServer();
+        $this->UpdatePurchaseCostVip();
         $server_service_group = Serverservicegroup::get();
         $serverservice = Serverservice::get();
         $clientgroup = Clientgroup::get();
@@ -27,13 +28,41 @@ class ServerserviceController extends Controller
 
     public function checkServer()
     {
-        $imei_services = Serverservice::orderBy('id')->get();
-        foreach ($imei_services as $v) {
+        $server_services = Serverservice::orderBy('id')->get();
+        foreach ($server_services as $v) {
             $check = Serviceservicepricing::where('id', $v->id)->first();
             if ($check == null) {
-                $imei_service = new Serviceservicepricing();
-                $imei_service->id = $v->id;
-                $imei_service->save();
+                $server_services = new Serviceservicepricing();
+                $server_services->id = $v->id;
+                $server_services->save();
+            }
+        }
+        $server_servicesdel = Serviceservicepricing::get();
+        foreach ($server_servicesdel as $v) {
+            $check = Serverservice::where('id', $v->id)->first();
+            if ($check == null) {
+                Serviceservicepricing::where('id', $v->id)->delete();
+            }
+        }
+    }
+
+    public function UpdatePurchaseCostVip(){
+        $defaultcurrency = Currenciepricing::where('type', '1')->first();
+        $exchangerate = Currencie::find($defaultcurrency->currency_id);
+        $serviceservicepricing = Serviceservicepricing::get();
+        foreach ($serviceservicepricing as $sr){
+            if($sr->id_supplier ==!null){
+                $serverservice= Serverservice::find($sr->id);
+                $tipurchasecost = $serverservice->servicepricing->nhacungcap->exchangerate;
+                $transactionfeegd = $serverservice->servicepricing->nhacungcap->transactionfee;
+                $exchangerategoc = $exchangerate->exchange_rate_static;
+                if(!$serverservice->serverservicequantityrange->isEmpty()){
+                    if($serverservice->api_id ==! null){
+                        $purchasecost = $serverservice->apiserverservices->credits;
+                        $giatransactionfee = ($tipurchasecost * $purchasecost) / $exchangerategoc + (($purchasecost / 100) * $transactionfeegd);
+                        Serverservice::where('id', $sr->id)->update(['purchase_cost' => $giatransactionfee]);
+                    }
+                }
             }
         }
     }
@@ -46,9 +75,11 @@ class ServerserviceController extends Controller
         //find default price ck 0
         $cliendefault = Clientgroup::where('chietkhau', '0')->first();
 
+        $clientgroup = Clientgroup::orderBy('chietkhau')->get();
+
         $supplier = Supplier::get();
         $serverservice = Serverservice::find($id);
-        return view('edit.editserver', compact('serverservice', 'supplier', 'exchangerate'));
+        return view('edit.editserver', compact('serverservice', 'supplier', 'exchangerate','clientgroup','cliendefault'));
     }
 
     public function updatesupplier($id, Request $request)
