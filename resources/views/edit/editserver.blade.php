@@ -190,18 +190,13 @@
                                         <th width="2%">ID</th>
                                         <th>Type</th>
                                         <th>ApiCredits</th>
-                                        <th>Purchase Cost</th>
+                                        <th>Purchase Cost (VIP)</th>
                                         @foreach($clientgroup as $cg)
                                             <th>{{$cg->group_name}}</th>
                                         @endforeach
                                         </thead>
                                         <tbody>
                                         @foreach($serverservice->serverservicetypewiseprice as $a)
-                                            <?php $server_service_type_wise_groupprice = DB::table('server_service_type_wise_groupprice')
-                                                ->where('service_type_id', $a->id)
-                                                ->where('server_service_id', $serverservice->id)
-                                                ->get();
-                                            ?>
                                             <tr>
                                                 <td>{{$a->id}}</td>
                                                 <td>{{$a->service_type}}</td>
@@ -210,18 +205,28 @@
                                                             {{$apiserverservicetypeprice->api_price}}
                                                         @endif
                                                     @endforeach</td>
-                                                <td>{{ number_format($a->purchase_cost, 2) }}</td>
-                                                @foreach($server_service_type_wise_groupprice as $s)
-                                                    <td>
-                                                       <input
-                                                                    id="client_group_amount_{{$s->id}}_{{$s->group_id}}"
+                                                <td><input
+                                                            id="purchase_cost_vip_{{$a->id}}"
+                                                            class="form-control"
+                                                            name="purchase_cost_vip_{{$a->id}}"
+                                                            type="text" readonly
+                                                            autocomplete="off"
+                                                            value="{{ number_format($a->purchase_cost, 2) }}"> </td>
+                                                @foreach($clientgroup as $cg)
+                                                <td>@foreach($a->serverservicetypewisegroupprice as $serverservicetypewisegroupprice)
+                                                        @if($serverservicetypewisegroupprice->service_type_id == $a->id &&$serverservicetypewisegroupprice->group_id == $cg->id)
+                                                            <input
+                                                                    id="client_group_amount_{{$serverservicetypewisegroupprice->group_id}}_{{$a->id}}"
                                                                     class="form-control"
-                                                                    name="client_group_amount_{{$s->id}}_{{$s->group_id}}"
-                                                                    type="text"
+                                                                    name="client_group_amount_{{$serverservicetypewisegroupprice->id}}_{{$serverservicetypewisegroupprice->group_id}}"
+                                                                    type="text" @if($serverservicetypewisegroupprice->group_id == $cliendefault->id) onchange="Chietkhau();" @endif
                                                                     autocomplete="off"
-                                                                    value="{{ number_format($s->amount, 2) }}">
-                                                    </td>
+                                                                    value="{{ number_format($serverservicetypewisegroupprice->amount, 2) }}">
+                                                        @endif
+                                                    @endforeach
+                                                </td>
                                                 @endforeach
+
                                             </tr>
                                         @endforeach
                                         </tbody>
@@ -236,6 +241,33 @@
                     </div>
                 </div>
             </div>
+
+            <script>
+                //gọi dữ liệu nhà cung cấp (tỉ giá, phí )
+                var tipurchasecost = {{$serverservice->servicepricing->nhacungcap->exchangerate}};
+                var transactionfeegd = {{$serverservice->servicepricing->nhacungcap->transactionfee}};
+                var exchangerategoc = {{$exchangerate->exchange_rate_static}};
+
+                function Chietkhau() {
+                     @foreach($serverservice->serverservicetypewiseprice as $a)
+                         var purchase_cost_vip_{{$a->id}} = document.getElementById("purchase_cost_vip_{{$a->id}}").value;
+                         var priceuser_{{$a->id}} = document.getElementById("client_group_amount_{{$cliendefault->id}}_{{$a->id}}").value;
+                        @foreach($clientgroup as $cg)
+                            @foreach($a->serverservicetypewisegroupprice as $serverservicetypewisegroupprice)
+                                    @if($serverservicetypewisegroupprice->service_type_id == $a->id &&$serverservicetypewisegroupprice->group_id == $cg->id)
+                                        var client_group_amount_{{$cg->id}}_{{$serverservicetypewisegroupprice->id}} = (priceuser_{{$a->id}} - (((priceuser_{{$a->id}} - purchase_cost_vip_{{$a->id}}) / 100) *{{$cg->chietkhau}}));
+                                      document.getElementById('client_group_amount_{{$serverservicetypewisegroupprice->group_id}}_{{$a->id}}').value = client_group_amount_{{$cg->id}}_{{$serverservicetypewisegroupprice->id}};
+                                    @endif
+                            @endforeach
+                        @endforeach
+                     @endforeach
+
+                }
+
+                document.addEventListener('DOMContentLoaded', function () {
+                }, false);
+
+            </script>
 
 
         @endif

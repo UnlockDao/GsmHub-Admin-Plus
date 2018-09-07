@@ -27,7 +27,7 @@ class ServerserviceController extends Controller
         $this->UpdatePurchaseCostVip();
         $server_service_group = Serverservicegroup::get();
         $serverservice = Serverservice::get();
-        $clientgroup = Clientgroup::get();
+        $clientgroup = Clientgroup::orderBy('chietkhau')->get();
         return view('serverservice', compact('serverservice','server_service_group','clientgroup'));
     }
 
