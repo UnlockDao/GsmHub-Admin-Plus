@@ -9,6 +9,7 @@ use App\Serverservice;
 use App\Serverserviceclientgroupcredit;
 use App\Serverservicegroup;
 use App\Serverservicetypewisegroupprice;
+use App\Serverserviceusercredit;
 use App\Serviceservicepricing;
 use App\Supplier;
 use Illuminate\Http\Request;
@@ -106,11 +107,18 @@ class ServerserviceController extends Controller
         foreach ($range as $ra) {
             foreach ($clientgroup as $cli) {
                 $u = $request->input('client_group_' . $cli->id . '_' . $ra->id);
+
                 if ($u == !null) {
                     $update = Serverserviceclientgroupcredit::where('id', $ra->id)
                         ->where('client_group_id', $cli->id)
                         ->update(['credit' => $u]);
                 }
+
+
+            }
+            $c = $request->input('credit_'.$ra->id);
+            if ($c == !null) {
+                $credit= Serverserviceusercredit::where('server_service_range_id',$ra->id)->where('currency','USD')->update(['credit' => $c]);
             }
         }
         return back();

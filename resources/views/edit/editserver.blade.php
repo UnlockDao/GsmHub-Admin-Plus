@@ -86,6 +86,7 @@
                                         <thead class="text-primary">
                                         <th>ID</th>
                                         <th>Range</th>
+                                        <th>Credit</th>
                                         @foreach($clientgroup as $cg)
                                             <th>{{$cg->group_name}}</th>
                                         @endforeach
@@ -96,6 +97,7 @@
                                                 <td>{{$serverservicequantityrange->id}}</td>
                                                 <td>{{$serverservicequantityrange->from_range}}
                                                     - {{$serverservicequantityrange->to_range}}</td>
+                                                <td>@foreach($serverservicequantityrange->serverserviceusercredit as $serverserviceusercredit)@if($serverserviceusercredit->currency == 'USD')<input class="form-control" name="credit_{{$serverservicequantityrange->id}}" value="{{number_format($serverserviceusercredit->credit,2)}}" type="text">@endif @endforeach</td>
                                                 @foreach($clientgroup as $cg)
                                                     <td>@foreach($serverservicequantityrange->serverserviceclientgroupcredit as $serverserviceclientgroupcredit)
                                                             @if($serverserviceclientgroupcredit->currency=='USD' && $serverserviceclientgroupcredit->client_group_id==$cg->id )
