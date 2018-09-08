@@ -83,6 +83,19 @@ class ServerserviceController extends Controller
                         $giatransactionfee = ($tipurchasecost * $purchasecost) / $exchangerategoc + (($purchasecost / 100) * $transactionfeegd);
                         Serverservice::where('id', $sr->id)->update(['purchase_cost' => $giatransactionfee]);
                     }
+                }else{
+                    if($serverservice->api_id ==! null){
+                         foreach($serverservice->serverservicetypewiseprice as $a){
+                             foreach($serverservice->apiserverservicetypeprice as $apiserverservicetypeprice){
+                                 if($apiserverservicetypeprice->service_type==$a->service_type){
+                                     $purchasecost=  $apiserverservicetypeprice->api_price;
+                                 }}
+
+                             $giatransactionfee = ($tipurchasecost * $purchasecost) / $exchangerategoc + (($purchasecost / 100) * $transactionfeegd);
+                             Serverservicetypewiseprice::where('id', $a->id)->update(['purchase_cost' => $giatransactionfee]);
+
+                         }
+                    }
                 }
             }
         }
@@ -190,5 +203,21 @@ class ServerserviceController extends Controller
             exit();
         }
         return;
+    }
+
+    public function sum(){
+        $tipurchasecost = 22800;
+        $transactionfeegd = 5;
+        $exchangerategoc = 22000;
+        $purchase_cost = 12;
+
+        $ck =($tipurchasecost * $purchase_cost) / $exchangerategoc + (($purchase_cost / 100) * $transactionfeegd);
+        $ck1 =$ck - (($purchase_cost / 100) * $transactionfeegd);
+
+        $i = ($exchangerategoc * $ck1) / $tipurchasecost ;
+        echo $ck.'<br>';
+        echo $i.'<br>';
+
+
     }
 }

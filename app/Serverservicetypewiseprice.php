@@ -17,5 +17,6 @@ class Serverservicetypewiseprice extends Model
         return $this->hasMany('App\Serverservicetypewisegroupprice','server_service_id','server_service_id');
     }
 
+
 }
 

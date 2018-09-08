@@ -275,7 +275,7 @@
                 }
 
                 document.addEventListener('DOMContentLoaded', function () {
-                    Purchasenet();
+
                 }, false);
 
             </script>
