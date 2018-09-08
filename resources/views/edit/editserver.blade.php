@@ -200,13 +200,26 @@
                                             <tr>
                                                 <td>{{$a->id}}</td>
                                                 <td>{{$a->service_type}}</td>
-                                                <td><input
+                                                <td>@if($serverservice->api_id ==! null)
+                                                        @foreach($serverservice->apiserverservicetypeprice as $apiserverservicetypeprice)@if($apiserverservicetypeprice->service_type==$a->service_type)
+                                                            <input
                                                             id="purchase_cost_{{$a->id}}"
                                                             class="form-control"
                                                             name="purchase_cost_{{$a->id}}"
                                                             type="text" onchange="Purchasenet();"
                                                             autocomplete="off" readonly
-                                                            value="@foreach($serverservice->apiserverservicetypeprice as $apiserverservicetypeprice)@if($apiserverservicetypeprice->service_type==$a->service_type){{$apiserverservicetypeprice->api_price}}@endif @endforeach"></td>
+                                                            value="{{$apiserverservicetypeprice->api_price}}">
+                                                        @endif
+                                                        @endforeach</td>
+                                                @else
+                                                    <input
+                                                            id="purchase_cost_{{$a->id}}"
+                                                            class="form-control"
+                                                            name="purchase_cost_{{$a->id}}"
+                                                            type="text" onchange="Purchasenet();"
+                                                            autocomplete="off"
+                                                            value="{{ number_format($a->purchase_cost, 2) }}">
+                                                @endif
                                                 <td><input
                                                             id="purchase_cost_vip_{{$a->id}}"
                                                             class="form-control"
