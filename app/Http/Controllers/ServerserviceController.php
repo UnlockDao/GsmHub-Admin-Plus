@@ -9,6 +9,7 @@ use App\Serverservice;
 use App\Serverserviceclientgroupcredit;
 use App\Serverservicegroup;
 use App\Serverservicetypewisegroupprice;
+use App\Serverservicetypewiseprice;
 use App\Serverserviceusercredit;
 use App\Serviceservicepricing;
 use App\Supplier;
@@ -25,6 +26,7 @@ class ServerserviceController extends Controller
     {
         $this->checkServer();
         $this->UpdatePurchaseCostVip();
+        $this->checkApiToNull();
         $server_service_group = Serverservicegroup::get();
         $serverservice = Serverservice::get();
         $clientgroup = Clientgroup::orderBy('chietkhau')->get();
@@ -49,6 +51,20 @@ class ServerserviceController extends Controller
                 Serviceservicepricing::where('id', $v->id)->delete();
             }
         }
+    }
+
+    public function checkApiToNull(){
+        $checkenableapi = Serverservicetypewiseprice::where('pricefromapi', '<>', '0')->get();
+        foreach ($checkenableapi as $ci) {
+            $updateenableapi = Serverservicetypewiseprice::where('id', $ci->id)->update(['pricefromapi' => '0']);
+        }
+
+        $checkenableapi2 = Serverservice::where('pricefromapi', '<>', '0')->get();
+        foreach ($checkenableapi2 as $cii) {
+            $updateenableapi2 = Serverservice::where('id', $cii->id)->update(['pricefromapi' => '0']);
+        }
+
+
     }
 
     public function UpdatePurchaseCostVip(){
@@ -135,12 +151,20 @@ class ServerserviceController extends Controller
     public function editwise($id, Request $request)
     {
         $clientgroup = Clientgroup::get();
+        $server_service_type_wise_price = Serverservicetypewiseprice::get();
+        foreach ($server_service_type_wise_price as $sp){
+            $pc = $request->input('purchase_cost_vip_' . $sp->id);
+            if ($pc == !null) {
+                Serverservicetypewiseprice::where('id', $sp->id)->update(['purchase_cost' => $pc]);
+            }
+        }
+
+
         $server_service_type_wise_groupprice = Serverservicetypewisegroupprice::where('server_service_id', $id)->get();
         foreach ($server_service_type_wise_groupprice as $sgp) {
             foreach ($clientgroup as $cli) {
                 $u = $request->input('client_group_amount_' . $sgp->id . '_' . $cli->id);
                 if ($u == !null) {
-                    echo 'client_group_amount_' . $sgp->id . '_' . $cli->id . ' | ' . $u . '<br>';
                     $update = Serverservicetypewisegroupprice::where('id', $sgp->id)
                         ->where('group_id', $cli->id)
                         ->update(['amount' => $u]);

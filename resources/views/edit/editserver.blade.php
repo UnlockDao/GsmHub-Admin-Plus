@@ -189,7 +189,7 @@
                                         <thead class="text-primary">
                                         <th width="2%">ID</th>
                                         <th>Type</th>
-                                        <th>ApiCredits</th>
+                                        <th>Purchase Cost</th>
                                         <th>Purchase Cost (VIP)</th>
                                         @foreach($clientgroup as $cg)
                                             <th>{{$cg->group_name}}</th>
@@ -200,17 +200,19 @@
                                             <tr>
                                                 <td>{{$a->id}}</td>
                                                 <td>{{$a->service_type}}</td>
-                                                <td>@foreach($serverservice->apiserverservicetypeprice as $apiserverservicetypeprice)
-                                                        @if($apiserverservicetypeprice->service_type == $a->service_type)
-                                                            {{$apiserverservicetypeprice->api_price}}
-                                                        @endif
-                                                    @endforeach</td>
+                                                <td><input
+                                                            id="purchase_cost_{{$a->id}}"
+                                                            class="form-control"
+                                                            name="purchase_cost_{{$a->id}}"
+                                                            type="text" onchange="Purchasenet();"
+                                                            autocomplete="off" readonly
+                                                            value="@foreach($serverservice->apiserverservicetypeprice as $apiserverservicetypeprice)@if($apiserverservicetypeprice->service_type==$a->service_type){{$apiserverservicetypeprice->api_price}}@endif @endforeach"></td>
                                                 <td><input
                                                             id="purchase_cost_vip_{{$a->id}}"
                                                             class="form-control"
                                                             name="purchase_cost_vip_{{$a->id}}"
                                                             type="text" readonly
-                                                            autocomplete="off"
+                                                            autocomplete="off"  onchange="Chietkhau();"
                                                             value="{{ number_format($a->purchase_cost, 2) }}"> </td>
                                                 @foreach($clientgroup as $cg)
                                                 <td>@foreach($a->serverservicetypewisegroupprice as $serverservicetypewisegroupprice)
@@ -248,6 +250,14 @@
                 var transactionfeegd = {{$serverservice->servicepricing->nhacungcap->transactionfee}};
                 var exchangerategoc = {{$exchangerate->exchange_rate_static}};
 
+                function Purchasenet() {
+                   @foreach($serverservice->serverservicetypewiseprice as $a)
+                        var purchase_cost_{{$a->id}} = document.getElementById("purchase_cost_{{$a->id}}").value;
+                        var giatransactionfee = (tipurchasecost * purchase_cost_{{$a->id}}) / exchangerategoc + ((purchase_cost_{{$a->id}} / 100) * transactionfeegd);
+                        document.getElementById('purchase_cost_vip_{{$a->id}}').value = giatransactionfee.toFixed(2);;
+                    @endforeach
+                }
+
                 function Chietkhau() {
                      @foreach($serverservice->serverservicetypewiseprice as $a)
                          var purchase_cost_vip_{{$a->id}} = document.getElementById("purchase_cost_vip_{{$a->id}}").value;
@@ -265,6 +275,7 @@
                 }
 
                 document.addEventListener('DOMContentLoaded', function () {
+                    Purchasenet();
                 }, false);
 
             </script>
