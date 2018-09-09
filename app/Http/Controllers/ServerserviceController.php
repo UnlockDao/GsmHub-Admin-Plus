@@ -204,20 +204,4 @@ class ServerserviceController extends Controller
         }
         return;
     }
-
-    public function sum(){
-        $tipurchasecost = 22800;
-        $transactionfeegd = 5;
-        $exchangerategoc = 22000;
-        $purchase_cost = 12;
-
-        $ck =($tipurchasecost * $purchase_cost) / $exchangerategoc + (($purchase_cost / 100) * $transactionfeegd);
-        $ck1 =$ck - (($purchase_cost / 100) * $transactionfeegd);
-
-        $i = ($exchangerategoc * $ck1) / $tipurchasecost ;
-        echo $ck.'<br>';
-        echo $i.'<br>';
-
-
-    }
 }

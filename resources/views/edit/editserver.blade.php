@@ -226,7 +226,7 @@
                                                             name="purchase_cost_vip_{{$a->id}}"
                                                             type="text" readonly
                                                             autocomplete="off"  onchange="Chietkhau();"
-                                                            value="{{ number_format($a->purchase_cost, 2) }}"> </td>
+                                                            value="{{ $a->purchase_cost }}"> </td>
                                                 @foreach($clientgroup as $cg)
                                                 <td>@foreach($a->serverservicetypewisegroupprice as $serverservicetypewisegroupprice)
                                                         @if($serverservicetypewisegroupprice->service_type_id == $a->id &&$serverservicetypewisegroupprice->group_id == $cg->id)
@@ -236,7 +236,7 @@
                                                                     name="client_group_amount_{{$serverservicetypewisegroupprice->id}}_{{$serverservicetypewisegroupprice->group_id}}"
                                                                     type="text" @if($serverservicetypewisegroupprice->group_id == $cliendefault->id) onchange="Chietkhau();" @endif
                                                                     autocomplete="off"
-                                                                    value="{{ number_format($serverservicetypewisegroupprice->amount, 2) }}">
+                                                                    value="{{ $serverservicetypewisegroupprice->amount }}">
                                                         @endif
                                                     @endforeach
                                                 </td>
