@@ -51,11 +51,15 @@ class IMEIController extends Controller
         $this->checkdelete();
         $this->checkimei();
         $this->checkapi();
+        //
+        $defaultcurrency = Currenciepricing::where('type', '1')->first();
+        $exchangerate = Currencie::find($defaultcurrency->currency_id);
+        //
         $group = Imeiservicegroup::get();
         $imei_service = Imeiservicepricing::get();
         $usergroup = Clientgroup::where('status', 'active')->orderBy('chietkhau')->get();
 
-        return view('imeiservice', compact('imei_service', 'group', 'usergroup'));
+        return view('imeiservice', compact('imei_service', 'group', 'usergroup','exchangerate'));
     }
 
     public function checkdelete()
@@ -84,7 +88,8 @@ class IMEIController extends Controller
 
     public function checkapi()
     {
-        $exchangerate = Currencie::where('currency_code', 'VND')->first();
+        $defaultcurrency = Currenciepricing::where('type', '1')->first();
+        $exchangerate = Currencie::find($defaultcurrency->currency_id);
         $checkapi = Imeiservicepricing::get();
         foreach ($checkapi as $c) {
             if ($c->imei->api_id == !null) {

@@ -94,18 +94,18 @@
                                                 </td>
                                                 <td>@if($v->nhacungcap ==! null){{$v->nhacungcap->name}}@endif</td>
                                                 @if($v->imei->api_id ==! null)
-                                                    <td>@if($v->imei->apiserverservices ==! null)<?php echo number_format($v->imei->apiserverservices->credits, 2); ?>@endif</td>
+                                                    <td>@if($v->imei->apiserverservices ==! null)<a rel="tooltip" title="" class="max-lines" data-original-title="{{number_format($v->imei->apiserverservices->credits*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->apiserverservices->credits, 2); ?></a>@endif</td>
                                                 @else
-                                                    <td><?php echo number_format($v->purchasecost, 2); ?></td>
+                                                    <td><a rel="tooltip" title="" class="max-lines" data-original-title="{{number_format($v->purchasecost*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->purchasecost, 2); ?></a></td>
                                                 @endif
 
 
-                                                <td><?php echo number_format($v->imei->purchase_cost, 2); ?></td>
-                                                <td><?php echo number_format($v->imei->credit, 2); ?></td>
+                                                <td><a rel="tooltip" title="" class="max-lines" data-original-title="{{number_format($v->imei->purchase_cost*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->purchase_cost, 2); ?></a></td>
+                                                <td><a rel="tooltip" title="" class="max-lines" data-original-title="{{number_format($v->imei->credit*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->credit, 2); ?></a></td>
                                                 @foreach($usergroup as $u)
                                                     <td>  @foreach($v->imei->clientgroupprice as $cl)
                                                         @if($cl->currency == 'USD' && $cl->service_type == 'imei' && $cl->group_id == $u->id )
-                                                            <?php echo number_format($v->imei->credit + $cl->discount, 2); ?>
+                                                            <a rel="tooltip" title="" class="max-lines" data-original-title="{{number_format(($v->imei->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->credit + $cl->discount, 2); ?></a>
                                                         @endif
                                                     @endforeach</td>
                                                 @endforeach
