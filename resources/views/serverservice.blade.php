@@ -116,7 +116,7 @@
                                                         @foreach($clientgroup as $cg)
                                                             <td>@foreach($serverservicequantityrange->serverserviceclientgroupcredit as $serverserviceclientgroupcredit)
                                                                     @if($serverserviceclientgroupcredit->currency=='USD' && $serverserviceclientgroupcredit->client_group_id==$cg->id )
-                                                                        {{number_format($serverserviceclientgroupcredit->credit,2)}}@endif
+                                                                        <a rel="tooltip" title="" class="max-lines" data-original-title="{{number_format($serverserviceclientgroupcredit->credit*$exchangerate->exchange_rate_static)}} đ" >{{number_format($serverserviceclientgroupcredit->credit,2)}}</a>@endif
                                                                 @endforeach
                                                             </td>
                                                         @endforeach
@@ -125,27 +125,23 @@
                                                 @endforeach
                                             @else
                                                 @foreach($v->serverservicetypewiseprice as $a)
-                                                    <?php $server_service_type_wise_groupprice = DB::table('server_service_type_wise_groupprice')
-                                                        ->where('service_type_id', $a->id)
-                                                        ->where('server_service_id', $v->id)
-                                                        ->get();
-                                                    ?>
                                                     <tr>
                                                         <td>*</td>
                                                         <td>{{$a->service_type}}</td>
                                                         <td></td>
                                                         <td></td>
                                                         <td></td>
-                                                        <td>@foreach($v->apiserverservicetypeprice as $apiserverservicetypeprice)
-                                                                @if($apiserverservicetypeprice->service_type == $a->service_type)
+                                                        <td>@if($v->api_id ==! null)
+                                                                @foreach($v->apiserverservicetypeprice as $apiserverservicetypeprice)@if($apiserverservicetypeprice->service_type==$a->service_type)
                                                                     {{$apiserverservicetypeprice->api_price}}
                                                                 @endif
-                                                            @endforeach</td>
+                                                                @endforeach
+                                                        @else{{ number_format($a->purchase_cost_not_vip, 2) }}@endif</td>
                                                         <td>{{ number_format($a->purchase_cost, 2) }}</td>
                                                         @foreach($clientgroup as $cg)
-                                                            <td> @foreach($server_service_type_wise_groupprice as $s)
-                                                                    @if($s->group_id==$cg->id)
-                                                                        {{ number_format($s->amount, 2) }}
+                                                            <td>@foreach($a->serverservicetypewisegroupprice as $serverservicetypewisegroupprice)
+                                                                    @if($serverservicetypewisegroupprice->service_type_id == $a->id &&$serverservicetypewisegroupprice->group_id == $cg->id)
+                                                                        <a rel="tooltip" title="" class="max-lines" data-original-title="{{number_format($serverservicetypewisegroupprice->amount*$exchangerate->exchange_rate_static)}} đ" >{{ number_format( $serverservicetypewisegroupprice->amount , 2) }}</a>
                                                                     @endif
                                                                 @endforeach
                                                             </td>

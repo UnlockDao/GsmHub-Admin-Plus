@@ -9,6 +9,14 @@ use Illuminate\Support\Facades\DB;
 class SQL extends Migration
 {
 
+    public function run(){
+        $this->clientGroup();
+        $this->createSupplier();
+        $this->imeiPricing();
+        $this->servicePricing();
+        $this->currencyPricing();
+        $this->addServerservicepurchasecostnotvip();
+    }
 
     public function createSupplier()
     {
@@ -90,6 +98,17 @@ class SQL extends Migration
                 'type' => '1',
                 'currency_id' => '145'
             ]);
+        }
+
+    }
+
+    public function addServerservicepurchasecostnotvip()
+    {
+        if (!Schema::hasColumn('server_service_type_wise_price', 'purchase_cost_not_vip'))
+        {
+            Schema::table('server_service_type_wise_price', function (Blueprint $table) {
+                $table->integer('purchase_cost_not_vip');
+            });
         }
 
     }

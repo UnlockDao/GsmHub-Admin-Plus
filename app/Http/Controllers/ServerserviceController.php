@@ -27,10 +27,14 @@ class ServerserviceController extends Controller
         $this->checkServer();
         $this->UpdatePurchaseCostVip();
         $this->checkApiToNull();
+        //
+        $defaultcurrency = Currenciepricing::where('type', '1')->first();
+        $exchangerate = Currencie::find($defaultcurrency->currency_id);
+        //
         $server_service_group = Serverservicegroup::get();
         $serverservice = Serverservice::get();
         $clientgroup = Clientgroup::orderBy('chietkhau')->get();
-        return view('serverservice', compact('serverservice','server_service_group','clientgroup'));
+        return view('serverservice', compact('serverservice','server_service_group','clientgroup','exchangerate'));
     }
 
     public function checkServer()
@@ -173,6 +177,10 @@ class ServerserviceController extends Controller
             $amount = $request->input('amount_' . $sp->id);
             if ($amount == !null) {
                 Serverservicetypewiseprice::where('id', $sp->id)->update(['amount' => $amount]);
+            }
+            $purchasenotvip = $request->input('purchase_cost_not_vip_' . $sp->id);
+            if ($purchasenotvip == !null) {
+                Serverservicetypewiseprice::where('id', $sp->id)->update(['purchase_cost_not_vip' => $purchasenotvip]);
             }
         }
 

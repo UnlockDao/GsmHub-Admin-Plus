@@ -215,11 +215,11 @@
                                                 @else
                                                     <input
                                                             id="purchase_cost_{{$a->id}}"
-                                                            class="form-control" disabled
-                                                            name="purchase_cost_{{$a->id}}"
+                                                            class="form-control"
+                                                            name="purchase_cost_not_vip_{{$a->id}}"
                                                             type="text" onchange="Purchasenet();"
                                                             autocomplete="off"
-                                                            value="{{ number_format($a->purchase_cost, 2) }}">
+                                                            value="{{ number_format($a->purchase_cost_not_vip, 2) }}">
                                                 @endif
                                                 <td><input
                                                             id="purchase_cost_vip_{{$a->id}}"

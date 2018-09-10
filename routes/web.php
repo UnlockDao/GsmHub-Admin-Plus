@@ -17,11 +17,7 @@ Route::get('login','Auth\LoginController@getLogin')->name('login');
 Route::post('login','Auth\LoginController@postLogin')->name('login');
 Route::get('/', function () {
     $sql = new SQL();
-    $sql->clientGroup();
-    $sql->createSupplier();
-    $sql->imeiPricing();
-    $sql->servicePricing();
-    $sql->currencyPricing();
+    $sql->run();
     return redirect('imei');
 });
 Route::get('/logout', function () {
