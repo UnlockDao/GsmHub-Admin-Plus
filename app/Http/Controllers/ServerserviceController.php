@@ -170,6 +170,10 @@ class ServerserviceController extends Controller
             if ($pc == !null) {
                 Serverservicetypewiseprice::where('id', $sp->id)->update(['purchase_cost' => $pc]);
             }
+            $amount = $request->input('amount_' . $sp->id);
+            if ($amount == !null) {
+                Serverservicetypewiseprice::where('id', $sp->id)->update(['amount' => $amount]);
+            }
         }
 
 

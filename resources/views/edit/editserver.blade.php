@@ -191,6 +191,7 @@
                                         <th>Type</th>
                                         <th>Purchase Cost</th>
                                         <th>Purchase Cost (VIP)</th>
+                                        <th>Credit</th>
                                         @foreach($clientgroup as $cg)
                                             <th>{{$cg->group_name}}</th>
                                         @endforeach
@@ -214,7 +215,7 @@
                                                 @else
                                                     <input
                                                             id="purchase_cost_{{$a->id}}"
-                                                            class="form-control"
+                                                            class="form-control" disabled
                                                             name="purchase_cost_{{$a->id}}"
                                                             type="text" onchange="Purchasenet();"
                                                             autocomplete="off"
@@ -227,6 +228,13 @@
                                                             type="text" readonly
                                                             autocomplete="off"  onchange="Chietkhau();"
                                                             value="{{ $a->purchase_cost }}"> </td>
+                                                <td><input id="amount_{{$a->id}}"
+                                                           class="form-control"
+                                                           name="amount_{{$a->id}}"
+                                                           type="text"
+                                                           class="form-control"
+                                                            autocomplete="off"
+                                                            value="{{ $a->amount }}"></td>
                                                 @foreach($clientgroup as $cg)
                                                 <td>@foreach($a->serverservicetypewisegroupprice as $serverservicetypewisegroupprice)
                                                         @if($serverservicetypewisegroupprice->service_type_id == $a->id &&$serverservicetypewisegroupprice->group_id == $cg->id)
