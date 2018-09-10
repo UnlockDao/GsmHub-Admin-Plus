@@ -11,13 +11,13 @@
                                   onsubmit="return checkForm(this);">
                                 {{ csrf_field() }}
                                 <div class="row">
-                                    <div class="col-md-5">
+                                    <div class="col-md-4">
                                         <strong>Exchangerates</strong>
                                         <input type="text" class="form-control"
                                                value="" id="amountconvert" onchange="Converse();"
                                                placeholder="" autocomplete="off">
                                     </div>
-                                    <div class="col-md-1">
+                                    <div class="col-md-2">
                                         <strong>From</strong>
                                         <select class="form-control">
                                             <option value="1">VND</option>
