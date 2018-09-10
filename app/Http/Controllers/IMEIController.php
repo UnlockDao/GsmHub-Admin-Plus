@@ -145,7 +145,7 @@ class IMEIController extends Controller
 
         $price = Clientgroupprice::where('currency', 'USD')->where('group_id', $cliendefault->id)->where('service_id', $id)->first();
 
-        return view('edit.editimei', compact('imei', 'nhacungcap', 'clien', 'pricegroup', 'price', 'exchangerate'));
+        return view('edit.editimei', compact('imei', 'nhacungcap', 'clien', 'pricegroup', 'price', 'exchangerate','cliendefault'));
     }
 
     public function edit($id, Request $request)
@@ -159,7 +159,7 @@ class IMEIController extends Controller
         $imei->save();
         //lấy dữ liệu nhập thủ công
         $giabanle = $request->giabanle;
-        $updateexchangerate = Imeiservice::where('id', $id)->update(['purchase_cost' => $request->purchasenet, 'credit' => $request->credit]);
+        $updateexchangerate = Imeiservice::where('id', $id)->update(['purchase_cost' => $request->purchasenet, 'credit' => $request->credit, 'service_name' => $request->service_name]);
         //lấy dữ liệu imei server
         $getimei = Imeiservice::find($id);
         //gọi nhóm user
@@ -178,7 +178,7 @@ class IMEIController extends Controller
                     ->update(['discount' => $y * $c->exchange_rate_static]);
             }
         }
-        return;
+        return back();
     }
 
     public function updatesupplier($id, Request $request)
