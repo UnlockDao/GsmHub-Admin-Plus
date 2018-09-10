@@ -107,7 +107,7 @@ class SQL extends Migration
         if (!Schema::hasColumn('server_service_type_wise_price', 'purchase_cost_not_vip'))
         {
             Schema::table('server_service_type_wise_price', function (Blueprint $table) {
-                $table->integer('purchase_cost_not_vip');
+                $table->double('purchase_cost_not_vip');
             });
         }
 
