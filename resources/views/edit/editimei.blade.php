@@ -150,7 +150,9 @@
                     var user = document.getElementById("chietkhau{{$cliendefault->id}}").value;
                     @foreach($clien as $pri)
                         result{{$pri->id}} = (user - (((user - giatransactionfee) / 100) *{{$pri->chietkhau}}));
-                    document.getElementById('chietkhau{{$pri->id}}').value = result{{$pri->id}};
+                        @if($pri->id !== $cliendefault->id)
+                        document.getElementById('chietkhau{{$pri->id}}').value = result{{$pri->id}};
+                        @endif
                     @endforeach
                 }
             }

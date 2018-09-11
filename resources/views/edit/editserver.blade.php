@@ -188,7 +188,9 @@
                                     @if($serverserviceclientgroupcredit->currency=='USD' && $serverserviceclientgroupcredit->client_group_id==$cg->id )
                                         sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}} = (priceuser_{{$serverservicequantityrange->id}} - (((priceuser_{{$serverservicequantityrange->id}} - giatransactionfee) / 100) *{{$cg->chietkhau}}));
                                          console.log(sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}});
+                                             @if($cg->id !== $cliendefault->id)
                                              document.getElementById('sel_client_group_{{$cg->id}}_{{$serverservicequantityrange->id}}').value = sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}};
+                                             @endif
                                     @endif
 
                                 @endforeach
@@ -327,7 +329,7 @@
                                                 <td>@foreach($a->serverservicetypewisegroupprice as $serverservicetypewisegroupprice)
                                                         @if($serverservicetypewisegroupprice->service_type_id == $a->id &&$serverservicetypewisegroupprice->group_id == $cg->id)
                                                             <input
-                                                                    id="client_group_amount_{{$serverservicetypewisegroupprice->group_id}}_{{$a->id}}@if($serverservicetypewisegroupprice->group_id == $cliendefault->id)_default @endif"
+                                                                    id="client_group_amount_{{$serverservicetypewisegroupprice->group_id}}_{{$a->id}}"
                                                                     class="form-control"
                                                                     name="client_group_amount_{{$serverservicetypewisegroupprice->id}}_{{$serverservicetypewisegroupprice->group_id}}"
                                                                     type="text" @if($serverservicetypewisegroupprice->group_id == $cliendefault->id) onchange="Chietkhau();" @endif
@@ -371,13 +373,15 @@
                 function Chietkhau() {
                      @foreach($serverservice->serverservicetypewiseprice as $a)
                          var purchase_cost_vip_{{$a->id}} = document.getElementById("purchase_cost_vip_{{$a->id}}").value;
-                         var priceuser_{{$a->id}} = document.getElementById("client_group_amount_{{$cliendefault->id}}_{{$a->id}}_default ").value;
+                         var priceuser_{{$a->id}} = document.getElementById("client_group_amount_{{$cliendefault->id}}_{{$a->id}}").value;
                          console.log(priceuser_{{$a->id}})
                         @foreach($clientgroup as $cg)
                             @foreach($a->serverservicetypewisegroupprice as $serverservicetypewisegroupprice)
                                     @if($serverservicetypewisegroupprice->service_type_id == $a->id &&$serverservicetypewisegroupprice->group_id == $cg->id)
                                         var client_group_amount_{{$cg->id}}_{{$serverservicetypewisegroupprice->id}} = (priceuser_{{$a->id}} - (((priceuser_{{$a->id}} - purchase_cost_vip_{{$a->id}}) / 100) *{{$cg->chietkhau}}));
-                                      document.getElementById('client_group_amount_{{$serverservicetypewisegroupprice->group_id}}_{{$a->id}}').value = client_group_amount_{{$cg->id}}_{{$serverservicetypewisegroupprice->id}};
+                                         @if($cg->id !== $cliendefault->id)
+                                            document.getElementById('client_group_amount_{{$serverservicetypewisegroupprice->group_id}}_{{$a->id}}').value = client_group_amount_{{$cg->id}}_{{$serverservicetypewisegroupprice->id}};
+                                         @endif
                                     @endif
                             @endforeach
                         @endforeach
