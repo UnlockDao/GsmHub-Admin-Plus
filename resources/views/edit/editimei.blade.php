@@ -126,7 +126,7 @@
             function Purchasenet() {
                 var purchasecost = document.getElementById("purchasecost").value;
                 var giatransactionfee = (tipurchasecost * purchasecost) / exchangerategoc + ((purchasecost / 100) * transactionfeegd);
-                document.getElementById('purchasenet').value = giatransactionfee;
+                document.getElementById('purchasenet').value = giatransactionfee.toFixed(2);
                 Chietkhau();
             }
 
@@ -151,7 +151,7 @@
                     @foreach($clien as $pri)
                         result{{$pri->id}} = (user - (((user - giatransactionfee) / 100) *{{$pri->chietkhau}}));
                         @if($pri->id !== $cliendefault->id)
-                        document.getElementById('chietkhau{{$pri->id}}').value = result{{$pri->id}};
+                        document.getElementById('chietkhau{{$pri->id}}').value = result{{$pri->id}}.toFixed(2);
                         @endif
                     @endforeach
                 }

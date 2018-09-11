@@ -190,7 +190,7 @@
                             sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}} = (priceuser_{{$serverservicequantityrange->id}} - (((priceuser_{{$serverservicequantityrange->id}} - giatransactionfee) / 100) *{{$cg->chietkhau}}));
                         console.log(sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}});
                         @if($cg->id !== $cliendefault->id)
-                        document.getElementById('sel_client_group_{{$cg->id}}_{{$serverservicequantityrange->id}}').value = sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}};
+                        document.getElementById('sel_client_group_{{$cg->id}}_{{$serverservicequantityrange->id}}').value = sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}}.toFixed(2);
                         @endif
                         @endif
 
@@ -382,7 +382,7 @@
                                 @if($serverservicetypewisegroupprice->service_type_id == $a->id &&$serverservicetypewisegroupprice->group_id == $cg->id)
                         var client_group_amount_{{$cg->id}}_{{$serverservicetypewisegroupprice->id}} = (priceuser_{{$a->id}} - (((priceuser_{{$a->id}} - purchase_cost_vip_{{$a->id}}) / 100) *{{$cg->chietkhau}}));
                         @if($cg->id !== $cliendefault->id)
-                        document.getElementById('client_group_amount_{{$serverservicetypewisegroupprice->group_id}}_{{$a->id}}').value = client_group_amount_{{$cg->id}}_{{$serverservicetypewisegroupprice->id}};
+                        document.getElementById('client_group_amount_{{$serverservicetypewisegroupprice->group_id}}_{{$a->id}}').value = client_group_amount_{{$cg->id}}_{{$serverservicetypewisegroupprice->id}}.toFixed(2);
                         @endif
                         @endif
                         @endforeach
