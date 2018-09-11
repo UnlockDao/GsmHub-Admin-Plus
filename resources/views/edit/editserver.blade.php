@@ -27,7 +27,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <input class="btn btn-primary pull-right" type="submit" value="Add">
+                                <input class="btn btn-primary pull-right" type="submit" value="Save">
                                 <div class="clearfix"></div>
                             </form>
                         </div>
@@ -54,18 +54,61 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
-                            <div class="card-header card-header-icon card-header-rose">
-                                <div class="card-icon">
-                                    <i class="material-icons">edit</i>
-                                </div>
-                                <h4 class="card-title ">Edit {{$serverservice->service_name}}</h4>
-                            </div>
+
                             <div class="card-body">
                                 <form action="{{ url('serverservice') }}/{{$serverservice->id}}" method="POST" enctype="multipart/form-data">
                                     {{ csrf_field() }}
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <strong>Exchangerates</strong>
+                                            <input type="text" class="form-control"
+                                                   value="" id="amountconvert" onchange="Converse();"
+                                                   placeholder="" autocomplete="off">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <strong>From</strong>
+                                            <select class="form-control">
+                                                <option value="1">VND</option>
+                                                <option value="22000">USD</option>
+                                                <option value="20">AUD</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <strong>To</strong>
+                                            <select class="form-control" id="valueTo">
+                                                <option value="22000">VND</option>
+                                                <option value="1" selected>USD</option>
+                                                <option value="20">AUD</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <strong>Result</strong>
+                                            <input type="text" class="form-control"
+                                                   value="" id="resultConvert"
+                                                   placeholder="" autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <strong>Name Server Services</strong>
+                                            <input type="text" name="service_name" id="service_name" class="form-control"
+                                                   value="{{$serverservice->service_name}}"
+                                                   placeholder="Name IMEI Services" autocomplete="off">
+                                        </div>
+                                        <div class="col-md-12">
+                                            <strong>Supplier</strong>
+                                            <select name="id_supplier" class="form-control">
+                                                @foreach($supplier as $v)
+                                                    <option value="{{$v->id}}"
+                                                            @if($serverservice->servicepricing->id_supplier == $v->id) selected @endif>{{$v->name}}</option>
+                                                @endforeach
+                                            </select>
+                                            <hr>
+                                        </div>
+                                    </div>
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <h5">Purchase Cost : </h5>
+                                        <h5>Purchase Cost : </h5>
                                     </div>
                                     <div class="col-md-3">
                                         <input autocomplete="off" id="purchasecost" class="form-control" name="purchase_cost" type="text" onchange="Purchasenet();"@if($serverservice->api_id ==! null) readonly @endif
@@ -74,7 +117,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <h5>Purchase Cost (Vip) : </h5>
+                                        <h5>Purchase Cost (Net) : </h5>
                                     </div>
                                     <div class="col-md-3">
                                         <input id="purchasenet" class="form-control" name="purchasenet" type="text"
@@ -176,14 +219,59 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header card-header-icon card-header-rose">
-                                <div class="card-icon">
-                                    <i class="material-icons">edit</i>
-                                </div>
                                 <h4 class="card-title ">Edit {{$serverservice->service_name}}</h4>
                             </div>
                             <div class="card-body">
                                 <form action="{{ url('serverservicewise') }}/{{$serverservice->id}}" method="POST" enctype="multipart/form-data">
                                     {{ csrf_field() }}
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <strong>Exchangerates</strong>
+                                            <input type="text" class="form-control"
+                                                   value="" id="amountconvert" onchange="Converse();"
+                                                   placeholder="" autocomplete="off">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <strong>From</strong>
+                                            <select class="form-control">
+                                                <option value="1">VND</option>
+                                                <option value="22000">USD</option>
+                                                <option value="20">AUD</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <strong>To</strong>
+                                            <select class="form-control" id="valueTo">
+                                                <option value="22000">VND</option>
+                                                <option value="1" selected>USD</option>
+                                                <option value="20">AUD</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <strong>Result</strong>
+                                            <input type="text" class="form-control"
+                                                   value="" id="resultConvert"
+                                                   placeholder="" autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <strong>Name Server Services</strong>
+                                            <input type="text" name="service_name" id="service_name" class="form-control"
+                                                   value="{{$serverservice->service_name}}"
+                                                   placeholder="Name IMEI Services" autocomplete="off">
+                                        </div>
+                                        <div class="col-md-12">
+                                            <strong>Supplier</strong>
+                                            <select name="id_supplier" class="form-control">
+                                                @foreach($supplier as $v)
+                                                    <option value="{{$v->id}}"
+                                                            @if($serverservice->servicepricing->id_supplier == $v->id) selected @endif>{{$v->name}}</option>
+                                                @endforeach
+                                            </select>
+                                            <hr>
+                                        </div>
+                                    </div>
                                 <div class="table-responsive table-full-width table-hover">
                                     <table id="testTable" class="table table-striped">
                                         <thead class="text-primary">
@@ -256,7 +344,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                    <input class="btn btn-primary pull-right" type="submit" name="myButton"
+                                    <input class="btn btn-primary pull-right" type="submit"
                                            onClick="parent.$.fancybox.close();" value="Save">
                                     <div class="clearfix"></div>
                                 </form>

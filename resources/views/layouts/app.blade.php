@@ -20,11 +20,8 @@
 <body class="">
 <div class="wrapper">
 
-    <div class="main-panel">
-        <div class="content">
             @yield('content')
-        </div>
-    </div>
+
 </div>
 </body>
 <!--   Core JS Files   -->

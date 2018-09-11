@@ -164,10 +164,12 @@ class ServerserviceController extends Controller
         //lưu giá trị nhập vào bộ nhớ tạm
         $servicepricing = Serviceservicepricing::find($id);
         $servicepricing->purchasecost = $request->purchase_cost;
+        $servicepricing->id_supplier = $request->id_supplier;
         $servicepricing->save();
         // cập nhập  purchasecost net
         $purchasecostnet = Serverservice::find($id);
         $purchasecostnet->purchase_cost = $request->purchasenet;
+        $purchasecostnet->service_name = $request->service_name;
         $purchasecostnet->save();
         $clientgroup = Clientgroup::get();
         $range = Serverserviceclientgroupcredit::get();
@@ -197,6 +199,16 @@ class ServerserviceController extends Controller
 
     public function editwise($id, Request $request)
     {
+
+        //save infoserver service
+        $servicepricing = Serviceservicepricing::find($id);
+        $servicepricing->id_supplier = $request->id_supplier;
+        $servicepricing->save();
+        $purchasecostnet = Serverservice::find($id);
+        $purchasecostnet->service_name = $request->service_name;
+        $purchasecostnet->save();
+
+
         $clientgroup = Clientgroup::get();
         $server_service_type_wise_price = Serverservicetypewiseprice::get();
         foreach ($server_service_type_wise_price as $sp){
