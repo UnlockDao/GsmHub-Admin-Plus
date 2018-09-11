@@ -104,10 +104,10 @@ class SQL extends Migration
 
     public function addServerservicepurchasecostnotvip()
     {
-        if (!Schema::hasColumn('server_service_type_wise_price', 'purchase_cost_not_vip'))
+        if (!Schema::hasColumn('server_service_type_wise_price', 'purchase_cost_not_net'))
         {
             Schema::table('server_service_type_wise_price', function (Blueprint $table) {
-                $table->double('purchase_cost_not_vip');
+                $table->double('purchase_cost_not_net');
             });
         }
 

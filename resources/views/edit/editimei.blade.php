@@ -41,13 +41,13 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-8">
+                                    <div class="col-md-12">
                                         <strong>Name IMEI Services</strong>
                                         <input type="text" name="service_name" id="service_name" class="form-control"
                                                value="{{$imei->imei->service_name}}"
                                                placeholder="Name IMEI Services" autocomplete="off">
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-12">
                                         <strong>Supplier</strong>
                                         <select name="id_supplier" class="form-control">
                                             @foreach($nhacungcap as $v)

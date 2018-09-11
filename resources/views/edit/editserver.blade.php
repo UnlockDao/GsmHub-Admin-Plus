@@ -190,7 +190,7 @@
                                         <th width="2%">ID</th>
                                         <th>Type</th>
                                         <th>Purchase Cost</th>
-                                        <th>Purchase Cost (VIP)</th>
+                                        <th>Purchase Cost (Net)</th>
                                         <th>Credit</th>
                                         @foreach($clientgroup as $cg)
                                             <th>{{$cg->group_name}}</th>
@@ -216,10 +216,10 @@
                                                     <input
                                                             id="purchase_cost_{{$a->id}}"
                                                             class="form-control"
-                                                            name="purchase_cost_not_vip_{{$a->id}}"
+                                                            name="purchase_cost_not_net_{{$a->id}}"
                                                             type="text" onchange="Purchasenet();"
                                                             autocomplete="off"
-                                                            value="{{ number_format($a->purchase_cost_not_vip, 2) }}">
+                                                            value="{{ number_format($a->purchase_cost_not_net, 2) }}">
                                                 @endif
                                                 <td><input
                                                             id="purchase_cost_vip_{{$a->id}}"
@@ -239,12 +239,13 @@
                                                 <td>@foreach($a->serverservicetypewisegroupprice as $serverservicetypewisegroupprice)
                                                         @if($serverservicetypewisegroupprice->service_type_id == $a->id &&$serverservicetypewisegroupprice->group_id == $cg->id)
                                                             <input
-                                                                    id="client_group_amount_{{$serverservicetypewisegroupprice->group_id}}_{{$a->id}}"
+                                                                    id="client_group_amount_{{$serverservicetypewisegroupprice->group_id}}_{{$a->id}}@if($serverservicetypewisegroupprice->group_id == $cliendefault->id)_default @endif"
                                                                     class="form-control"
                                                                     name="client_group_amount_{{$serverservicetypewisegroupprice->id}}_{{$serverservicetypewisegroupprice->group_id}}"
                                                                     type="text" @if($serverservicetypewisegroupprice->group_id == $cliendefault->id) onchange="Chietkhau();" @endif
                                                                     autocomplete="off"
                                                                     value="{{ $serverservicetypewisegroupprice->amount }}">
+                                                            <span hidden id="client_group_amount_{{$serverservicetypewisegroupprice->group_id}}_{{$a->id}}">{{ $serverservicetypewisegroupprice->amount }}</span>
                                                         @endif
                                                     @endforeach
                                                 </td>
@@ -282,7 +283,8 @@
                 function Chietkhau() {
                      @foreach($serverservice->serverservicetypewiseprice as $a)
                          var purchase_cost_vip_{{$a->id}} = document.getElementById("purchase_cost_vip_{{$a->id}}").value;
-                         var priceuser_{{$a->id}} = document.getElementById("client_group_amount_{{$cliendefault->id}}_{{$a->id}}").value;
+                         var priceuser_{{$a->id}} = document.getElementById("client_group_amount_{{$cliendefault->id}}_{{$a->id}}_default ").value;
+                         console.log(priceuser_{{$a->id}})
                         @foreach($clientgroup as $cg)
                             @foreach($a->serverservicetypewisegroupprice as $serverservicetypewisegroupprice)
                                     @if($serverservicetypewisegroupprice->service_type_id == $a->id &&$serverservicetypewisegroupprice->group_id == $cg->id)

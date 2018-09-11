@@ -49,7 +49,7 @@
                                 <th>Status</th>
                                 <th>Supplier</th>
                                 <th>Purchase Cost</th>
-                                <th>Purchase Cost (VIP)</th>
+                                <th>Purchase Cost (Net)</th>
                                 @foreach($clientgroup as $cg)
                                     <th>{{$cg->group_name}}</th>
                                 @endforeach
@@ -111,8 +111,8 @@
                                                             - {{$serverservicequantityrange->to_range}}</td>
                                                         <td></td>
                                                         <td></td>
-                                                        <td></td>
-                                                        <td></td>
+                                                        <td>@if($v->api_id ==! null){{number_format($v->apiserverservices->credits,2)}}@elseif($v->servicepricing->purchasecost == null){{number_format($v->purchase_cost,2)}}@else{{number_format($v->servicepricing->purchasecost,2)}}@endif</td>
+                                                        <td>{{number_format($v->purchase_cost,2)}}</td>
                                                         @foreach($clientgroup as $cg)
                                                             <td>@foreach($serverservicequantityrange->serverserviceclientgroupcredit as $serverserviceclientgroupcredit)
                                                                     @if($serverserviceclientgroupcredit->currency=='USD' && $serverserviceclientgroupcredit->client_group_id==$cg->id )
@@ -136,7 +136,7 @@
                                                                     {{$apiserverservicetypeprice->api_price}}
                                                                 @endif
                                                                 @endforeach
-                                                        @else{{ number_format($a->purchase_cost_not_vip, 2) }}@endif</td>
+                                                        @else{{ number_format($a->purchase_cost_not_net, 2) }}@endif</td>
                                                         <td>{{ number_format($a->purchase_cost, 2) }}</td>
                                                         @foreach($clientgroup as $cg)
                                                             <td>@foreach($a->serverservicetypewisegroupprice as $serverservicetypewisegroupprice)

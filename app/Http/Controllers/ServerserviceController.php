@@ -117,6 +117,36 @@ class ServerserviceController extends Controller
 
         $supplier = Supplier::get();
         $serverservice = Serverservice::find($id);
+
+
+        //add price user null wise
+        foreach($serverservice->serverservicetypewiseprice as $a){
+            foreach ($clientgroup as $cg) {
+                $check = Serverservicetypewisegroupprice::where('group_id', $cg->id)->where('server_service_id', $id)->where('service_type_id', $a->id)->first();
+                if ($check == null) {
+                    $create = Serverservicetypewisegroupprice::firstOrCreate(['server_service_id'=>$id,
+                        'service_type_id'=>$a->id,
+                        'group_id'=>$cg->id,
+                        'currency'=>'USD',
+                        'amount'=>$a->purchase_cost]);
+                }
+            }
+        }
+        //add price user null
+        foreach($serverservice->serverservicequantityrange as $sr){
+            foreach ($clientgroup as $cg) {
+                $check = Serverserviceclientgroupcredit::where('client_group_id', $cg->id)->where('server_service_range_id', $sr->id)->first();
+                if ($check == null) {
+                    $currencies = Currencie::where('display_currency', 'Yes')->get();
+                    foreach ($currencies as $c) {
+                        $create = Serverserviceclientgroupcredit::firstOrCreate(['server_service_range_id' => $sr->id,
+                            'client_group_id' => $cg->id,
+                            'credit' => $serverservice->purchase_cost* $c->exchange_rate_static,
+                            'currency' => $c->currency_code]);
+                    }
+                }
+            }
+        }
         return view('edit.editserver', compact('serverservice', 'supplier', 'exchangerate','clientgroup','cliendefault'));
     }
 
@@ -178,9 +208,9 @@ class ServerserviceController extends Controller
             if ($amount == !null) {
                 Serverservicetypewiseprice::where('id', $sp->id)->update(['amount' => $amount]);
             }
-            $purchasenotvip = $request->input('purchase_cost_not_vip_' . $sp->id);
+            $purchasenotvip = $request->input('purchase_cost_not_net_' . $sp->id);
             if ($purchasenotvip == !null) {
-                Serverservicetypewiseprice::where('id', $sp->id)->update(['purchase_cost_not_vip' => $purchasenotvip]);
+                Serverservicetypewiseprice::where('id', $sp->id)->update(['purchase_cost_not_net' => $purchasenotvip]);
             }
         }
 

@@ -18,8 +18,7 @@
 </head>
 <body class="sidebar-mini">
 <div class="wrapper">
-    <div class="sidebar" data-color="rose" data-background-color="black"
-         data-image="{{ asset('assets/img/sidebar-1.jpg') }}">
+    <div class="sidebar" data-color="rose" data-background-color="black">
         <div class="logo">
             <a href="{{ url('') }}" class="simple-text logo-mini">
                 SU

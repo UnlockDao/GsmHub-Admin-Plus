@@ -11,6 +11,12 @@ class Serverserviceclientgroupcredit extends Model
 {
     protected $table = 'server_service_client_group_credit';
     public $timestamps = false;
+    protected $fillable = [
+        'server_service_range_id',
+        'client_group_id',
+        'credit',
+        'currency'
+    ];
 
 }
 
