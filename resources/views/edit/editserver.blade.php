@@ -145,9 +145,9 @@
                                                     <td>@foreach($serverservicequantityrange->serverserviceclientgroupcredit as $serverserviceclientgroupcredit)
                                                             @if($serverserviceclientgroupcredit->currency=='USD' && $serverserviceclientgroupcredit->client_group_id==$cg->id )
                                                                 <input id="sel_client_group_{{$serverserviceclientgroupcredit->client_group_id}}_{{$serverservicequantityrange->id}}"
-                                                                       class="form-control" @if($serverserviceclientgroupcredit->client_group_id == $cliendefault->id) onchange="Chietkhau();" @endif
+                                                                       class="form-control" @if($serverserviceclientgroupcredit->client_group_id == $cliendefault->id) onchange="Chietkhau();" onclick="Enabled=true;Chietkhau();" @endif
                                                                        name="client_group_{{$serverserviceclientgroupcredit->client_group_id}}_{{$serverserviceclientgroupcredit->id}}"
-                                                                       type="text" autocomplete="off"
+                                                                       type="text" autocomplete="off" @if($serverserviceclientgroupcredit->client_group_id !== $cliendefault->id) onclick="Enabled=false;Chietkhau();" @endif
                                                                        value="{{number_format($serverserviceclientgroupcredit->credit,2)}}">@endif
                                                         @endforeach
                                                     </td>
@@ -177,26 +177,27 @@
                     document.getElementById('purchasenet').value = giatransactionfee;
                 }
 
-
+                var Enabled = true;
                 function Chietkhau() {
+                    if (Enabled == true) {
                         var giatransactionfee = document.getElementById("purchasenet").value;
-                    @foreach($serverservice->serverservicequantityrange as $serverservicequantityrange )
+                                @foreach($serverservice->serverservicequantityrange as $serverservicequantityrange )
                         var priceuser_{{$serverservicequantityrange->id}} = document.getElementById("sel_client_group_{{$cliendefault->id}}_{{$serverservicequantityrange->id}}").value;
 
                         @foreach($clientgroup as $cg)
-                               @foreach($serverservicequantityrange->serverserviceclientgroupcredit as $serverserviceclientgroupcredit)
-                                    @if($serverserviceclientgroupcredit->currency=='USD' && $serverserviceclientgroupcredit->client_group_id==$cg->id )
-                                        sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}} = (priceuser_{{$serverservicequantityrange->id}} - (((priceuser_{{$serverservicequantityrange->id}} - giatransactionfee) / 100) *{{$cg->chietkhau}}));
-                                         console.log(sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}});
-                                             @if($cg->id !== $cliendefault->id)
-                                             document.getElementById('sel_client_group_{{$cg->id}}_{{$serverservicequantityrange->id}}').value = sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}};
-                                             @endif
-                                    @endif
+                                @foreach($serverservicequantityrange->serverserviceclientgroupcredit as $serverserviceclientgroupcredit)
+                                @if($serverserviceclientgroupcredit->currency=='USD' && $serverserviceclientgroupcredit->client_group_id==$cg->id )
+                            sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}} = (priceuser_{{$serverservicequantityrange->id}} - (((priceuser_{{$serverservicequantityrange->id}} - giatransactionfee) / 100) *{{$cg->chietkhau}}));
+                        console.log(sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}});
+                        @if($cg->id !== $cliendefault->id)
+                        document.getElementById('sel_client_group_{{$cg->id}}_{{$serverservicequantityrange->id}}').value = sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}};
+                        @endif
+                        @endif
 
-                                @endforeach
                         @endforeach
-                    @endforeach
-
+                        @endforeach
+                        @endforeach
+                    }
                 }
 
                 document.addEventListener('DOMContentLoaded', function () {
@@ -332,8 +333,8 @@
                                                                     id="client_group_amount_{{$serverservicetypewisegroupprice->group_id}}_{{$a->id}}"
                                                                     class="form-control"
                                                                     name="client_group_amount_{{$serverservicetypewisegroupprice->id}}_{{$serverservicetypewisegroupprice->group_id}}"
-                                                                    type="text" @if($serverservicetypewisegroupprice->group_id == $cliendefault->id) onchange="Chietkhau();" @endif
-                                                                    autocomplete="off"
+                                                                    type="text" @if($serverservicetypewisegroupprice->group_id == $cliendefault->id) onchange="Chietkhau();" onclick="Enabled=true;Chietkhau();" @endif
+                                                                    autocomplete="off" @if($serverservicetypewisegroupprice->group_id !== $cliendefault->id) onclick="Enabled=false;Chietkhau();" @endif
                                                                     value="{{ $serverservicetypewisegroupprice->amount }}">
                                                             <span hidden id="client_group_amount_{{$serverservicetypewisegroupprice->group_id}}_{{$a->id}}">{{ $serverservicetypewisegroupprice->amount }}</span>
                                                         @endif
@@ -369,24 +370,25 @@
                         document.getElementById('purchase_cost_vip_{{$a->id}}').value = giatransactionfee.toFixed(2);;
                     @endforeach
                 }
-
+                var Enabled = true;
                 function Chietkhau() {
-                     @foreach($serverservice->serverservicetypewiseprice as $a)
-                         var purchase_cost_vip_{{$a->id}} = document.getElementById("purchase_cost_vip_{{$a->id}}").value;
-                         var priceuser_{{$a->id}} = document.getElementById("client_group_amount_{{$cliendefault->id}}_{{$a->id}}").value;
-                         console.log(priceuser_{{$a->id}})
-                        @foreach($clientgroup as $cg)
-                            @foreach($a->serverservicetypewisegroupprice as $serverservicetypewisegroupprice)
-                                    @if($serverservicetypewisegroupprice->service_type_id == $a->id &&$serverservicetypewisegroupprice->group_id == $cg->id)
-                                        var client_group_amount_{{$cg->id}}_{{$serverservicetypewisegroupprice->id}} = (priceuser_{{$a->id}} - (((priceuser_{{$a->id}} - purchase_cost_vip_{{$a->id}}) / 100) *{{$cg->chietkhau}}));
-                                         @if($cg->id !== $cliendefault->id)
-                                            document.getElementById('client_group_amount_{{$serverservicetypewisegroupprice->group_id}}_{{$a->id}}').value = client_group_amount_{{$cg->id}}_{{$serverservicetypewisegroupprice->id}};
-                                         @endif
-                                    @endif
-                            @endforeach
+                    if (Enabled == true) {
+                                @foreach($serverservice->serverservicetypewiseprice as $a)
+                        var purchase_cost_vip_{{$a->id}} = document.getElementById("purchase_cost_vip_{{$a->id}}").value;
+                        var priceuser_{{$a->id}} = document.getElementById("client_group_amount_{{$cliendefault->id}}_{{$a->id}}").value;
+                        console.log(priceuser_{{$a->id}})
+                                @foreach($clientgroup as $cg)
+                                @foreach($a->serverservicetypewisegroupprice as $serverservicetypewisegroupprice)
+                                @if($serverservicetypewisegroupprice->service_type_id == $a->id &&$serverservicetypewisegroupprice->group_id == $cg->id)
+                        var client_group_amount_{{$cg->id}}_{{$serverservicetypewisegroupprice->id}} = (priceuser_{{$a->id}} - (((priceuser_{{$a->id}} - purchase_cost_vip_{{$a->id}}) / 100) *{{$cg->chietkhau}}));
+                        @if($cg->id !== $cliendefault->id)
+                        document.getElementById('client_group_amount_{{$serverservicetypewisegroupprice->group_id}}_{{$a->id}}').value = client_group_amount_{{$cg->id}}_{{$serverservicetypewisegroupprice->id}};
+                        @endif
+                        @endif
                         @endforeach
-                     @endforeach
-
+                        @endforeach
+                        @endforeach
+                    }
                 }
 
                 document.addEventListener('DOMContentLoaded', function () {

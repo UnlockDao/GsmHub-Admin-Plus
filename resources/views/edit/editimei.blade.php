@@ -93,8 +93,8 @@
                                             @if($c->chietkhau ==! null)
                                                 <td><input type="text" name="giabanle{{$c->group_id}}"
                                                            id="chietkhau{{$c->group_id}}"
-                                                           @if($c->group_id== $cliendefault->id) onchange="Chietkhau();"
-                                                           @endif
+                                                           @if($c->group_id== $cliendefault->id) onchange="Chietkhau();" onclick="Enabled=true;Chietkhau();" @endif
+                                                           @if($c->group_id !== $cliendefault->id) onclick="Enabled=false;Chietkhau();" @endif
                                                            class="form-control"
                                                            value="<?php echo $imei->imei->credit + $c->discount  ?>"
                                                            placeholder="Giá bán lẻ" autocomplete="off"></td>
