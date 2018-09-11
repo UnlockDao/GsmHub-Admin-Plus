@@ -2,7 +2,6 @@
 @section('content')
     @if($imei->id_supplier ==!null)
         <div class="container-fluid">
-
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
@@ -13,31 +12,29 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <strong>Exchangerates</strong>
-                                        <input type="text" class="form-control"
-                                               value="" id="amountconvert" onchange="Converse();"
-                                               placeholder="" autocomplete="off">
+                                        <input id="valueExchangerates" class="form-control" autocomplete="off"
+                                               onchange="conversecurrency();">
                                     </div>
                                     <div class="col-md-2">
                                         <strong>From</strong>
-                                        <select class="form-control">
-                                            <option value="1">VND</option>
-                                            <option value="22000">USD</option>
-                                            <option value="20">AUD</option>
+                                        <select class="form-control" id="valueFrom">
+                                            @foreach($allcurrencies as $ac)
+                                                <option value="{{$ac->currency_code}}">{{$ac->currency_code}}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div class="col-md-1">
                                         <strong>To</strong>
                                         <select class="form-control" id="valueTo">
-                                            <option value="22000">VND</option>
-                                            <option value="1" selected>USD</option>
-                                            <option value="20">AUD</option>
+                                            @foreach($allcurrencies as $ac)
+                                                <option @if($ac->currency_code == $exchangerate->currency_code) selected
+                                                        @endif value="{{$ac->currency_code}}">{{$ac->currency_code}}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div class="col-md-5">
                                         <strong>Result</strong>
-                                        <input type="text" class="form-control"
-                                               value="" id="resultConvert"
-                                               placeholder="" autocomplete="off">
+                                        <input id=results class="form-control" readonly>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -93,8 +90,10 @@
                                             @if($c->chietkhau ==! null)
                                                 <td><input type="text" name="giabanle{{$c->group_id}}"
                                                            id="chietkhau{{$c->group_id}}"
-                                                           @if($c->group_id== $cliendefault->id) onchange="Chietkhau();" onclick="Enabled=true;Chietkhau();" @endif
-                                                           @if($c->group_id !== $cliendefault->id) onclick="Enabled=false;Chietkhau();" @endif
+                                                           @if($c->group_id== $cliendefault->id) onchange="Chietkhau();"
+                                                           onclick="Enabled=true;Chietkhau();" @endif
+                                                           @if($c->group_id !== $cliendefault->id) onclick="Enabled=false;Chietkhau();"
+                                                           @endif
                                                            class="form-control"
                                                            value="<?php echo $imei->imei->credit + $c->discount  ?>"
                                                            placeholder="Giá bán lẻ" autocomplete="off"></td>
@@ -130,16 +129,6 @@
                 Chietkhau();
             }
 
-            function Converse() {
-                var amountonvert , resultConvert ;
-                amountconvert = document.getElementById("amountconvert").value;
-                valueTo = document.getElementById("valueTo").value;
-                amountconvert = amountconvert.replace(/\`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi, '.');
-                document.getElementById('amountconvert').value = amountconvert;
-                var result = parseFloat(amountconvert) / 22000;
-                document.getElementById('resultConvert').value = result;
-            }
-
             var Enabled = true;
 
             function Chietkhau() {
@@ -150,9 +139,9 @@
                     var user = document.getElementById("chietkhau{{$cliendefault->id}}").value;
                     @foreach($clien as $pri)
                         result{{$pri->id}} = (user - (((user - giatransactionfee) / 100) *{{$pri->chietkhau}}));
-                        @if($pri->id !== $cliendefault->id)
-                        document.getElementById('chietkhau{{$pri->id}}').value = result{{$pri->id}}.toFixed(2);
-                        @endif
+                    @if($pri->id !== $cliendefault->id)
+                    document.getElementById('chietkhau{{$pri->id}}').value = result{{$pri->id}}.toFixed(2);
+                    @endif
                     @endforeach
                 }
             }

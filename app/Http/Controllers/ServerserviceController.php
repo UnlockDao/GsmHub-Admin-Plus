@@ -118,6 +118,7 @@ class ServerserviceController extends Controller
         $supplier = Supplier::get();
         $serverservice = Serverservice::find($id);
 
+        $allcurrencies = Currencie::get();
 
         //add price user null wise
         foreach($serverservice->serverservicetypewiseprice as $a){
@@ -147,7 +148,7 @@ class ServerserviceController extends Controller
                 }
             }
         }
-        return view('edit.editserver', compact('serverservice', 'supplier', 'exchangerate','clientgroup','cliendefault'));
+        return view('edit.editserver', compact('serverservice', 'supplier', 'exchangerate','clientgroup','cliendefault','allcurrencies'));
     }
 
     public function updatesupplier($id, Request $request)
