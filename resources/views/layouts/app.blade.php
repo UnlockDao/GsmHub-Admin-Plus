@@ -51,7 +51,7 @@
 
     });
 </script>
-<script src="https://coinmill.com/frame.js"></script>
+<script src="{{ asset('js/framecoinmill.js') }}"></script>
 <script>
     function conversecurrency() {
         valueFrom = document.getElementById("valueFrom").value;

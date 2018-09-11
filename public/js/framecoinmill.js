@@ -1,0 +1,90 @@
+var currency_data = 'ADA,0.052519636711,0.001|ADP,0.00497975,1|AED,0.194981,0.25|AFA,9.68e-06,1|AFN,0.00968,1|ALL,0.006588,0.1|AMD,0.0014781,0.2|ANC,0.656,0.0001|ANG,0.4012,0.01|AOA,0.0025114,0.1|ARDR,0.069211785897,0.0001|ARG,0.0310544919056,0.001|ARS,0.01919,0.01|ATS,0.0602138,1|AUD,0.509481,0.05|AUR,0.183847818408,0.00001|AWG,0.402,0.01|AZM,8.4268e-05,10|AZN,0.42134,0.01|BAM,0.42494,0.5|BBD,0.36,0.01|BCH,337.3451958,0.0000001|BCN,0.00146434720612,10|BDT,0.00855,0.01|BEF,0.0205395,0.5|BET,0.012377444691,0.01|BGL,0.00042363,10|BGN,0.42363,0.01|BHD,1.90443,0.05|BIF,0.00040895,1|BLC,0.00588116437809,0.01|BMD,0.716066,0.01|BNB,6.85495715226,0.00001|BND,0.518588,0.01|BOB,0.104,0.1|BRC,6.35076e-05,0.01|BRL,0.174646,0.01|BSD,0.72,0.01|BTB,5.398,0.00001|BTC,4558.76540692,0.00001|BTG,13.9965801994,0.000001|BTN,0.0099765,0.20|BTS,0.0731716801255,0.001|BWP,0.0655916,0.01|BYN,0.34,0.01|BYR,0.00034,1|BZD,0.35843,0.01|CAD,0.542615,0.01|CDF,0.0004574,0.01|CHF,0.735558,0.05|CLF,28.41932,0.01|CLP,0.00104013,1|CNH,0.1041,0.5|CNY,0.10439,0.5|COP,0.000233235,100|CRC,0.001236,0.01|CSD,0.0070113,0.5|CUC,0.716066,0.01|CUP,0.72,0.01|CVE,0.00756,0.01|CYP,1.414,0.01|CZK,0.0323047,1|DASH,144.91577997,0.000001|DEE,0.0050209120612,0.001|DEM,0.423636,0.01|DGC,0.00766,0.001|DJF,0.004034,10|DKK,0.111099,0.25|DMD,1.77549844055,0.0001|DOP,0.01431,1|DZD,0.00605755,0.05|ECS,2.863e-05,100|EEK,0.0529546,0.05|EFL,0.0373824365628,0.001|EGP,0.04025,0.25|EOS,3.625967171,0.0001|ERN,0.04777,0.01|ESP,0.00497975,1|ETB,0.026048,0.01|ETC,8.24528091321,0.00001|ETH,140.66967045,0.0000001|EUR,0.82856,0.01|FIM,0.139354,1|FJD,0.34,0.01|FKP,0.925945,0.01|FLO,0.0244943033277,0.1|FLT,0.00064,0.01|FRC,0.0033,0.001|FRF,0.126313,0.01|FRK,0.08361,0.0001|FST,0.0011,0.01|FTC,0.0352298820822,0.001|GBP,0.925945,0.01|GBX,0.00925945,1|GEL,0.2767,0.01|GHC,1.5096e-05,0.1|GHS,0.15096,0.01|GIP,0.93396,0.01|GLC,0.002,0.1|GLD,0.0314028556585,0.01|GMD,0.0149,0.01|GNF,7.9576e-05,1|GRD,0.00243158,0.5|GTQ,0.094362,0.01|GYD,0.00347,1|HBN,0.0026,0.01|HKD,0.091223,0.1|HNL,0.029892,0.01|HRK,0.1123,0.01|HTG,0.01051,0.05|HUF,0.00255009,1|ICX,0.440715208068,0.0001|IDR,4.82687e-05,25|IEP,1.05205,0.01|ILS,0.199469,0.01|INR,0.00986663,0.1|IQD,0.00060174,500|IRR,1.70492e-05,5|ISK,0.00640088,1|ITL,0.000427916,1|IXC,0.026,0.001|JEP,0.925945,0.01|JMD,0.0052803,0.01|JOD,1.0098,0.05|JPY,0.00645453,1|KES,0.0071272,0.01|KGS,0.010286,1|KHR,0.00017594,100|KMF,0.0016923,0.05|KPW,0.0007956,0.01|KRW,0.00063758,1|KWD,2.36403,0.001|KYD,0.87325,0.01|KZT,0.0018938,1|LAK,8.4263e-05,500|LBP,0.00047484,50|LKR,0.00442643,1|LRD,0.0046353,0.05|LSK,2.6659290534,0.00001|LSL,0.05029,0.01|LTC,39.201450102,0.00001|LTL,0.2398,0.01|LUF,0.0205395,0.5|LVL,1.17893,0.01|LYD,0.517491,0.001|MAD,0.076115,0.2|MAX,0.0154,0.001|MDL,0.042789,0.01|MEC,0.0031,0.0001|MGA,0.00021898,1|MGF,4.3796e-05,50|MIOTA,0.415887588123,0.0001|MKD,0.0136,0.5|MKR,241.825764317,0.0000001|MMK,0.00046079,50|MNC,0.00711398749705,0.001|MNT,0.00028932,1|MOP,0.088571,0.1|MRO,0.002017,0.2|MTL,1.93003,0.01|MUR,0.0208678,0.01|MVR,0.04599,0.01|MWK,0.0010027,5|MXN,0.0371268,0.05|MXP,3.71268e-05,0.01|MXV,0.2258943,1|MYR,0.17239,0.01|MZM,1.192e-05,1|MZN,0.01192,1|NAD,0.047447,0.05|NANO,1.39023749992,0.00001|NAS,1.08559053247,1|NEO,13.3316597749,0.000001|NET,0.0001,0.01|NGN,0.001989,1|NIO,0.02248,0.05|NLG,0.375984,0.5|NMC,1.576593518,0.0001|NOK,0.0853923,0.5|NPR,0.0062386,0.05|NVC,2.82221093568,0.00001|NXT,0.0458328690511,0.1|NZD,0.466803,0.10|OMG,2.48595355848,0.00001|OMR,1.86233,0.005|ORB,0.118,0.001|PAB,0.72,0.01|PEN,0.21502,0.01|PGK,0.2157,0.01|PHP,0.0133021,0.01|PHS,0.011,0.001|PKR,0.00576303,0.01|PLN,0.192062,0.01|POT,0.0255795475717,0.01|PPC,0.774971748915,0.0001|PPT,2.57401081859,0.00001|PTC,0.0150522592872,0.01|PTE,0.00413284,0.05|PXC,0.002,0.01|PYG,0.00012344,1|QAR,0.196721,1|QRK,0.004,0.01|QTUM,2.5452416834,0.00001|RDD,0.00273596685672,10|REP,10.801172937,0.00001|ROL,1.8013e-05,0.01|RON,0.18013,0.01|RSD,0.0070113,0.5|RUB,0.0102488,0.01|RUR,1.02488e-05,10|RWF,0.00083468,1|SAR,0.190951,1|SBD,0.090611,0.05|SCR,0.053,0.05|SDD,0.00039881,0.01|SDG,0.039881,0.01|SDP,3.9881e-05,0.01|SDR,1,0.01|SEK,0.0791618,0.01|SGD,0.518588,0.01|SHP,0.93396,0.01|SIT,0.00345752,0.1|SKK,0.0275032,0.5|SLL,8.7432e-05,10|SLR,0.0739992006036,0.1|SNT,0.0245109523004,0.001|SOS,0.001254,1|SRD,0.0965,0.01|SRG,9.65e-05,5|STD,3.3994e-05,0.5|STEEM,0.539329994723,0.0001|STRAT,1.00135945273,0.00001|SVC,0.0818361,0.05|SXC,0.0021,0.01|SYP,0.0013905,0.25|SZL,0.047493,0.01|TAG,0.037,0.0001|TGC,0.0021,0.01|THB,0.0217941,0.25|TIX,0.076730488571,0.0001|TJS,0.075996,0.05|TMM,4.2e-05,1|TMT,0.21,1|TND,0.257917,0.005|TOP,0.30315,0.01|TRC,0.068203542579,0.001|TRL,1.1117e-07,5000|TRX,0.0139801696776,0.01|TRY,0.11117,0.01|TTD,0.106001,0.01|TWD,0.023257,1|TZS,0.00031365,0.05|UAH,0.02545,0.01|UGX,0.00019016,50|UNO,64.0493511418,0.00001|USD,0.716066,0.01|USDT,0.721135074625,0.001|UYU,0.0220544,0.1|UZS,9.2158e-05,0.01|VEB,2.88e-09,1|VEF,2.88e-06,1|VEN,1.16779825902,0.0001|VERI,13.672264824,0.000001|VND,3.0717e-05,200|VRC,0.113318563231,0.001|VTC,0.466365513587,0.0001|VUV,0.0064273,1|WDC,0.0022,0.001|WST,0.2685,0.05|WTC,2.39542282876,0.00001|XAF,0.00126313,1|XAG,10.072,0.001|XAL,2000,0.01|XAU,1195,0.001|XCC,0.01048143049,0.001|XCD,0.27,0.01|XCP,5841,0.01|XDG,0.00462944664973,1|XEM,0.066685842966,0.001|XEU,0.82856,0.01|XIC,0.0194,0.01|XJO,0.0037558373157,0.01|XLM,0.13940044673,0.001|XMR,77.3650860762,0.0001|XMS,0.16031301862,0.01|XMT,5.91045746241e-05,10|XOF,0.00126313,1|XPD,691,0.001|XPF,0.00694334,1|XPM,0.558763396192,0.0001|XPT,562.83,0.001|XRP,0.193683682139,0.01|XSC,0.00394874970607,0.01|XVG,0.0092659709435,0.01|YAC,0.00081,0.01|YER,0.002865,0.005|YUM,0.42494,0.5|ZAR,0.0471596,0.05|ZCP,2.82107715519,0.0001|ZEC,84.5276449365,0.000001|ZET,0.00153138864226,0.01|ZMK,6.986e-05,0.01|ZMW,0.06986,0.05|ZRN,4.574e-07,10|ZRX,0.398747093475,0.0001|ZTC,2.43786360327e-05,10|ZWD,7.16066e-30,0.01|ZWL,7.16066e-05,0.01|ZWN,7.16066e-30,5|ZWR,7.16066e-17,0.01';
+var currency_sdrPer = new Array(), currency_Unit = new Array();
+currency_make_arrays();
+
+function currency_make_arrays() {
+    var d = currency_data.split("|");
+    for (var e = 0; e < d.length; e++) {
+        var b = d[e].split(","), f = b[0];
+        currency_sdrPer[f] = b[1];
+        currency_Unit[f] = b[2]
+    }
+};
+
+function currency_rnd(h, e) {
+    h = Math.round(h / e) * e + ".";
+    var g = (e + ".").split("."), c = h.split("."), b = c[1], a = g[1].length, d = b.length;
+    if (d > a) {
+        b = b.substring(0, a)
+    }
+    for (var f = 0; f < a - d; f++) {
+        b += "0"
+    }
+    return c[0] + (a == 0 ? "" : "." + b)
+}
+
+function currency_convert(f, d, c) {
+    var e = currency_sdrPer;
+    if (!e[d] || !e[c]) {
+        return ""
+    }
+    return currency_format(f * (e[d] / e[c]), currency_Unit[c])
+}
+
+function currency_format(b, e) {
+    var h = typeof currency_thousandsSeparator == "string" ? currency_thousandsSeparator : "",
+        c = typeof currency_decimalSeparator == "string" ? currency_decimalSeparator : ".",
+        e = (typeof currency_decimalDigits == "number") ? (1 / Math.pow(10, currency_decimalDigits)) : (typeof e == "number" ? e : 0.01),
+        j = typeof currency_thousandsSeparatorMin == "number" ? currency_thousandsSeparatorMin : 3;
+    if (typeof currency_round == "boolean" && currency_round) {
+        b = currency_rnd(b, e)
+    }
+    var i = ("" + b).split("."), g = i[0], f = i.length > 1 ? c + i[1] : "", a = /(\d+)(\d{3})/;
+    if (h != "") {
+        while (a.test(g) && g.length > j) {
+            g = g.replace(a, "$1" + h + "$2")
+        }
+    }
+    return g + f
+};
+
+function currency_show_conversion(e, d, c) {
+    document.write(currency_convert(e, d, c))
+}
+
+function currency_getRateHTML(d, c) {
+    var g = currency_convert(1, d, c);
+    if (g == "") {
+        return ""
+    }
+    var f = d + "_" + c + ".html";
+    if (c < d) {
+        f = c + "_" + d + ".html"
+    }
+    f = "http://coinmill.com/" + f;
+    var e = unescape("%3Ca+href%3D%22%24link%22%3E%24from_the_name+is+worth+%3Cb%3E%24rate%3C/b%3E+%24to_plural_name%3C/a%3E%3Cbr%3E");
+    if (typeof currency_template != "undefined") {
+        e = currency_template
+    }
+    return e.replace("$link", f).replace("$rate", g).replace("$from_abbrev", d).replace("$from_name", d).replace("$from_plural_name", d + "s").replace("$from_the_name", "the " + d).replace("$to_abbrev", c).replace("$to_name", c).replace("$to_plural_name", c + "s").replace("$to_the_name", "the " + c)
+}
+
+function currency_showRate(d, c) {
+    document.write(currency_getRateHTML(d, c))
+}
+
+function currency_showRates() {
+    for (var e = 0; e < currency_rate_list.length; e++) {
+        var d = currency_rate_list[e];
+        e++;
+        if (e < currency_rate_list.length) {
+            var c = currency_rate_list[e];
+            currency_showRate(d, c)
+        }
+    }
+}
+
+if (typeof currency_rate_list != "undefined") {
+    currency_showRates()
+}
+;
