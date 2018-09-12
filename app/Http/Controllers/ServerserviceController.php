@@ -190,9 +190,12 @@ class ServerserviceController extends Controller
                 $u = $request->input('client_group_' . $cli->id . '_' . $ra->id);
 
                 if ($u == !null) {
-                    $update = Serverserviceclientgroupcredit::where('id', $ra->id)
-                        ->where('client_group_id', $cli->id)
-                        ->update(['credit' => $u]);
+                    foreach ($currencies as $cu) {
+                             $update = Serverserviceclientgroupcredit::where('server_service_range_id',$ra->server_service_range_id)
+                                                                    ->where('client_group_id', $cli->id)
+                                                                    ->where('currency',$cu->currency_code)
+                                                                    ->update(['credit' => $u* $cu->exchange_rate_static]);
+                    }
                 }
 
 
