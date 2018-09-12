@@ -46,8 +46,32 @@ class IMEIController extends Controller
         return redirect('/imei');
     }
 
+    public function checkNullUser(){
+        $cliengroup = Clientgroup::get();
+        $imeiservices= Imeiservice::get();
+        $currencies = Currencie::where('display_currency', 'Yes')->get();
+        foreach ($imeiservices as $imei){
+            foreach ($cliengroup as $cg){
+                    foreach ($currencies as $cu){
+                        $check =Clientgroupprice::where('group_id',$cg->id)
+                                                ->where('service_id',$imei->id)
+                                                ->where('service_type','imei')
+                                                ->where('currency',$cu->currency_code)
+                                                ->first();
+                        if($check == null){
+                            $create = Clientgroupprice::firstOrCreate(['group_id'=>$cg->id,
+                                'service_id'=>$imei->id,
+                                'service_type'=>'imei',
+                                'currency'=>$cu->currency_code]);
+                        }
+                    }
+            }
+        }
+    }
+
     public function imei(Request $request)
     {
+        $this->checkNullUser();
         $this->checkdelete();
         $this->checkimei();
         $this->checkapi();
@@ -113,20 +137,6 @@ class IMEIController extends Controller
     public function show($id)
     {
         $clien = Clientgroup::get();
-        $pg = Clientgroupprice::where('service_id', $id)->get();
-        foreach ($pg as $p) {
-            foreach ($clien as $c) {
-                $check = Clientgroupprice::where('group_id', $c->id)->where('service_id', $id)->first();
-                if ($check == null) {
-                    $newx = new Clientgroupprice();
-                    $newx->service_id = $id;
-                    $newx->group_id = $c->id;
-                    $newx->currency = 'USD';
-                    $newx->save();
-                }
-            }
-        }
-
         //find default currency
         $defaultcurrency = Currenciepricing::where('type', '1')->first();
         $exchangerate = Currencie::find($defaultcurrency->currency_id);
