@@ -11,6 +11,9 @@ class Serviceservicepricing extends Model
 {
     protected $table = 'adminplus_service_service';
     public $timestamps = false;
+    protected $fillable = [
+        'id'
+    ];
 
 	    public function service()
     {

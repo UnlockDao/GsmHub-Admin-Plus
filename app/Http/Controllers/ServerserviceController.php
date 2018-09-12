@@ -83,12 +83,8 @@ class ServerserviceController extends Controller
     {
         $server_services = Serverservice::orderBy('id')->get();
         foreach ($server_services as $v) {
-            $check = Serviceservicepricing::where('id', $v->id)->first();
-            if ($check == null) {
-                $server_services = new Serviceservicepricing();
-                $server_services->id = $v->id;
-                $server_services->save();
-            }
+            $add = Serviceservicepricing::firstOrCreate(['id'=>$v->id]);
+
         }
         $server_servicesdel = Serviceservicepricing::get();
         foreach ($server_servicesdel as $v) {

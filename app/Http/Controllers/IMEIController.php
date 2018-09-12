@@ -101,12 +101,7 @@ class IMEIController extends Controller
     {
         $imei_services = Imeiservice::orderBy('id')->get();
         foreach ($imei_services as $v) {
-            $check = Imeiservicepricing::where('id', $v->id)->first();
-            if ($check == null) {
-                $imei_service = new Imeiservicepricing();
-                $imei_service->id = $v->id;
-                $imei_service->save();
-            }
+            $add = Imeiservicepricing::firstOrCreate(['id'=>$v->id]);
         }
     }
 
