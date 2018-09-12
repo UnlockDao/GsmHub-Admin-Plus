@@ -16,7 +16,7 @@
                     type: 'get',
                     data: 'id=' + ida,
                     success: function (result) {
-                        $.notify({icon: "notifications", message: result});
+                       // $.notify({icon: "notifications", message: result});
                     },
                     error: function(result) {
                         alert('error');
@@ -45,8 +45,8 @@
                                 <th width="10%">Service Type</th>
                                 <th width="5%">Status</th>
                                 <th width="5%">Supplier</th>
-                                <th>Purchase Cost</th>
-                                <th>Purchase Cost (Net)</th>
+                                <th width="10%">Purchase Cost</th>
+                                <th width="10%">Purchase Cost (Net)</th>
                                 <th width="5%">Default</th>
                                 @foreach($usergroup as $u)
                                     <th width="5%">{{$u->group_name}}</th>
@@ -90,13 +90,13 @@
                                                 </td>
                                                 <td width="5%">@if($v->nhacungcap ==! null){{$v->nhacungcap->name}}@endif</td>
                                                 @if($v->imei->api_id ==! null)
-                                                    <td>@if($v->imei->apiserverservices ==! null)<a rel="tooltip" title="" class="max-lines" data-original-title="{{number_format($v->imei->apiserverservices->credits*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->apiserverservices->credits, 2); ?></a>@endif</td>
+                                                    <td width="10%">@if($v->imei->apiserverservices ==! null)<a rel="tooltip"  data-original-title="{{number_format($v->imei->apiserverservices->credits*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->apiserverservices->credits, 2); ?></a>@endif</td>
                                                 @else
-                                                    <td><a rel="tooltip" title="" class="max-lines" data-original-title="{{number_format($v->purchasecost*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->purchasecost, 2); ?></a></td>
+                                                    <td width="10%"><a rel="tooltip"  data-original-title="{{number_format($v->purchasecost*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->purchasecost, 2); ?></a></td>
                                                 @endif
 
 
-                                                <td><a rel="tooltip" title="" class="max-lines" data-original-title="{{number_format($v->imei->purchase_cost*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->purchase_cost, 2); ?></a></td>
+                                                <td width="10%"><a rel="tooltip"  data-original-title="{{number_format($v->imei->purchase_cost*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->purchase_cost, 2); ?></a></td>
                                                 <td width="5%"><a rel="tooltip" data-original-title="{{number_format($v->imei->credit*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->credit, 2); ?></a></td>
                                                 @foreach($usergroup as $u)
                                                     <td width="5%">  @foreach($v->imei->clientgroupprice as $cl)
