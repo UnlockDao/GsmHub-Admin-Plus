@@ -55,20 +55,14 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-4">
-                                        <strong>Default Credit</strong>
-                                        <input type="text" name="credit" id="credit" class="form-control"
-                                               value="{{$imei->imei->credit}}"
-                                               placeholder="Credit" autocomplete="off">
-                                    </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <strong>Purchase Cost </strong>
                                         <input type="text" name="purchasecost" id="purchasecost" class="form-control"
                                                onchange="Purchasenet();"
                                                value="@if($imei->imei->apiserverservices ==! null){{$imei->imei->apiserverservices->credits}}@elseif($imei->purchasecost == null){{$imei->imei->purchase_cost}}@else{{$imei->purchasecost}}@endif"
                                                placeholder="Giá nhập" autocomplete="off">
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <strong>Purchase Cost(Net) </strong>
                                         <input type="text" name="purchasenet" id="purchasenet" class="form-control"
                                                value=""
@@ -79,6 +73,7 @@
                                 <div class="table-responsive table-full-width table-hover">
                                     <table id="testTable" class="table table-striped">
                                         <thead class="text-primary">
+                                        <th>Credit</th>
                                         @foreach($pricegroup as $c)
                                             @if($c->chietkhau ==! null)
                                                 <th>{{$c->chietkhau->group_name}}</th>
@@ -86,6 +81,9 @@
                                         @endforeach
                                         </thead>
                                         <tbody>
+                                        <td><input type="text" name="credit" id="credit" class="form-control"
+                                                   value="{{$imei->imei->credit}}"
+                                                   placeholder="Credit" autocomplete="off"></td>
                                         @foreach($pricegroup as $c)
                                             @if($c->chietkhau ==! null)
                                                 <td><input type="text" name="giabanle{{$c->group_id}}"

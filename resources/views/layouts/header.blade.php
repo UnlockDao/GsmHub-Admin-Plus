@@ -16,6 +16,19 @@
           type='text/css'>
     <script src="{{ asset('excel/tableToExcel.js') }}"></script>
 </head>
+<style>
+    /* for custom scrollbar for webkit browser*/
+
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    }
+    ::-webkit-scrollbar-thumb {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    }
+</style>
 <body class="sidebar-mini">
 <div class="wrapper">
     <div class="sidebar" data-color="rose" data-background-color="black">
@@ -40,9 +53,6 @@
         <div class="content">
             @yield('content')
         </div>
-        <footer class="footer">
-            @include('layouts.footer')
-        </footer>
     </div>
 </div>
 <div class="beep" style="display: none;"></div>

@@ -25,14 +25,18 @@
             });
         }, false);
     </script>
+    <style>
+        #testTable{
+            display: block;
+            height: 600px;
+            overflow-y: scroll;
+        }
+    </style>
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header card-header-icon card-header-rose">
-                        <div class="card-icon">
-                            <i class="material-icons">monetization_on</i>
-                        </div>
                         <button type="button" onclick="tableToExcel('testTable', 'W3C Example Table')"
                                 class="btn btn-info pull-right"><i class="material-icons">cloud_download</i>
                         </button>
@@ -41,22 +45,24 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive table-full-width table-hover">
-                            <table id="testTable" class="table table-striped">
+                            <table class="table table-striped">
                                 <thead class="text-primary">
                                 <th width="2%"></th>
-                                <th>Service Name</th>
-                                <th>Service Type</th>
-                                <th>Status</th>
-                                <th>Supplier</th>
+                                <th width="30%">Service Name</th>
+                                <th width="10%">Service Type</th>
+                                <th width="5%">Status</th>
+                                <th width="5%">Supplier</th>
                                 <th>Purchase Cost</th>
                                 <th>Purchase Cost (Net)</th>
-                                <th>Default</th>
+                                <th width="5%">Default</th>
                                 @foreach($usergroup as $u)
-                                    <th>{{$u->group_name}}</th>
+                                    <th width="5%">{{$u->group_name}}</th>
                                 @endforeach
-                                <th></th>
+                                <th width="2%"></th>
 
                                 </thead>
+                            </table>
+                            <table id="testTable" class="table table-striped">
                                 <tbody>
                                 @foreach($group as $g)
                                     <tr class="table-warning">
@@ -77,14 +83,14 @@
                                     </tr>
                                     @foreach($imei_service as $v)
                                         @if($v->imei->imei_service_group_id == $g->id )
-                                            <tr id="{{$v->id}}">
-                                                <td>{{$v->id}}</td>
-                                                <td @if($v->imei->status == 'soft_deleted' )style="text-decoration: line-through;"@endif>{{$v->imei->service_name}}</td>
-                                                <td>@if($v->imei->api_id ==! null)<span
+                                            <tr>
+                                                <td width="2%">{{$v->id}}</td>
+                                                <td width="30%" @if($v->imei->status == 'soft_deleted' )style="text-decoration: line-through;"@endif>{{$v->imei->service_name}}</td>
+                                                <td width="10%">@if($v->imei->api_id ==! null)<span
                                                             class="badge badge-pill badge-success">API<span>  @else<span
                                                                     class="badge badge-pill badge-info">Manual<span>  @endif
                                                 </td>
-                                                <td>
+                                                <td width="5%">
                                                     <div class="togglebutton">
                                                         <label id="{{$v->id}}">
                                                             <input onClick="window.location.reload()" class="status" id="check{{$v->id}}" type="checkbox" @if($v->imei->status == 'active' )checked="" @endif>
@@ -92,7 +98,7 @@
                                                         </label>
                                                     </div>
                                                 </td>
-                                                <td>@if($v->nhacungcap ==! null){{$v->nhacungcap->name}}@endif</td>
+                                                <td width="5%">@if($v->nhacungcap ==! null){{$v->nhacungcap->name}}@endif</td>
                                                 @if($v->imei->api_id ==! null)
                                                     <td>@if($v->imei->apiserverservices ==! null)<a rel="tooltip" title="" class="max-lines" data-original-title="{{number_format($v->imei->apiserverservices->credits*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->apiserverservices->credits, 2); ?></a>@endif</td>
                                                 @else
@@ -101,16 +107,16 @@
 
 
                                                 <td><a rel="tooltip" title="" class="max-lines" data-original-title="{{number_format($v->imei->purchase_cost*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->purchase_cost, 2); ?></a></td>
-                                                <td><a rel="tooltip" title="" class="max-lines" data-original-title="{{number_format($v->imei->credit*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->credit, 2); ?></a></td>
+                                                <td width="5%"><a rel="tooltip" title="" class="max-lines" data-original-title="{{number_format($v->imei->credit*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->credit, 2); ?></a></td>
                                                 @foreach($usergroup as $u)
-                                                    <td>  @foreach($v->imei->clientgroupprice as $cl)
+                                                    <td width="5%">  @foreach($v->imei->clientgroupprice as $cl)
                                                         @if($cl->currency == 'USD' && $cl->service_type == 'imei' && $cl->group_id == $u->id )
                                                             <a rel="tooltip" title="" class="max-lines" data-original-title="{{number_format(($v->imei->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->credit + $cl->discount, 2); ?></a>
                                                         @endif
                                                     @endforeach</td>
                                                 @endforeach
 
-                                                <td>@if($v->imei->status == 'active')<a
+                                                <td width="2%">@if($v->imei->status == 'active')<a
                                                             class="material-icons fancybox fancybox.iframe"
                                                             href="{{ asset('') }}imei/{{$v->id}}">edit</a>@endif</td>
                                             </tr>
