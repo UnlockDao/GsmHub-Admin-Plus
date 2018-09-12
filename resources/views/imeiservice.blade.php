@@ -25,13 +25,6 @@
             });
         }, false);
     </script>
-    <style>
-        #testTable{
-            display: block;
-            height: 600px;
-            overflow-y: scroll;
-        }
-    </style>
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
@@ -45,8 +38,8 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive table-full-width table-hover">
-                            <table class="table table-striped">
-                                <thead class="text-primary">
+                            <table class="table table-striped" >
+                                <thead class="text-primary" id="myHeader">
                                 <th width="2%"></th>
                                 <th width="30%">Service Name</th>
                                 <th width="10%">Service Type</th>
@@ -58,11 +51,8 @@
                                 @foreach($usergroup as $u)
                                     <th width="5%">{{$u->group_name}}</th>
                                 @endforeach
-                                <th width="2%"></th>
-
+                                <th width="3%"></th>
                                 </thead>
-                            </table>
-                            <table id="testTable" class="table table-striped">
                                 <tbody>
                                 @foreach($group as $g)
                                     <tr class="table-warning">
@@ -107,13 +97,13 @@
 
 
                                                 <td><a rel="tooltip" title="" class="max-lines" data-original-title="{{number_format($v->imei->purchase_cost*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->purchase_cost, 2); ?></a></td>
-                                                <td width="5%"><a rel="tooltip" title="" class="max-lines" data-original-title="{{number_format($v->imei->credit*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->credit, 2); ?></a></td>
+                                                <td width="5%"><a rel="tooltip" data-original-title="{{number_format($v->imei->credit*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->credit, 2); ?></a></td>
                                                 @foreach($usergroup as $u)
                                                     <td width="5%">  @foreach($v->imei->clientgroupprice as $cl)
-                                                        @if($cl->currency == 'USD' && $cl->service_type == 'imei' && $cl->group_id == $u->id )
-                                                            <a rel="tooltip" title="" class="max-lines" data-original-title="{{number_format(($v->imei->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->credit + $cl->discount, 2); ?></a>
-                                                        @endif
-                                                    @endforeach</td>
+                                                            @if($cl->currency == 'USD' && $cl->service_type == 'imei' && $cl->group_id == $u->id )
+                                                                <a rel="tooltip" data-original-title="{{number_format(($v->imei->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->credit + $cl->discount, 2); ?></a>
+                                                            @endif
+                                                        @endforeach</td>
                                                 @endforeach
 
                                                 <td width="2%">@if($v->imei->status == 'active')<a
@@ -122,23 +112,14 @@
                                             </tr>
                                         @endif
                                     @endforeach
-
                                 @endforeach
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
-
-
     </div>
-
-
-
-
-
 @endsection
 

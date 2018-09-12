@@ -28,6 +28,16 @@
     ::-webkit-scrollbar-thumb {
         -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
     }
+    .sticky {
+        position: fixed;
+        top: 0;
+    }
+    #myHeader {
+        background: #fff;
+        margin-left: -20px;
+        margin-right: 30px;
+
+    }
 </style>
 <body class="sidebar-mini">
 <div class="wrapper">
@@ -91,5 +101,20 @@
     $('.defaultcurrency').on('change', function () {
         $('.defaultcurrency').not(this).prop('checked', false);
     });
+</script>
+
+<script>
+    window.onscroll = function() {myFunction()};
+
+    var header = document.getElementById("myHeader");
+    var sticky = header.offsetTop;
+
+    function myFunction() {
+        if (window.pageYOffset > sticky) {
+            header.classList.add("sticky");
+        } else {
+            header.classList.remove("sticky");
+        }
+    }
 </script>
 </html>
