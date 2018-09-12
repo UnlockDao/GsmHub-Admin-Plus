@@ -87,7 +87,7 @@
                                                 <td>
                                                     <div class="togglebutton">
                                                         <label id="{{$v->id}}">
-                                                            <input class="status" id="check{{$v->id}}" type="checkbox" @if($v->imei->status == 'active' )checked="" @endif>
+                                                            <input onClick="window.location.reload()" class="status" id="check{{$v->id}}" type="checkbox" @if($v->imei->status == 'active' )checked="" @endif>
                                                             <span class="toggle"></span>
                                                         </label>
                                                     </div>

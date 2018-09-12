@@ -50,6 +50,7 @@
                                 <th>Supplier</th>
                                 <th>Purchase Cost</th>
                                 <th>Purchase Cost (Net)</th>
+                                <th>Credit</th>
                                 @foreach($clientgroup as $cg)
                                     <th>{{$cg->group_name}}</th>
                                 @endforeach
@@ -60,6 +61,7 @@
                                     <tr class="table-warning">
                                         <td><i class="material-icons">monetization_on</i></td>
                                         <td><strong style="font-weight:700;">{{$g->group_name}}</strong></td>
+                                        <td></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -84,15 +86,16 @@
                                                 <td>
                                                     <div class="togglebutton">
                                                         <label id="{{$v->id}}">
-                                                            <input class="status" id="check{{$v->id}}" type="checkbox"
+                                                            <input class="status" id="check{{$v->id}}" type="checkbox" onClick="window.location.reload()"
                                                                    @if($v->status == 'active' )checked="" @endif>
                                                             <span class="toggle"></span>
                                                         </label>
                                                     </div>
                                                 </td>
                                                 <td>@if($v->servicepricing->nhacungcap ==! null){{$v->servicepricing->nhacungcap->name}}@endif</td>
-                                                <td>@if($v->api_id ==! null){{number_format($v->apiserverservices->credits,2)}}@elseif($v->servicepricing->purchasecost == null){{number_format($v->purchase_cost,2)}}@else{{number_format($v->servicepricing->purchasecost,2)}}@endif</td>
-                                                <td>{{number_format($v->purchase_cost,2)}}</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
@@ -113,6 +116,8 @@
                                                         <td></td>
                                                         <td>@if($v->api_id ==! null){{number_format($v->apiserverservices->credits,2)}}@elseif($v->servicepricing->purchasecost == null){{number_format($v->purchase_cost,2)}}@else{{number_format($v->servicepricing->purchasecost,2)}}@endif</td>
                                                         <td>{{number_format($v->purchase_cost,2)}}</td>
+                                                        <td>@foreach($serverservicequantityrange->serverserviceusercredit as $serverserviceusercredit)@if($serverserviceusercredit->currency == 'USD')
+                                                                {{number_format($serverserviceusercredit->credit,2)}}@endif @endforeach</td>
                                                         @foreach($clientgroup as $cg)
                                                             <td>@foreach($serverservicequantityrange->serverserviceclientgroupcredit as $serverserviceclientgroupcredit)
                                                                     @if($serverserviceclientgroupcredit->currency=='USD' && $serverserviceclientgroupcredit->client_group_id==$cg->id )
@@ -138,6 +143,7 @@
                                                                 @endforeach
                                                         @else{{ number_format($a->purchase_cost_not_net, 2) }}@endif</td>
                                                         <td>{{ number_format($a->purchase_cost, 2) }}</td>
+                                                        <td>{{ $a->amount }}</td>
                                                         @foreach($clientgroup as $cg)
                                                             <td>@foreach($a->serverservicetypewisegroupprice as $serverservicetypewisegroupprice)
                                                                     @if($serverservicetypewisegroupprice->service_type_id == $a->id &&$serverservicetypewisegroupprice->group_id == $cg->id)

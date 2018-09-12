@@ -22,9 +22,51 @@ class ServerserviceController extends Controller
         $this->middleware('auth');
     }
 
+    public function checkNullUser(){
+
+
+
+        $clientgroup = Clientgroup::orderBy('chietkhau')->get();
+
+        $serverservices = Serverservice::get();
+        foreach ($serverservices as $serverservice){
+            //add price user null wise
+            foreach($serverservice->serverservicetypewiseprice as $a){
+                foreach ($clientgroup as $cg) {
+                    $check = Serverservicetypewisegroupprice::where('group_id', $cg->id)->where('server_service_id', $serverservice->id)->where('service_type_id', $a->id)->first();
+                    if ($check == null) {
+                        $create = Serverservicetypewisegroupprice::firstOrCreate(['server_service_id'=>$serverservice->id,
+                            'service_type_id'=>$a->id,
+                            'group_id'=>$cg->id,
+                            'currency'=>'USD',
+                            'amount'=>$a->amount]);
+                    }
+                }
+            }
+            //add price user null
+            foreach($serverservice->serverservicequantityrange as $sr){
+                foreach ($clientgroup as $cg) {
+                    $check = Serverserviceclientgroupcredit::where('client_group_id', $cg->id)->where('server_service_range_id', $sr->id)->first();
+                    if ($check == null) {
+                        $currencies = Currencie::where('display_currency', 'Yes')->get();
+                        foreach ($currencies as $c) {
+                            if( $sr->serverserviceusercredit->where('currency','USD')->first() ==! null){
+                            $create = Serverserviceclientgroupcredit::firstOrCreate(['server_service_range_id' => $sr->id,
+                                'client_group_id' => $cg->id,
+                                'credit' => $sr->serverserviceusercredit->where('currency','USD')->first()->credit* $c->exchange_rate_static,
+                                'currency' => $c->currency_code]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public function index(Request $request)
     {
         $this->checkServer();
+        $this->checkNullUser();
         $this->UpdatePurchaseCostVip();
         $this->checkApiToNull();
         //
@@ -120,34 +162,6 @@ class ServerserviceController extends Controller
 
         $allcurrencies = Currencie::get();
 
-        //add price user null wise
-        foreach($serverservice->serverservicetypewiseprice as $a){
-            foreach ($clientgroup as $cg) {
-                $check = Serverservicetypewisegroupprice::where('group_id', $cg->id)->where('server_service_id', $id)->where('service_type_id', $a->id)->first();
-                if ($check == null) {
-                    $create = Serverservicetypewisegroupprice::firstOrCreate(['server_service_id'=>$id,
-                        'service_type_id'=>$a->id,
-                        'group_id'=>$cg->id,
-                        'currency'=>'USD',
-                        'amount'=>$a->purchase_cost]);
-                }
-            }
-        }
-        //add price user null
-        foreach($serverservice->serverservicequantityrange as $sr){
-            foreach ($clientgroup as $cg) {
-                $check = Serverserviceclientgroupcredit::where('client_group_id', $cg->id)->where('server_service_range_id', $sr->id)->first();
-                if ($check == null) {
-                    $currencies = Currencie::where('display_currency', 'Yes')->get();
-                    foreach ($currencies as $c) {
-                        $create = Serverserviceclientgroupcredit::firstOrCreate(['server_service_range_id' => $sr->id,
-                            'client_group_id' => $cg->id,
-                            'credit' => $serverservice->purchase_cost* $c->exchange_rate_static,
-                            'currency' => $c->currency_code]);
-                    }
-                }
-            }
-        }
         return view('edit.editserver', compact('serverservice', 'supplier', 'exchangerate','clientgroup','cliendefault','allcurrencies'));
     }
 
