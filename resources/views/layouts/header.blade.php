@@ -34,6 +34,7 @@
     }
     #myHeader {
         background: #fff;
+        z-index: 10;
         margin-left: -20px;
         margin-right: 30px;
 
