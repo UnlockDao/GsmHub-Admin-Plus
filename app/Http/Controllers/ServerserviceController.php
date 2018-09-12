@@ -197,12 +197,11 @@ class ServerserviceController extends Controller
 
 
             }
-            $c = $request->input('credit_'.$ra->id);
+            $c = $request->input('credit_'.$ra->server_service_range_id);
             if ($c == !null) {
                 foreach ($currencies as $cu) {
-                    $credit= Serverserviceusercredit::where('server_service_range_id',$ra->id)->where('currency',$cu->currency_code)->update(['credit' => $c * $cu->exchange_rate_static]);
+                    $credit= Serverserviceusercredit::where('server_service_range_id',$ra->server_service_range_id)->where('currency',$cu->currency_code)->update(['credit' => $c * $cu->exchange_rate_static]);
                 }
-
             }
         }
         return back();
