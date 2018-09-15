@@ -42,9 +42,9 @@ return [
         'mysql' => [
             'driver'    => 'mysql',
             'host'      => 'localhost',
-            'database'  => 'admin_sunlockdbvn',
-            'username'  => 'sunlockdbvn',
-            'password'  => 'GvD3Wbs22NwrdRLC',
+            'database'  => 'admin_sunlock2018',
+            'username'  => 'sunlockdb',
+            'password'  => '2T*Dn?rJt?fq7VJy',
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
