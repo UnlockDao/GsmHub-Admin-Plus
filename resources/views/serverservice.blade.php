@@ -118,7 +118,12 @@
                                                         @foreach($clientgroup as $cg)
                                                             <td  width="5%">@foreach($serverservicequantityrange->serverserviceclientgroupcredit as $serverserviceclientgroupcredit)
                                                                     @if($serverserviceclientgroupcredit->currency=='USD' && $serverserviceclientgroupcredit->client_group_id==$cg->id )
-                                                                        <a rel="tooltip"  data-original-title="{{number_format($serverserviceclientgroupcredit->credit*$exchangerate->exchange_rate_static)}} đ" >{{number_format($serverserviceclientgroupcredit->credit,2)}}</a>@endif
+                                                                            @if($v->purchase_cost > $serverserviceclientgroupcredit->credit)
+                                                                            <span class="badge badge-pill badge-danger">{{number_format($serverserviceclientgroupcredit->credit,2)}}<span>
+                                                                            @else
+                                                                            <a rel="tooltip"  data-original-title="{{number_format($serverserviceclientgroupcredit->credit*$exchangerate->exchange_rate_static)}} đ" >{{number_format($serverserviceclientgroupcredit->credit,2)}}</a>
+                                                                            @endif
+                                                                        @endif
                                                                 @endforeach
                                                             </td>
                                                         @endforeach
@@ -144,7 +149,11 @@
                                                         @foreach($clientgroup as $cg)
                                                             <td  width="5%">@foreach($a->serverservicetypewisegroupprice as $serverservicetypewisegroupprice)
                                                                     @if($serverservicetypewisegroupprice->service_type_id == $a->id &&$serverservicetypewisegroupprice->group_id == $cg->id)
-                                                                        <a rel="tooltip"  data-original-title="{{number_format($serverservicetypewisegroupprice->amount*$exchangerate->exchange_rate_static)}} đ" >{{ number_format( $serverservicetypewisegroupprice->amount , 2) }}</a>
+                                                                           @if($a->purchase_cost > $serverservicetypewisegroupprice->amount)
+                                                                            <span class="badge badge-pill badge-danger">{{ number_format( $serverservicetypewisegroupprice->amount , 2) }}<span>
+                                                                           @else
+                                                                            <a rel="tooltip"  data-original-title="{{number_format($serverservicetypewisegroupprice->amount*$exchangerate->exchange_rate_static)}} đ" >{{ number_format( $serverservicetypewisegroupprice->amount , 2) }}</a>
+                                                                           @endif
                                                                     @endif
                                                                 @endforeach
                                                             </td>
