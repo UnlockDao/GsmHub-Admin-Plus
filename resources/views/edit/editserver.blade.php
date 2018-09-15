@@ -1,5 +1,27 @@
 @extends('layouts.app')
 @section('content')
+    <script>
+        function VNtoUSD() {
+            if(Enabled == 1) {
+                var vnd, usd;
+                //Lấy text từ thẻ input title
+                vnd = document.getElementById("valueExchangerates").value;
+                var b = parseFloat(vnd) / {{$exchangerate->exchange_rate_static}};
+                result = b;
+                document.getElementById('results').value = result;
+            }
+        }
+        function USDtoVND() {
+            if(Enabled == 2)
+            {
+                var vnd, usd;
+                //Lấy text từ thẻ input title
+                usd = document.getElementById("results").value;
+                var b = parseFloat(usd) * {{$exchangerate->exchange_rate_static}};
+                document.getElementById('valueExchangerates').value = b;
+            }
+        }
+    </script>
     @if($serverservice->servicepricing->id_supplier == null)
         <div class="container-fluid">
             <div class="row">
@@ -51,28 +73,23 @@
                                         <div class="col-md-4">
                                             <strong>Exchangerates</strong>
                                             <input id="valueExchangerates" class="form-control" autocomplete="off"
-                                                   onchange="conversecurrency();">
+                                                   onchange="VNtoUSD();" onclick="Enabled=1;USDtoVND();">
                                         </div>
                                         <div class="col-md-2">
                                             <strong>From</strong>
                                             <select class="form-control" id="valueFrom">
-                                                @foreach($allcurrencies as $ac)
-                                                    <option value="{{$ac->currency_code}}">{{$ac->currency_code}}</option>
-                                                @endforeach
+                                                <option value="VND">VND</option>
                                             </select>
                                         </div>
                                         <div class="col-md-1">
                                             <strong>To</strong>
                                             <select class="form-control" id="valueTo">
-                                                @foreach($allcurrencies as $ac)
-                                                    <option @if($ac->currency_code == $exchangerate->currency_code) selected
-                                                            @endif value="{{$ac->currency_code}}">{{$ac->currency_code}}</option>
-                                                @endforeach
+                                                <option value="USD">USD</option>
                                             </select>
                                         </div>
                                         <div class="col-md-5">
                                             <strong>Result</strong>
-                                            <input id=results class="form-control" readonly>
+                                            <input onchange="USDtoVND();" onclick="Enabled=3;VNtoUSD();Enabled=2;USDtoVND();" id=results class="form-control" autocomplete="off">
                                         </div>
                                     </div>
                                     <div class="row">
@@ -223,28 +240,23 @@
                                         <div class="col-md-4">
                                             <strong>Exchangerates</strong>
                                             <input id="valueExchangerates" class="form-control" autocomplete="off"
-                                                   onchange="conversecurrency();">
+                                                   onchange="VNtoUSD();" onclick="Enabled=1;USDtoVND();">
                                         </div>
                                         <div class="col-md-2">
                                             <strong>From</strong>
                                             <select class="form-control" id="valueFrom">
-                                                @foreach($allcurrencies as $ac)
-                                                    <option value="{{$ac->currency_code}}">{{$ac->currency_code}}</option>
-                                                @endforeach
+                                                <option value="VND">VND</option>
                                             </select>
                                         </div>
                                         <div class="col-md-1">
                                             <strong>To</strong>
                                             <select class="form-control" id="valueTo">
-                                                @foreach($allcurrencies as $ac)
-                                                    <option @if($ac->currency_code == $exchangerate->currency_code) selected
-                                                            @endif value="{{$ac->currency_code}}">{{$ac->currency_code}}</option>
-                                                @endforeach
+                                                <option value="USD">USD</option>
                                             </select>
                                         </div>
                                         <div class="col-md-5">
                                             <strong>Result</strong>
-                                            <input id=results class="form-control" readonly>
+                                            <input onchange="USDtoVND();" onclick="Enabled=3;VNtoUSD();Enabled=2;USDtoVND();" id=results class="form-control" autocomplete="off">
                                         </div>
                                     </div>
                                     <div class="row">
