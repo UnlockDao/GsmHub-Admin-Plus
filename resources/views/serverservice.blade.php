@@ -113,8 +113,15 @@
                                                         <td></td>
                                                         <td width="10%">@if($v->api_id ==! null){{number_format($v->apiserverservices->credits,2)}}@elseif($v->servicepricing->purchasecost == null){{number_format($v->purchase_cost,2)}}@else{{number_format($v->servicepricing->purchasecost,2)}}@endif</td>
                                                         <td width="10%">{{number_format($v->purchase_cost,2)}}</td>
-                                                        <td width="5%">@foreach($serverservicequantityrange->serverserviceusercredit as $serverserviceusercredit)@if($serverserviceusercredit->currency == 'USD')
-                                                                {{number_format($serverserviceusercredit->credit,2)}}@endif @endforeach</td>
+                                                        <td width="5%">@foreach($serverservicequantityrange->serverserviceusercredit as $serverserviceusercredit)
+                                                                @if($serverserviceusercredit->currency == 'USD')
+                                                                        @if($v->purchase_cost > $serverserviceusercredit->credit)
+                                                                        <span class="badge badge-pill badge-danger">{{number_format($serverserviceusercredit->credit,2)}}<span>
+                                                                        @else
+                                                                        {{number_format($serverserviceusercredit->credit,2)}}
+                                                                        @endif
+                                                                @endif
+                                                            @endforeach</td>
                                                         @foreach($clientgroup as $cg)
                                                             <td  width="5%">@foreach($serverservicequantityrange->serverserviceclientgroupcredit as $serverserviceclientgroupcredit)
                                                                     @if($serverserviceclientgroupcredit->currency=='USD' && $serverserviceclientgroupcredit->client_group_id==$cg->id )
@@ -145,7 +152,13 @@
                                                                 @endforeach
                                                         @else{{ number_format($a->purchase_cost_not_net, 2) }}@endif</td>
                                                         <td width="10%">{{ number_format($a->purchase_cost, 2) }}</td>
-                                                        <td width="5%">{{ $a->amount }}</td>
+                                                        <td width="5%">
+                                                                @if($a->purchase_cost > $a->amount)
+                                                                <span class="badge badge-pill badge-danger">{{ number_format( $a->amount , 2) }}<span>
+                                                                @else
+                                                                {{ number_format( $a->amount , 2) }}
+                                                                @endif
+                                                        </td>
                                                         @foreach($clientgroup as $cg)
                                                             <td  width="5%">@foreach($a->serverservicetypewisegroupprice as $serverservicetypewisegroupprice)
                                                                     @if($serverservicetypewisegroupprice->service_type_id == $a->id &&$serverservicetypewisegroupprice->group_id == $cg->id)
