@@ -51,14 +51,14 @@
 
     });
 </script>
-<script src="{{ asset('js/framecoinmill.js') }}"></script>
-<script>
-    function conversecurrency() {
-        valueFrom = document.getElementById("valueFrom").value;
-        valueTo = document.getElementById("valueTo").value;
-        valueExchangerates = document.getElementById("valueExchangerates").value;
-        resultscurrency_convert = currency_convert(valueExchangerates, valueFrom, valueTo)
-        document.getElementById('results').value = resultscurrency_convert;
-    }
-</script>
+{{--<script src="{{ asset('js/framecoinmill.js') }}"></script>--}}
+{{--<script>--}}
+    {{--function conversecurrency() {--}}
+        {{--valueFrom = document.getElementById("valueFrom").value;--}}
+        {{--valueTo = document.getElementById("valueTo").value;--}}
+        {{--valueExchangerates = document.getElementById("valueExchangerates").value;--}}
+        {{--resultscurrency_convert = currency_convert(valueExchangerates, valueFrom, valueTo)--}}
+        {{--document.getElementById('results').value = resultscurrency_convert;--}}
+    {{--}--}}
+{{--</script>--}}
 </html>

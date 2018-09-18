@@ -97,11 +97,21 @@
 
 
                                                 <td width="10%"><a rel="tooltip"  data-original-title="{{number_format($v->imei->purchase_cost*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->purchase_cost, 2); ?></a></td>
-                                                <td width="5%"><a rel="tooltip" data-original-title="{{number_format($v->imei->credit*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->credit, 2); ?></a></td>
+                                                <td width="5%">
+                                                   @if($v->imei->purchase_cost > $v->imei->credit)
+                                                        <span class="badge badge-pill badge-danger">{{number_format($v->imei->credit, 2)}}<span>
+                                                   @else
+                                                       <a rel="tooltip" data-original-title="{{number_format($v->imei->credit*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->credit, 2); ?></a>
+                                                   @endif
+                                                </td>
                                                 @foreach($usergroup as $u)
                                                     <td width="5%">  @foreach($v->imei->clientgroupprice as $cl)
                                                             @if($cl->currency == 'USD' && $cl->service_type == 'imei' && $cl->group_id == $u->id )
-                                                                <a rel="tooltip" data-original-title="{{number_format(($v->imei->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->credit + $cl->discount, 2); ?></a>
+                                                                @if($v->imei->purchase_cost > $v->imei->credit + $cl->discount)
+                                                                    <span class="badge badge-pill badge-danger"><?php echo number_format($v->imei->credit + $cl->discount, 2); ?><span>
+                                                                @else
+                                                                    <a rel="tooltip" data-original-title="{{number_format(($v->imei->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->credit + $cl->discount, 2); ?></a>
+                                                                @endif
                                                             @endif
                                                         @endforeach</td>
                                                 @endforeach
