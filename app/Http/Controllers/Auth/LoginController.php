@@ -38,7 +38,26 @@ class LoginController extends Controller
                 return redirect('/');
             }
         } else {
-            return redirect('/');
+            $admin = Administrator::where('user_id', $users->user_id)->where('role_adminplus', '1')->first();
+            if ($admin == !null) {
+                if ($users == !null) {
+                    $hash = $users->bba_token;
+                } else {
+                    $hash = '';
+                }
+                $user = User::where('user_name', $request->email)
+                    ->where('password', md5($request->password . $hash))
+                    ->first();
+
+                if ($user == !null) {
+                    Auth::login($user);
+                    return redirect('/');
+                } else {
+                    return redirect('/');
+                }
+            } else {
+                return redirect('/');
+            }
         }
     }
 
