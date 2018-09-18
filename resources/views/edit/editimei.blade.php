@@ -99,15 +99,20 @@
                                         </thead>
                                         <tbody>
                                         <td><input type="text" name="credit" id="credit" class="form-control"
-                                                   value="{{$imei->imei->credit}}"
+                                                   value="{{$imei->imei->credit}}" @if($cliendefault == null) onchange="Chietkhau();" @endif
                                                    placeholder="Credit" autocomplete="off"></td>
                                         @foreach($pricegroup as $c)
                                             @if($c->chietkhau ==! null)
                                                 <td><input type="text" name="giabanle{{$c->group_id}}"
                                                            id="chietkhau{{$c->group_id}}"
-                                                           @if($c->group_id== $cliendefault->id) onchange="Chietkhau();"
-                                                           onclick="Enabled=true;Chietkhau();" @endif
-                                                           @if($c->group_id !== $cliendefault->id) onclick="Enabled=false;Chietkhau();"
+                                                           @if($cliendefault ==! null)
+                                                               @if($c->group_id== $cliendefault->id) onchange="Chietkhau();"
+                                                               onclick="Enabled=true;Chietkhau();"
+                                                               @endif
+                                                               @if($c->group_id !== $cliendefault->id) onclick="Enabled=false;Chietkhau();"
+                                                               @endif
+                                                           @else
+                                                                onclick="Enabled=false;Chietkhau();"
                                                            @endif
                                                            class="form-control"
                                                            value="<?php echo $imei->imei->credit + $c->discount  ?>"
@@ -151,12 +156,21 @@
                     //tính giá đã bao gồm phí chuyển đổi
                     var giatransactionfee = document.getElementById("purchasenet").value;
                     //Lấy giá trị từ giá bán lẻ
+                    @if($cliendefault ==! null)
                     var user = document.getElementById("chietkhau{{$cliendefault->id}}").value;
+                    @else
+                    var user = document.getElementById("credit").value;
+                    @endif
                     @foreach($clien as $pri)
                         result{{$pri->id}} = (user - (((user - giatransactionfee) / 100) *{{$pri->chietkhau}}));
-                    @if($pri->id !== $cliendefault->id)
-                    document.getElementById('chietkhau{{$pri->id}}').value = result{{$pri->id}}.toFixed(2);
-                    @endif
+                        @if($cliendefault == null)
+                        document.getElementById('chietkhau{{$pri->id}}').value = result{{$pri->id}}.toFixed(2);
+                                @else
+                                    @if($pri->id !== $cliendefault->id)
+                                        document.getElementById('chietkhau{{$pri->id}}').value = result{{$pri->id}}.toFixed(2);
+                                    @endif
+                                @endif
+
                     @endforeach
                 }
             }

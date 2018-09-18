@@ -16,6 +16,8 @@ class SQL extends Migration
         $this->servicePricing();
         $this->currencyPricing();
         $this->addServerservicepurchasecostnotvip();
+        $this->roleAdminplus();
+
     }
 
     public function createSupplier()
@@ -111,6 +113,14 @@ class SQL extends Migration
             });
         }
 
+    }
+    public function roleAdminplus(){
+        if (!Schema::hasColumn('administrator', 'role_adminplus'))
+        {
+            Schema::table('administrator', function (Blueprint $table) {
+                $table->integer('role_adminplus');
+            });
+        }
     }
 
 }

@@ -142,19 +142,16 @@ class IMEIController extends Controller
 
         $allcurrencies = Currencie::get();
 
-        $imei = Imeiservicepricing::with('nhacungcap')->with(['imei' => function ($query) {
-        }, 'imei.clientgroupprice' => function ($query) use ($cliendefault) {
-            $query->where('currency', 'USD')->where('group_id', $cliendefault->id);
-        }])->find($id);
+        $imei = Imeiservicepricing::find($id);
         $nhacungcap = Supplier::get();
 
         $imeiservice = Imeiservice::find($id);
 
         $pricegroup = Clientgroupprice::orderBy('group_id', 'desc')->where('currency', 'USD')->where('service_type', 'imei')->where('service_id', $id)->get();
 
-        $price = Clientgroupprice::where('currency', 'USD')->where('group_id', $cliendefault->id)->where('service_id', $id)->first();
 
-        return view('edit.editimei', compact('imei', 'nhacungcap', 'clien', 'pricegroup', 'price', 'exchangerate', 'cliendefault', 'allcurrencies'));
+
+        return view('edit.editimei', compact('imei', 'nhacungcap', 'clien', 'pricegroup', 'exchangerate', 'cliendefault', 'allcurrencies'));
     }
 
     public function edit($id, Request $request)
