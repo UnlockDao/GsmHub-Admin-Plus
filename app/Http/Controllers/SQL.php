@@ -118,7 +118,7 @@ class SQL extends Migration
         if (!Schema::hasColumn('administrator', 'role_adminplus'))
         {
             Schema::table('administrator', function (Blueprint $table) {
-                $table->integer('role_adminplus');
+                $table->integer('role_adminplus')->default(1);
             });
         }
     }

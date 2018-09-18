@@ -59,6 +59,12 @@
             <p>Currency</p>
         </a>
     </li>
+    <li class="nav-item ">
+        <a class="nav-link" href="{{ url('role') }}">
+            <i class="material-icons">fingerprint</i>
+            <p>Role</p>
+        </a>
+    </li>
 
 
 </ul>
