@@ -61,4 +61,26 @@ class LoginController extends Controller
         }
     }
 
+    public function role()
+    {
+        $administrator = Administrator::get();
+        return view('role',compact('administrator'));
+    }
+
+    public function status($par = NULL, $par2 = NULL)
+    {
+        if ($par == "status") {
+            $id = $_GET['id'];
+            $imei = Administrator::find($id);
+            $imei->role_adminplus = $par2;
+            $imei->save();
+            if ($par2 == '1') {
+                echo 'Active';
+            } else {
+                echo 'Disable';
+            }
+            exit();
+        }
+        return;
+    }
 }

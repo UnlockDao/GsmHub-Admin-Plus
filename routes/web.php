@@ -64,3 +64,6 @@ Route::post('updatesupplierserver/{id}', 'ServerserviceController@updatesupplier
 Route::post('serverservice/{id}', 'ServerserviceController@edit');
 Route::post('serverservicewise/{id}', 'ServerserviceController@editwise');
 Route::get('service/{squirrel}/{any}', 'ServerserviceController@status');
+
+Route::get('role', 'Auth\LoginController@role');
+Route::get('role/{squirrel}/{any}', 'Auth\LoginController@status');
