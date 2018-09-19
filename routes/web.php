@@ -41,6 +41,7 @@ Route::get('imei/{squirrel}/{any}', 'IMEIController@status');
 Route::get('clientgroup', 'ClientController@index');
 Route::get('clientgroup/{id}', 'ClientController@show');
 Route::post('clientgroup/{id}', 'ClientController@edit');
+Route::get('clientgroup/{squirrel}/{any}', 'ClientController@status');
 
 //thêm sửa xóa nhà cung cấp, phí giao dịch, tỉ giá
 Route::get('supplier', 'SupplierController@index');
@@ -64,3 +65,6 @@ Route::post('updatesupplierserver/{id}', 'ServerserviceController@updatesupplier
 Route::post('serverservice/{id}', 'ServerserviceController@edit');
 Route::post('serverservicewise/{id}', 'ServerserviceController@editwise');
 Route::get('service/{squirrel}/{any}', 'ServerserviceController@status');
+
+Route::get('role', 'Auth\LoginController@role');
+Route::get('role/{squirrel}/{any}', 'Auth\LoginController@status');

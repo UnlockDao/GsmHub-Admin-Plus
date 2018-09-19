@@ -6,10 +6,10 @@
                 var ida = $(this).parent().attr('id');
                 var url = '';
                 if ($(this).prop('checked') == true) {
-                    url = 'clientgroup/status/active';
+                    url = 'role/status/1';
                 }
                 else if ($(this).prop('checked') == false) {
-                    url = 'clientgroup/status/inactive';
+                    url = 'role/status/0';
                 }
                 $.ajax({
                     url: url,
@@ -34,37 +34,33 @@
                         <div class="card-icon">
                             <i class="material-icons">monetization_on</i>
                         </div>
-                        <button type="button" onfocus="tableToExcel('testTable', 'W3C Example Table')"
-                                class="btn btn-info pull-right"><i class="material-icons">cloud_download</i>
-                        </button>
-                        <h4 class="card-title ">IMEI Service</h4>
+                        <h4 class="card-title ">Currency</h4>
+
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table id="testTable" class="table">
                                 <thead class="text-primary">
                                 <th width="2%">ID</th>
-                                <th>User</th>
-                                <th>Status</th>
-                                <th>%</th>
-                                <th>Edit</th>
+                                <th>Name</th>
+                                <th>Role</th>
+
 
                                 </thead>
                                 <tbody>
-                                @foreach($client as $v)
+                                @foreach($administrator as $v)
                                     <tr>
                                         <td>{{$v->id}}</td>
-                                        <td>{{$v->group_name}}</td>
-                                        <td><div class="togglebutton">
+                                        <td>{{$v->user->user_name}}</td>
+                                        <td>
+                                            <div class="togglebutton">
                                                 <label id="{{$v->id}}">
-                                                    <input class="status" id="check{{$v->id}}" type="checkbox"
-                                                    @if($v->status == 'active')checked="" @endif>
+                                                    <input class="status" id="check{{$v->id}}" type="checkbox" @if($v->administrator_role_id == '1') disabled checked @endif
+                                                           @if($v->role_adminplus == '1' )checked="" @endif>
                                                     <span class="toggle"></span>
                                                 </label>
-                                            </div></td>
-                                        <td>{{$v->chietkhau}}</td>
-                                        <td><a class="material-icons "
-                                               href="{{ asset('') }}clientgroup/{{$v->id}}">edit</a></td>
+                                            </div>
+                                        </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -75,13 +71,6 @@
 
             </div>
         </div>
-
-
     </div>
-
-
-
-
-
 @endsection
 

@@ -30,7 +30,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header card-header-icon card-header-rose">
-                        <button type="button" onclick="tableToExcel('testTable', 'W3C Example Table')"
+                        <button type="button" onfocus="tableToExcel('testTable', 'W3C Example Table')"
                                 class="btn btn-info pull-right"><i class="material-icons">cloud_download</i>
                         </button>
                         <h3 class="card-title ">Server Services</h3>
@@ -65,17 +65,15 @@
                                         <td></td>
                                         <td></td>
                                         <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        @foreach($clientgroup as $cg)
+                                            <td></td>
+                                        @endforeach
                                     </tr>
                                     @foreach($serverservice as $v)
                                         @if($v->server_service_group_id == $g->id )
                                             <tr class="table-info">
                                                 <td width="2%">{{$v->id}}</td>
-                                                <td width="30%">{{$v->service_name}}</td>
+                                                <td width="30%"><a href="https://s-unlock.com/admin/server-service/edit/{{$v->id}}" target="_blank">{{$v->service_name}}</a> </td>
                                                 <td width="10">@if($v->api_id ==! null)<span
                                                             class="badge badge-pill badge-success">API<span>  @else<span
                                                                     class="badge badge-pill badge-info">Manual<span>  @endif
@@ -83,7 +81,7 @@
                                                 <td width="5%">
                                                     <div class="togglebutton">
                                                         <label id="{{$v->id}}">
-                                                            <input class="status" id="check{{$v->id}}" type="checkbox" onClick="window.location.reload()"
+                                                            <input class="status" id="check{{$v->id}}" type="checkbox" onfocus="window.location.reload()"
                                                                    @if($v->status == 'active' )checked="" @endif>
                                                             <span class="toggle"></span>
                                                         </label>
@@ -93,11 +91,9 @@
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
+                                                @foreach($clientgroup as $cg)
+                                                    <td></td>
+                                                @endforeach
                                                 <td width="2%"><a class="material-icons fancybox fancybox.iframe"
                                                        href="{{ asset('') }}serverservice/{{$v->id}}">edit</a></td>
                                             </tr>

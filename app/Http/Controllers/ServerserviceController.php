@@ -26,7 +26,7 @@ class ServerserviceController extends Controller
 
 
 
-        $clientgroup = Clientgroup::orderBy('chietkhau')->get();
+        $clientgroup = Clientgroup::where('status','active')->orderBy('chietkhau')->get();
 
         $serverservices = Serverservice::get();
         foreach ($serverservices as $serverservice){
@@ -75,7 +75,7 @@ class ServerserviceController extends Controller
         //
         $server_service_group = Serverservicegroup::get();
         $serverservice = Serverservice::get();
-        $clientgroup = Clientgroup::orderBy('chietkhau')->get();
+        $clientgroup = Clientgroup::where('status','active')->orderBy('chietkhau')->get();
         return view('serverservice', compact('serverservice','server_service_group','clientgroup','exchangerate'));
     }
 
@@ -149,9 +149,9 @@ class ServerserviceController extends Controller
         $defaultcurrency = Currenciepricing::where('type', '1')->first();
         $exchangerate = Currencie::find($defaultcurrency->currency_id);
         //find default price ck 0
-        $cliendefault = Clientgroup::where('chietkhau', '0')->first();
+        $cliendefault = Clientgroup::where('status','active')->where('chietkhau', '0')->first();
 
-        $clientgroup = Clientgroup::orderBy('chietkhau')->get();
+        $clientgroup = Clientgroup::where('status','active')->orderBy('chietkhau')->get();
 
         $supplier = Supplier::get();
         $serverservice = Serverservice::find($id);
@@ -182,7 +182,7 @@ class ServerserviceController extends Controller
         $purchasecostnet->purchase_cost = $request->purchasenet;
         $purchasecostnet->service_name = $request->service_name;
         $purchasecostnet->save();
-        $clientgroup = Clientgroup::get();
+        $clientgroup = Clientgroup::where('status','active')->get();
         $range = Serverserviceclientgroupcredit::get();
         $currencies = Currencie::where('display_currency', 'Yes')->get();
         foreach ($range as $ra) {
@@ -222,7 +222,7 @@ class ServerserviceController extends Controller
         $purchasecostnet->save();
 
 
-        $clientgroup = Clientgroup::get();
+        $clientgroup = Clientgroup::where('status','active')->get();
         $server_service_type_wise_price = Serverservicetypewiseprice::get();
         foreach ($server_service_type_wise_price as $sp){
             $pc = $request->input('purchase_cost_vip_' . $sp->id);
