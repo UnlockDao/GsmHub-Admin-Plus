@@ -30,7 +30,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header card-header-icon card-header-rose">
-                        <button type="button" onclick="tableToExcel('testTable', 'W3C Example Table')"
+                        <button type="button" onfocus="tableToExcel('testTable', 'W3C Example Table')"
                                 class="btn btn-info pull-right"><i class="material-icons">cloud_download</i>
                         </button>
                         <h3 class="card-title ">Server Services</h3>
@@ -83,7 +83,7 @@
                                                 <td width="5%">
                                                     <div class="togglebutton">
                                                         <label id="{{$v->id}}">
-                                                            <input class="status" id="check{{$v->id}}" type="checkbox" onClick="window.location.reload()"
+                                                            <input class="status" id="check{{$v->id}}" type="checkbox" onfocus="window.location.reload()"
                                                                    @if($v->status == 'active' )checked="" @endif>
                                                             <span class="toggle"></span>
                                                         </label>

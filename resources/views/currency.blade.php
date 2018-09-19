@@ -57,7 +57,7 @@
                         <div class="card-icon">
                             <i class="material-icons">monetization_on</i>
                         </div>
-                        <button type="button" onclick="tableToExcel('testTable', 'W3C Example Table')"
+                        <button type="button" onfocus="tableToExcel('testTable', 'W3C Example Table')"
                                 class="btn btn-info pull-right"><i class="material-icons">cloud_download</i>
                         </button>
                         <h4 class="card-title ">Currency</h4>

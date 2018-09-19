@@ -73,7 +73,7 @@
                                         <div class="col-md-4">
                                             <strong>Exchangerates</strong>
                                             <input id="valueExchangerates" class="form-control" autocomplete="off"
-                                                   onchange="VNtoUSD();" onclick="Enabled=1;USDtoVND();">
+                                                   onchange="VNtoUSD();" onfocus="Enabled=1;USDtoVND();">
                                         </div>
                                         <div class="col-md-2">
                                             <strong>From</strong>
@@ -89,7 +89,7 @@
                                         </div>
                                         <div class="col-md-5">
                                             <strong>Result</strong>
-                                            <input onchange="USDtoVND();" onclick="Enabled=3;VNtoUSD();Enabled=2;USDtoVND();" id=results class="form-control" autocomplete="off">
+                                            <input onchange="USDtoVND();" onfocus="Enabled=3;VNtoUSD();Enabled=2;USDtoVND();" id=results class="form-control" autocomplete="off">
                                         </div>
                                     </div>
                                     <div class="row">
@@ -150,20 +150,28 @@
                                                     <td>@foreach($serverservicequantityrange->serverserviceusercredit as $serverserviceusercredit)@if($serverserviceusercredit->currency == 'USD')
                                                             <input class="form-control"
                                                                    name="credit_{{$serverservicequantityrange->id}}"
+                                                                   id="credit_{{$serverservicequantityrange->id}}"
                                                                    autocomplete="off"
-                                                                   value="{{number_format($serverserviceusercredit->credit,2)}}"
+                                                                   value="{{$serverserviceusercredit->credit}}"
+                                                                   @if($cliendefault == null)
+                                                                     onfocus="Enabled=true;Chietkhau();"  onchange="Chietkhau();"
+                                                                   @endif
                                                                    type="text">@endif @endforeach</td>
                                                     @foreach($clientgroup as $cg)
                                                         <td>@foreach($serverservicequantityrange->serverserviceclientgroupcredit as $serverserviceclientgroupcredit)
                                                                 @if($serverserviceclientgroupcredit->currency=='USD' && $serverserviceclientgroupcredit->client_group_id==$cg->id )
                                                                     <input id="sel_client_group_{{$serverserviceclientgroupcredit->client_group_id}}_{{$serverservicequantityrange->id}}"
                                                                            class="form-control"
-                                                                           @if($serverserviceclientgroupcredit->client_group_id == $cliendefault->id) onchange="Chietkhau();"
-                                                                           onclick="Enabled=true;Chietkhau();" @endif
+                                                                           @if($cliendefault ==! null)
+                                                                               @if($serverserviceclientgroupcredit->client_group_id == $cliendefault->id) onchange="Chietkhau();"
+                                                                               onfocus="Enabled=true;Chietkhau();" @endif
+                                                                               @if($serverserviceclientgroupcredit->client_group_id !== $cliendefault->id) onfocus="Enabled=false;Chietkhau();"
+                                                                               @endif
+                                                                           @else
+                                                                                onfocus="Enabled=false;Chietkhau();"
+                                                                           @endif
                                                                            name="client_group_{{$serverserviceclientgroupcredit->client_group_id}}_{{$serverserviceclientgroupcredit->id}}"
                                                                            type="text" autocomplete="off"
-                                                                           @if($serverserviceclientgroupcredit->client_group_id !== $cliendefault->id) onclick="Enabled=false;Chietkhau();"
-                                                                           @endif
                                                                            value="{{number_format($serverserviceclientgroupcredit->credit,2)}}">@endif
                                                             @endforeach
                                                         </td>
@@ -174,7 +182,7 @@
                                         </table>
                                     </div>
                                     <input class="btn btn-primary pull-right" type="submit" name="myButton"
-                                           onClick="parent.$.fancybox.close();" value="Save">
+                                           onfocus="parent.$.fancybox.close();" value="Save">
                                     <div class="clearfix"></div>
                                 </form>
                             </div>
@@ -200,16 +208,27 @@
                     if (Enabled == true) {
                         var giatransactionfee = document.getElementById("purchasenet").value;
                                 @foreach($serverservice->serverservicequantityrange as $serverservicequantityrange )
-                        var priceuser_{{$serverservicequantityrange->id}} = document.getElementById("sel_client_group_{{$cliendefault->id}}_{{$serverservicequantityrange->id}}").value;
+                            @if($cliendefault == null)
+                                var priceuser_{{$serverservicequantityrange->id}} = document.getElementById("credit_{{$serverservicequantityrange->id}}").value;
+                            @else
+                                var priceuser_{{$serverservicequantityrange->id}} = document.getElementById("sel_client_group_{{$cliendefault->id}}_{{$serverservicequantityrange->id}}").value;
+                            @endif
+
 
                         @foreach($clientgroup as $cg)
                                 @foreach($serverservicequantityrange->serverserviceclientgroupcredit as $serverserviceclientgroupcredit)
                                 @if($serverserviceclientgroupcredit->currency=='USD' && $serverserviceclientgroupcredit->client_group_id==$cg->id )
                             sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}} = (priceuser_{{$serverservicequantityrange->id}} - (((priceuser_{{$serverservicequantityrange->id}} - giatransactionfee) / 100) *{{$cg->chietkhau}}));
                         console.log(sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}});
-                        @if($cg->id !== $cliendefault->id)
-                        document.getElementById('sel_client_group_{{$cg->id}}_{{$serverservicequantityrange->id}}').value = sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}}.toFixed(2);
+
+                        @if($cliendefault == null)
+                            document.getElementById('sel_client_group_{{$cg->id}}_{{$serverservicequantityrange->id}}').value = sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}}.toFixed(2);
+                        @else
+                            @if($cg->id !== $cliendefault->id)
+                            document.getElementById('sel_client_group_{{$cg->id}}_{{$serverservicequantityrange->id}}').value = sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}}.toFixed(2);
+                            @endif
                         @endif
+
                         @endif
 
                         @endforeach
@@ -240,7 +259,7 @@
                                         <div class="col-md-4">
                                             <strong>Exchangerates</strong>
                                             <input id="valueExchangerates" class="form-control" autocomplete="off"
-                                                   onchange="VNtoUSD();" onclick="Enabled=1;USDtoVND();">
+                                                   onchange="VNtoUSD();" onfocus="Enabled=1;USDtoVND();">
                                         </div>
                                         <div class="col-md-2">
                                             <strong>From</strong>
@@ -256,7 +275,7 @@
                                         </div>
                                         <div class="col-md-5">
                                             <strong>Result</strong>
-                                            <input onchange="USDtoVND();" onclick="Enabled=3;VNtoUSD();Enabled=2;USDtoVND();" id=results class="form-control" autocomplete="off">
+                                            <input onchange="USDtoVND();" onfocus="Enabled=3;VNtoUSD();Enabled=2;USDtoVND();" id=results class="form-control" autocomplete="off">
                                         </div>
                                     </div>
                                     <div class="row">
@@ -338,9 +357,9 @@
                                                                             name="client_group_amount_{{$serverservicetypewisegroupprice->id}}_{{$serverservicetypewisegroupprice->group_id}}"
                                                                             type="text"
                                                                             @if($serverservicetypewisegroupprice->group_id == $cliendefault->id) onchange="Chietkhau();"
-                                                                            onclick="Enabled=true;Chietkhau();" @endif
+                                                                            onfocus="Enabled=true;Chietkhau();" @endif
                                                                             autocomplete="off"
-                                                                            @if($serverservicetypewisegroupprice->group_id !== $cliendefault->id) onclick="Enabled=false;Chietkhau();"
+                                                                            @if($serverservicetypewisegroupprice->group_id !== $cliendefault->id) onfocus="Enabled=false;Chietkhau();"
                                                                             @endif
                                                                             value="{{ $serverservicetypewisegroupprice->amount }}">
                                                                     <span hidden
@@ -356,7 +375,7 @@
                                         </table>
                                     </div>
                                     <input class="btn btn-primary pull-right" type="submit"
-                                           onClick="parent.$.fancybox.close();" value="Save">
+                                           onfocus="parent.$.fancybox.close();" value="Save">
                                     <div class="clearfix"></div>
                                 </form>
                             </div>
