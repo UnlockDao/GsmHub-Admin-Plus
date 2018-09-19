@@ -21,6 +21,10 @@ class Serverservicequantityrange extends Model
     {
         return $this->hasMany('App\Serverserviceusercredit','server_service_range_id','id');
     }
+    public function serverservicequantityrange()
+    {
+        return $this->belongsTo('App\Serverservice','server_service_id','id');
+    }
 
 
 

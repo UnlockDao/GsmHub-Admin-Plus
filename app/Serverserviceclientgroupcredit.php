@@ -17,6 +17,10 @@ class Serverserviceclientgroupcredit extends Model
         'credit',
         'currency'
     ];
+    public function serverservicequantityrange()
+    {
+        return $this->belongsTo('App\Serverservicequantityrange','server_service_range_id','id');
+    }
 
 }
 

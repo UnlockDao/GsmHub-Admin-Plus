@@ -66,21 +66,23 @@ class SupplierController extends Controller
         $currencies = Currencie::where('display_currency', 'Yes')->get();
         $imei = Imeiservice::get();
         $client = Clientgroup::get();
-
-        foreach ($imei as $i){
-            $imeiprices = Clientgroupprice::where('service_id',$i->id)->where('group_id','19')->where('currency','USD')->first();
-            if($imeiprices ==! null){
-                $giabanle = $i->credit+$imeiprices->discount;
-                foreach ($client as $c){
-                    $chietkhau = ($giabanle - ((($giabanle - $i->purchase_cost) / 100) *$c->chietkhau));
-                    $y = $chietkhau-$i->credit;
-                    foreach ($currencies as $cu) {
-                        $b= $y*$cu->exchange_rate_static;
-                        $updatepriceuse = Clientgroupprice::where('group_id', $c->id)
-                            ->where('service_type', 'imei')
-                            ->where('currency', $cu->currency_code)
-                            ->where('service_id', $i->id)
-                            ->update(['discount' => $b]);
+        $cliendefault = Clientgroup::where('chietkhau', '0')->first();
+        if($cliendefault ==! null){
+            foreach ($imei as $i){
+                $imeiprices = Clientgroupprice::where('service_id',$i->id)->where('group_id',$cliendefault->id)->where('currency','USD')->first();
+                if($imeiprices ==! null){
+                    $giabanle = $i->credit+$imeiprices->discount;
+                    foreach ($client as $c){
+                        $chietkhau = ($giabanle - ((($giabanle - $i->purchase_cost) / 100) *$c->chietkhau));
+                        $y = $chietkhau-$i->credit;
+                        foreach ($currencies as $cu) {
+                            $b= $y*$cu->exchange_rate_static;
+                            $updatepriceuse = Clientgroupprice::where('group_id', $c->id)
+                                ->where('service_type', 'imei')
+                                ->where('currency', $cu->currency_code)
+                                ->where('service_id', $i->id)
+                                ->update(['discount' => $b]);
+                        }
                     }
                 }
             }
