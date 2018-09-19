@@ -75,7 +75,7 @@
                                         @if($v->server_service_group_id == $g->id )
                                             <tr class="table-info">
                                                 <td width="2%">{{$v->id}}</td>
-                                                <td width="30%">{{$v->service_name}}</td>
+                                                <td width="30%"><a href="https://s-unlock.com/admin/server-service/edit/{{$v->id}}" target="_blank">{{$v->service_name}}</a> </td>
                                                 <td width="10">@if($v->api_id ==! null)<span
                                                             class="badge badge-pill badge-success">API<span>  @else<span
                                                                     class="badge badge-pill badge-info">Manual<span>  @endif
