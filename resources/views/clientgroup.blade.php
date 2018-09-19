@@ -1,5 +1,30 @@
 @extends('layouts.header')
 @section('content')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            $(document).on("click", ".status", function () {
+                var ida = $(this).parent().attr('id');
+                var url = '';
+                if ($(this).prop('checked') == true) {
+                    url = 'clientgroup/status/active';
+                }
+                else if ($(this).prop('checked') == false) {
+                    url = 'clientgroup/status/inactive';
+                }
+                $.ajax({
+                    url: url,
+                    type: 'get',
+                    data: 'id=' + ida,
+                    success: function (result) {
+                        $.notify({icon: "notifications", message: result});
+                    },
+                    error: function (result) {
+                        alert('error');
+                    }
+                });
+            });
+        }, false);
+    </script>
     <div class="container-fluid">
 
         <div class="row">
@@ -13,7 +38,6 @@
                                 class="btn btn-info pull-right"><i class="material-icons">cloud_download</i>
                         </button>
                         <h4 class="card-title ">IMEI Service</h4>
-
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -21,6 +45,7 @@
                                 <thead class="text-primary">
                                 <th width="2%">ID</th>
                                 <th>User</th>
+                                <th>Status</th>
                                 <th>%</th>
                                 <th>Edit</th>
 
@@ -30,6 +55,13 @@
                                     <tr>
                                         <td>{{$v->id}}</td>
                                         <td>{{$v->group_name}}</td>
+                                        <td><div class="togglebutton">
+                                                <label id="{{$v->id}}">
+                                                    <input class="status" id="check{{$v->id}}" type="checkbox"
+                                                    @if($v->status == 'active')checked="" @endif>
+                                                    <span class="toggle"></span>
+                                                </label>
+                                            </div></td>
                                         <td>{{$v->chietkhau}}</td>
                                         <td><a class="material-icons "
                                                href="{{ asset('') }}clientgroup/{{$v->id}}">edit</a></td>

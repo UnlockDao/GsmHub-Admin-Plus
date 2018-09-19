@@ -59,14 +59,14 @@ class IMEIController extends Controller
         //
         $group = Imeiservicegroup::get();
         $imei_service = Imeiservicepricing::get();
-        $usergroup = Clientgroup::where('status', 'active')->orderBy('chietkhau')->get();
+        $usergroup = Clientgroup::where('status','active')->where('status', 'active')->orderBy('chietkhau')->get();
 
         return view('imeiservice', compact('imei_service', 'group', 'usergroup', 'exchangerate'));
     }
 
     public function checkNullUser()
     {
-        $cliengroup = Clientgroup::get();
+        $cliengroup = Clientgroup::where('status','active')->get();
         $imeiservices = Imeiservice::get();
         $currencies = Currencie::where('display_currency', 'Yes')->get();
         foreach ($imeiservices as $imei) {
@@ -133,12 +133,12 @@ class IMEIController extends Controller
 
     public function show($id)
     {
-        $clien = Clientgroup::get();
+        $clien = Clientgroup::where('status','active')->get();
         //find default currency
         $defaultcurrency = Currenciepricing::where('type', '1')->first();
         $exchangerate = Currencie::find($defaultcurrency->currency_id);
         //find default price ck 0
-        $cliendefault = Clientgroup::where('chietkhau', '0')->first();
+        $cliendefault = Clientgroup::where('status','active')->where('chietkhau', '0')->first();
 
         $allcurrencies = Currencie::get();
 
@@ -174,7 +174,7 @@ class IMEIController extends Controller
         //lấy dữ liệu imei server
         $getimei = Imeiservice::find($id);
         //gọi nhóm user
-        $group_user = Clientgroup::get();
+        $group_user = Clientgroup::where('status','active')->get();
         //ghi dữ liệu giá vào nhóm user
         foreach ($group_user as $u) {
             $idclient = $u->id;

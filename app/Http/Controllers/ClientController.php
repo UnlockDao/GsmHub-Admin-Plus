@@ -42,7 +42,7 @@ class ClientController extends Controller
         //cập nhập tất cả chiết khấu
         $currencies = Currencie::where('display_currency', 'Yes')->get();
         $imei = Imeiservice::get();
-        $cliendefault = Clientgroup::where('chietkhau', '0')->first();
+        $cliendefault = Clientgroup::where('status','active')->where('chietkhau', '0')->first();
         if ($cliendefault==! null){
             foreach ($imei as $i){
                 $imeiprice = Clientgroupprice::where('service_id',$i->id)->where('group_id',$cliendefault->id)->where('currency','USD')->first();
@@ -61,7 +61,7 @@ class ClientController extends Controller
 
             }
         }
-        $cliendefault = Clientgroup::where('chietkhau', '0')->first();
+        $cliendefault = Clientgroup::where('status','active')->where('chietkhau', '0')->first();
         if($cliendefault ==! null){
             $range = Serverserviceclientgroupcredit::where('client_group_id',$id)->where('currency','USD')->get();
             $currencies = Currencie::where('display_currency', 'Yes')->get();
@@ -83,5 +83,22 @@ class ClientController extends Controller
         }
 
         return redirect('/clientgroup');
+    }
+
+    public function status($par = NULL, $par2 = NULL)
+    {
+        if ($par == "status") {
+            $id = $_GET['id'];
+            $imei = Clientgroup::find($id);
+            $imei->status = $par2;
+            $imei->save();
+            if ($par2 == 'active') {
+                echo 'Active ';
+            } else {
+                echo 'Disable';
+            }
+            exit();
+        }
+        return;
     }
 }

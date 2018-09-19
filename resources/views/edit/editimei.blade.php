@@ -99,7 +99,7 @@
                                         </thead>
                                         <tbody>
                                         <td><input type="text" name="credit" id="credit" class="form-control"
-                                                   value="{{$imei->imei->credit}}" @if($cliendefault == null) onchange="Chietkhau();" @endif
+                                                   value="{{$imei->imei->credit}}" @if($cliendefault == null) onchange="Chietkhau();" onfocus="Enabled=true;Chietkhau();" @endif
                                                    placeholder="Credit" autocomplete="off"></td>
                                         @foreach($pricegroup as $c)
                                             @if($c->chietkhau ==! null)

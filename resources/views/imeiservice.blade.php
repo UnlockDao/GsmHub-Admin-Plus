@@ -65,11 +65,9 @@
                                         <td></td>
                                         <td></td>
                                         <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        @foreach($usergroup as $u)
+                                            <td></td>
+                                        @endforeach
                                     </tr>
                                     @foreach($imei_service as $v)
                                         @if($v->imei->imei_service_group_id == $g->id )

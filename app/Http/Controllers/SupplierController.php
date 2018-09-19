@@ -65,8 +65,8 @@ class SupplierController extends Controller
         // cập nhập giá theo user
         $currencies = Currencie::where('display_currency', 'Yes')->get();
         $imei = Imeiservice::get();
-        $client = Clientgroup::get();
-        $cliendefault = Clientgroup::where('chietkhau', '0')->first();
+        $client = Clientgroup::where('status','active')->get();
+        $cliendefault = Clientgroup::where('status','active')->where('chietkhau', '0')->first();
         if($cliendefault ==! null){
             foreach ($imei as $i){
                 $imeiprices = Clientgroupprice::where('service_id',$i->id)->where('group_id',$cliendefault->id)->where('currency','USD')->first();

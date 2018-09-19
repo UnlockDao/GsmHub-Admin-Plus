@@ -65,11 +65,9 @@
                                         <td></td>
                                         <td></td>
                                         <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        @foreach($clientgroup as $cg)
+                                            <td></td>
+                                        @endforeach
                                     </tr>
                                     @foreach($serverservice as $v)
                                         @if($v->server_service_group_id == $g->id )
@@ -93,11 +91,9 @@
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
+                                                @foreach($clientgroup as $cg)
+                                                    <td></td>
+                                                @endforeach
                                                 <td width="2%"><a class="material-icons fancybox fancybox.iframe"
                                                        href="{{ asset('') }}serverservice/{{$v->id}}">edit</a></td>
                                             </tr>
