@@ -28,18 +28,18 @@
 
 
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="theme/jslogin/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="theme/js/jslogin/vendor/bootstrap/css/bootstrap.min.css">
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="theme/jslogin/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="theme/js/jslogin/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="theme/jslogin/vendor/animate/animate.css">
+    <link rel="stylesheet" type="text/css" href="theme/js/jslogin/vendor/animate/animate.css">
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="theme/jslogin/vendor/css-hamburgers/hamburgers.min.css">
+    <link rel="stylesheet" type="text/css" href="theme/js/jslogin/vendor/css-hamburgers/hamburgers.min.css">
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="theme/jslogin/vendor/select2/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="theme/js/jslogin/vendor/select2/select2.min.css">
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="theme/jslogin/css/util.css">
-    <link rel="stylesheet" type="text/css" href="theme/jslogin/css/main.css">
+    <link rel="stylesheet" type="text/css" href="theme/js/jslogin/css/util.css">
+    <link rel="stylesheet" type="text/css" href="theme/js/jslogin/css/main.css">
     <!--===============================================================================================-->
 
 
@@ -55,7 +55,7 @@
     <div class="container-login100">
         <div class="wrap-login100">
             <div class="login100-pic js-tilt" data-tilt>
-                <img src="theme/jslogin/images/img-01.png" alt="IMG">
+                <img src="theme/js/jslogin/images/img-01.png" alt="IMG">
             </div>
 
             <form class="form-horizontal" method="POST" action="{{ url('login') }}">
@@ -101,24 +101,19 @@
 
 
 <!--===============================================================================================-->
-<script src="theme/jslogin/vendor/jquery/jquery-3.2.1.min.js"></script>
+<script src="theme/js/jslogin/vendor/jquery/jquery-3.2.1.min.js"></script>
 <!--===============================================================================================-->
-<script src="theme/jslogin/vendor/bootstrap/js/popper.js"></script>
-<script src="theme/jslogin/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="theme/js/jslogin/vendor/bootstrap/js/popper.js"></script>
+<script src="theme/js/jslogin/vendor/bootstrap/js/bootstrap.min.js"></script>
 <!--===============================================================================================-->
-<script src="theme/jslogin/vendor/select2/select2.min.js"></script>
+<script src="theme/js/jslogin/vendor/select2/select2.min.js"></script>
 <!--===============================================================================================-->
-<script src="theme/jslogin/vendor/tilt/tilt.jquery.min.js"></script>
+<script src="theme/js/jslogin/vendor/tilt/tilt.jquery.min.js"></script>
 <script >
     $('.js-tilt').tilt({
         scale: 1.1
     })
 </script>
-
-<!--===============================================================================================-->
-<script src="assets/js/bootstrap-notify.js"></script>
-
-
 
 </body>
 </html>

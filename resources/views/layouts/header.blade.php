@@ -69,8 +69,8 @@
 <div class="beep" style="display: none;"></div>
 </body>
 <!--   Core JS Files   -->
-<script src="{{ asset('assets/js/plugins/bootstrap-notify.js') }}"></script>
 <script src="{{ asset('assets/js/core/jquery.min.js') }}"></script>
+<script src="{{ asset('assets/js/plugins/bootstrap-notify.js') }}"></script>
 <script src="{{ asset('assets/js/core/popper.min.js') }}"></script>
 <script src="{{ asset('assets/js/bootstrap-material-design.min.js') }}"></script>
 <script src="{{ asset('assets/js/plugins/perfect-scrollbar.jquery.min.js') }}"></script>
