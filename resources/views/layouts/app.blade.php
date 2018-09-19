@@ -38,8 +38,8 @@
 <script src="{{ asset('assets/js/plugins/bootstrap-notify.js') }}"></script>
 <!--  DataTables.net Plugin, full documentation here: https://datatables.net/    -->
 <script src="{{ asset('assets/js/plugins/jquery.datatables.js') }}"></script>
-<script type="text/javascript" src="{{ asset('source/jquery.fancybox.pack.js?v=2.1.5') }}"></script>
-<link rel="stylesheet" type="text/css" href="{{ asset('source/jquery.fancybox.css?v=2.1.5') }}" media="screen" />
+<script type="text/javascript" src="{{ asset('theme/source/jquery.fancybox.pack.js?v=2.1.5') }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ asset('theme/source/jquery.fancybox.css?v=2.1.5') }}" media="screen" />
 <script type="text/javascript">
     $(document).ready(function() {
         $(".fancybox").fancybox({
@@ -51,14 +51,5 @@
 
     });
 </script>
-{{--<script src="{{ asset('js/framecoinmill.js') }}"></script>--}}
-{{--<script>--}}
-    {{--function conversecurrency() {--}}
-        {{--valueFrom = document.getElementById("valueFrom").value;--}}
-        {{--valueTo = document.getElementById("valueTo").value;--}}
-        {{--valueExchangerates = document.getElementById("valueExchangerates").value;--}}
-        {{--resultscurrency_convert = currency_convert(valueExchangerates, valueFrom, valueTo)--}}
-        {{--document.getElementById('results').value = resultscurrency_convert;--}}
-    {{--}--}}
-{{--</script>--}}
+
 </html>

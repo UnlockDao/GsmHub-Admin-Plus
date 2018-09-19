@@ -28,24 +28,24 @@
 
 
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="jslogin/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="theme/jslogin/vendor/bootstrap/css/bootstrap.min.css">
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="jslogin/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="theme/jslogin/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="jslogin/vendor/animate/animate.css">
+    <link rel="stylesheet" type="text/css" href="theme/jslogin/vendor/animate/animate.css">
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="jslogin/vendor/css-hamburgers/hamburgers.min.css">
+    <link rel="stylesheet" type="text/css" href="theme/jslogin/vendor/css-hamburgers/hamburgers.min.css">
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="jslogin/vendor/select2/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="theme/jslogin/vendor/select2/select2.min.css">
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="jslogin/css/util.css">
-    <link rel="stylesheet" type="text/css" href="jslogin/css/main.css">
+    <link rel="stylesheet" type="text/css" href="theme/jslogin/css/util.css">
+    <link rel="stylesheet" type="text/css" href="theme/jslogin/css/main.css">
     <!--===============================================================================================-->
 
 
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,300|Material+Icons' rel='stylesheet' type='text/css'>
     <!-- Add jQuery library -->
-    <script type="text/javascript" src="lib/jquery-1.10.2.min.js"></script>
+    <script src="{{ asset('assets/js/core/jquery.min.js') }}"></script>
 
 
 </head>
@@ -55,7 +55,7 @@
     <div class="container-login100">
         <div class="wrap-login100">
             <div class="login100-pic js-tilt" data-tilt>
-                <img src="/jslogin/images/img-01.png" alt="IMG">
+                <img src="theme/jslogin/images/img-01.png" alt="IMG">
             </div>
 
             <form class="form-horizontal" method="POST" action="{{ url('login') }}">
@@ -101,14 +101,14 @@
 
 
 <!--===============================================================================================-->
-<script src="jslogin/vendor/jquery/jquery-3.2.1.min.js"></script>
+<script src="theme/jslogin/vendor/jquery/jquery-3.2.1.min.js"></script>
 <!--===============================================================================================-->
-<script src="jslogin/vendor/bootstrap/js/popper.js"></script>
-<script src="jslogin/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="theme/jslogin/vendor/bootstrap/js/popper.js"></script>
+<script src="theme/jslogin/vendor/bootstrap/js/bootstrap.min.js"></script>
 <!--===============================================================================================-->
-<script src="jslogin/vendor/select2/select2.min.js"></script>
+<script src="theme/jslogin/vendor/select2/select2.min.js"></script>
 <!--===============================================================================================-->
-<script src="jslogin/vendor/tilt/tilt.jquery.min.js"></script>
+<script src="theme/jslogin/vendor/tilt/tilt.jquery.min.js"></script>
 <script >
     $('.js-tilt').tilt({
         scale: 1.1
