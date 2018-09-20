@@ -8,6 +8,7 @@ use App\Currenciepricing;
 use App\Serverservice;
 use App\Serverserviceclientgroupcredit;
 use App\Serverservicegroup;
+use App\Serverservicequantityrange;
 use App\Serverservicetypewisegroupprice;
 use App\Serverservicetypewiseprice;
 use App\Serverserviceusercredit;
@@ -206,6 +207,34 @@ class ServerserviceController extends Controller
                     $credit= Serverserviceusercredit::where('server_service_range_id',$ra->server_service_range_id)->where('currency',$cu->currency_code)->update(['credit' => $c * $cu->exchange_rate_static]);
                 }
             }
+        }
+        if($request->credit_new ==! null){
+            $newquantityrange = new Serverservicequantityrange();
+            $newquantityrange->server_service_id = $id;
+            $newquantityrange->from_range = 1;
+            $newquantityrange->to_range = 1;
+            $newquantityrange->save();
+            foreach ($currencies as $cu) {
+                $server_service_user_credit = new Serverserviceusercredit();
+                $server_service_user_credit->server_service_range_id = $newquantityrange->id;
+                $server_service_user_credit->credit = $request->credit_new * $cu->exchange_rate_static;
+                $server_service_user_credit->currency = $cu->currency_code;
+                $server_service_user_credit->save();
+            }
+            foreach ($clientgroup as $cli) {
+                $newcredituser = $request->input('sel_client_group_'.$cli->id.'_new');
+                if ($newcredituser ==! null) {
+                    foreach ($currencies as $cu) {
+                        $addcredituser = new Serverserviceclientgroupcredit();
+                        $addcredituser->server_service_range_id = $newquantityrange->id;
+                        $addcredituser->client_group_id = $cli->id;
+                        $addcredituser->credit = $newcredituser * $cu->exchange_rate_static;
+                        $addcredituser->currency = $cu->currency_code;
+                        $addcredituser->save();
+                    }
+                }
+            }
+
         }
         return back();
     }

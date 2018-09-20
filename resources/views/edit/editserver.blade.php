@@ -355,6 +355,24 @@
                                                     @endforeach
                                                 </tr>
                                             @endforeach
+                                            @if($serverservice->serverservicequantityrange->isEmpty())
+                                                <tr>
+                                                    <td></td>
+                                                    <td>1-1</td>
+                                                    <td><input class="form-control"
+                                                                   name="credit_new"
+                                                                   autocomplete="off"
+                                                                   value=""
+                                                                   type="text"></td>
+                                                    @foreach($clientgroup as $cg)
+                                                        <td><input class="form-control"
+                                                                   name="sel_client_group_{{$cg->id}}_new"
+                                                                   autocomplete="off"
+                                                                   value=""
+                                                                   type="text"></td>
+                                                    @endforeach
+                                                </tr>
+                                            @endif
                                             </tbody>
                                         </table>
                                     </div>
