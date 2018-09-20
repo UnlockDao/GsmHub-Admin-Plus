@@ -1,6 +1,6 @@
 <div class="user">
     <div class="photo">
-        <img src="{{ url('jslogin\images\img-011.png') }}" />
+        <img src="{{ url('theme/js/jslogin/images/img-011.png') }}" />
     </div>
     <div class="user-info">
         <a data-toggle="collapse" href="#collapseExample" class="username">

@@ -59,191 +59,9 @@
         </div>
     @else
         <!-- service-->
-        @if(!$serverservice->serverservicequantityrange->isEmpty())
-
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <form action="{{ url('serverservice') }}/{{$serverservice->id}}" method="POST"
-                                      enctype="multipart/form-data">
-                                    {{ csrf_field() }}
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <strong>Exchangerates</strong>
-                                            <input id="valueExchangerates" class="form-control" autocomplete="off"
-                                                   onchange="VNtoUSD();" onfocus="Enabled=1;USDtoVND();">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <strong>From</strong>
-                                            <select class="form-control" id="valueFrom">
-                                                <option value="VND">VND</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-1">
-                                            <strong>To</strong>
-                                            <select class="form-control" id="valueTo">
-                                                <option value="USD">USD</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-5">
-                                            <strong>Result</strong>
-                                            <input onchange="USDtoVND();" onfocus="Enabled=3;VNtoUSD();Enabled=2;USDtoVND();" id=results class="form-control" autocomplete="off">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <strong>Name Server Services</strong>
-                                            <input type="text" name="service_name" id="service_name"
-                                                   class="form-control"
-                                                   value="{{$serverservice->service_name}}"
-                                                   placeholder="Name IMEI Services" autocomplete="off">
-                                        </div>
-                                        <div class="col-md-12">
-                                            <strong>Supplier</strong>
-                                            <select name="id_supplier" class="form-control">
-                                                @foreach($supplier as $v)
-                                                    <option value="{{$v->id}}"
-                                                            @if($serverservice->servicepricing->id_supplier == $v->id) selected @endif>{{$v->name}}</option>
-                                                @endforeach
-                                            </select>
-                                            <hr>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <h5>Purchase Cost : </h5>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input autocomplete="off" id="purchasecost" class="form-control"
-                                                   name="purchase_cost" type="text" onchange="Purchasenet();"
-                                                   @if($serverservice->api_id ==! null) readonly @endif
-                                                   value="@if($serverservice->api_id ==! null){{$serverservice->apiserverservices->credits}}@elseif($serverservice->servicepricing->purchasecost == null){{number_format($serverservice->purchase_cost,2)}}@else{{number_format($serverservice->servicepricing->purchasecost,2)}}@endif">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <h5>Purchase Cost (Net) : </h5>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input id="purchasenet" class="form-control" name="purchasenet" type="text"
-                                                   value="{{number_format($serverservice->purchase_cost,2)}}" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="table-responsive table-full-width table-hover">
-                                        <table id="testTable" class="table table-striped">
-                                            <thead class="text-primary">
-                                            <th>ID</th>
-                                            <th>Range</th>
-                                            <th>Credit</th>
-                                            @foreach($clientgroup as $cg)
-                                                <th>{{$cg->group_name}}</th>
-                                            @endforeach
-                                            </thead>
-                                            <tbody>
-                                            @foreach($serverservice->serverservicequantityrange as $serverservicequantityrange )
-                                                <tr>
-                                                    <td>{{$serverservicequantityrange->id}}</td>
-                                                    <td>{{$serverservicequantityrange->from_range}}
-                                                        - {{$serverservicequantityrange->to_range}}</td>
-                                                    <td>@foreach($serverservicequantityrange->serverserviceusercredit as $serverserviceusercredit)@if($serverserviceusercredit->currency == 'USD')
-                                                            <input class="form-control"
-                                                                   name="credit_{{$serverservicequantityrange->id}}"
-                                                                   id="credit_{{$serverservicequantityrange->id}}"
-                                                                   autocomplete="off"
-                                                                   value="{{$serverserviceusercredit->credit}}"
-                                                                   @if($cliendefault == null)
-                                                                     onfocus="Enabled=true;Chietkhau();"  onchange="Chietkhau();"
-                                                                   @endif
-                                                                   type="text">@endif @endforeach</td>
-                                                    @foreach($clientgroup as $cg)
-                                                        <td>@foreach($serverservicequantityrange->serverserviceclientgroupcredit as $serverserviceclientgroupcredit)
-                                                                @if($serverserviceclientgroupcredit->currency=='USD' && $serverserviceclientgroupcredit->client_group_id==$cg->id )
-                                                                    <input id="sel_client_group_{{$serverserviceclientgroupcredit->client_group_id}}_{{$serverservicequantityrange->id}}"
-                                                                           class="form-control"
-                                                                           @if($cliendefault ==! null)
-                                                                               @if($serverserviceclientgroupcredit->client_group_id == $cliendefault->id) onchange="Chietkhau();"
-                                                                               onfocus="Enabled=true;Chietkhau();" @endif
-                                                                               @if($serverserviceclientgroupcredit->client_group_id !== $cliendefault->id) onfocus="Enabled=false;Chietkhau();"
-                                                                               @endif
-                                                                           @else
-                                                                                onfocus="Enabled=false;Chietkhau();"
-                                                                           @endif
-                                                                           name="client_group_{{$serverserviceclientgroupcredit->client_group_id}}_{{$serverserviceclientgroupcredit->id}}"
-                                                                           type="text" autocomplete="off"
-                                                                           value="{{number_format($serverserviceclientgroupcredit->credit,2)}}">@endif
-                                                            @endforeach
-                                                        </td>
-                                                    @endforeach
-                                                </tr>
-                                            @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <input class="btn btn-primary pull-right" type="submit" name="myButton"
-                                           onfocus="parent.$.fancybox.close();" value="Save">
-                                    <div class="clearfix"></div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <script>
-                //gọi dữ liệu nhà cung cấp (tỉ giá, phí )
-                var tipurchasecost = {{$serverservice->servicepricing->nhacungcap->exchangerate}};
-                var transactionfeegd = {{$serverservice->servicepricing->nhacungcap->transactionfee}};
-                var exchangerategoc = {{$exchangerate->exchange_rate_static}};
-
-                function Purchasenet() {
-                    var purchasecost = document.getElementById("purchasecost").value;
-                    var giatransactionfee = (tipurchasecost * purchasecost) / exchangerategoc + ((purchasecost / 100) * transactionfeegd);
-                    document.getElementById('purchasenet').value = giatransactionfee;
-                }
-
-                var Enabled = true;
-
-                function Chietkhau() {
-                    if (Enabled == true) {
-                        var giatransactionfee = document.getElementById("purchasenet").value;
-                                @foreach($serverservice->serverservicequantityrange as $serverservicequantityrange )
-                            @if($cliendefault == null)
-                                var priceuser_{{$serverservicequantityrange->id}} = document.getElementById("credit_{{$serverservicequantityrange->id}}").value;
-                            @else
-                                var priceuser_{{$serverservicequantityrange->id}} = document.getElementById("sel_client_group_{{$cliendefault->id}}_{{$serverservicequantityrange->id}}").value;
-                            @endif
+        @if(!$serverservice->serverservicetypewiseprice->isEmpty())
 
 
-                        @foreach($clientgroup as $cg)
-                                @foreach($serverservicequantityrange->serverserviceclientgroupcredit as $serverserviceclientgroupcredit)
-                                @if($serverserviceclientgroupcredit->currency=='USD' && $serverserviceclientgroupcredit->client_group_id==$cg->id )
-                            sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}} = (priceuser_{{$serverservicequantityrange->id}} - (((priceuser_{{$serverservicequantityrange->id}} - giatransactionfee) / 100) *{{$cg->chietkhau}}));
-                        console.log(sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}});
-
-                        @if($cliendefault == null)
-                            document.getElementById('sel_client_group_{{$cg->id}}_{{$serverservicequantityrange->id}}').value = sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}}.toFixed(2);
-                        @else
-                            @if($cg->id !== $cliendefault->id)
-                            document.getElementById('sel_client_group_{{$cg->id}}_{{$serverservicequantityrange->id}}').value = sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}}.toFixed(2);
-                            @endif
-                        @endif
-
-                        @endif
-
-                        @endforeach
-                        @endforeach
-                        @endforeach
-                    }
-                }
-
-                document.addEventListener('DOMContentLoaded', function () {
-                    Purchasenet();
-                }, false);
-
-            </script>
-            <!--wise service-->
-        @else
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12">
@@ -419,6 +237,189 @@
                 document.addEventListener('DOMContentLoaded', function () {
                 }, false);
             </script>
+        @else
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <form action="{{ url('serverservice') }}/{{$serverservice->id}}" method="POST"
+                                      enctype="multipart/form-data">
+                                    {{ csrf_field() }}
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <strong>Exchangerates</strong>
+                                            <input id="valueExchangerates" class="form-control" autocomplete="off"
+                                                   onchange="VNtoUSD();" onfocus="Enabled=1;USDtoVND();">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <strong>From</strong>
+                                            <select class="form-control" id="valueFrom">
+                                                <option value="VND">VND</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <strong>To</strong>
+                                            <select class="form-control" id="valueTo">
+                                                <option value="USD">USD</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <strong>Result</strong>
+                                            <input onchange="USDtoVND();" onfocus="Enabled=3;VNtoUSD();Enabled=2;USDtoVND();" id=results class="form-control" autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <strong>Name Server Services</strong>
+                                            <input type="text" name="service_name" id="service_name"
+                                                   class="form-control"
+                                                   value="{{$serverservice->service_name}}"
+                                                   placeholder="Name IMEI Services" autocomplete="off">
+                                        </div>
+                                        <div class="col-md-12">
+                                            <strong>Supplier</strong>
+                                            <select name="id_supplier" class="form-control">
+                                                @foreach($supplier as $v)
+                                                    <option value="{{$v->id}}"
+                                                            @if($serverservice->servicepricing->id_supplier == $v->id) selected @endif>{{$v->name}}</option>
+                                                @endforeach
+                                            </select>
+                                            <hr>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <h5>Purchase Cost : </h5>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input autocomplete="off" id="purchasecost" class="form-control"
+                                                   name="purchase_cost" type="text" onchange="Purchasenet();"
+                                                   @if($serverservice->api_id ==! null) readonly @endif
+                                                   value="@if($serverservice->api_id ==! null){{$serverservice->apiserverservices->credits}}@elseif($serverservice->servicepricing->purchasecost == null){{number_format($serverservice->purchase_cost,2)}}@else{{number_format($serverservice->servicepricing->purchasecost,2)}}@endif">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <h5>Purchase Cost (Net) : </h5>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input id="purchasenet" class="form-control" name="purchasenet" type="text"
+                                                   value="{{number_format($serverservice->purchase_cost,2)}}" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive table-full-width table-hover">
+                                        <table id="testTable" class="table table-striped">
+                                            <thead class="text-primary">
+                                            <th>ID</th>
+                                            <th>Range</th>
+                                            <th>Credit</th>
+                                            @foreach($clientgroup as $cg)
+                                                <th>{{$cg->group_name}}</th>
+                                            @endforeach
+                                            </thead>
+                                            <tbody>
+                                            @foreach($serverservice->serverservicequantityrange as $serverservicequantityrange )
+                                                <tr>
+                                                    <td>{{$serverservicequantityrange->id}}</td>
+                                                    <td>{{$serverservicequantityrange->from_range}}
+                                                        - {{$serverservicequantityrange->to_range}}</td>
+                                                    <td>@foreach($serverservicequantityrange->serverserviceusercredit as $serverserviceusercredit)@if($serverserviceusercredit->currency == 'USD')
+                                                            <input class="form-control"
+                                                                   name="credit_{{$serverservicequantityrange->id}}"
+                                                                   id="credit_{{$serverservicequantityrange->id}}"
+                                                                   autocomplete="off"
+                                                                   value="{{$serverserviceusercredit->credit}}"
+                                                                   @if($cliendefault == null)
+                                                                   onfocus="Enabled=true;Chietkhau();"  onchange="Chietkhau();"
+                                                                   @endif
+                                                                   type="text">@endif @endforeach</td>
+                                                    @foreach($clientgroup as $cg)
+                                                        <td>@foreach($serverservicequantityrange->serverserviceclientgroupcredit as $serverserviceclientgroupcredit)
+                                                                @if($serverserviceclientgroupcredit->currency=='USD' && $serverserviceclientgroupcredit->client_group_id==$cg->id )
+                                                                    <input id="sel_client_group_{{$serverserviceclientgroupcredit->client_group_id}}_{{$serverservicequantityrange->id}}"
+                                                                           class="form-control"
+                                                                           @if($cliendefault ==! null)
+                                                                           @if($serverserviceclientgroupcredit->client_group_id == $cliendefault->id) onchange="Chietkhau();"
+                                                                           onfocus="Enabled=true;Chietkhau();" @endif
+                                                                           @if($serverserviceclientgroupcredit->client_group_id !== $cliendefault->id) onfocus="Enabled=false;Chietkhau();"
+                                                                           @endif
+                                                                           @else
+                                                                           onfocus="Enabled=false;Chietkhau();"
+                                                                           @endif
+                                                                           name="client_group_{{$serverserviceclientgroupcredit->client_group_id}}_{{$serverserviceclientgroupcredit->id}}"
+                                                                           type="text" autocomplete="off"
+                                                                           value="{{number_format($serverserviceclientgroupcredit->credit,2)}}">@endif
+                                                            @endforeach
+                                                        </td>
+                                                    @endforeach
+                                                </tr>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <input class="btn btn-primary pull-right" type="submit" name="myButton"
+                                           onfocus="parent.$.fancybox.close();" value="Save">
+                                    <div class="clearfix"></div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                //gọi dữ liệu nhà cung cấp (tỉ giá, phí )
+                var tipurchasecost = {{$serverservice->servicepricing->nhacungcap->exchangerate}};
+                var transactionfeegd = {{$serverservice->servicepricing->nhacungcap->transactionfee}};
+                var exchangerategoc = {{$exchangerate->exchange_rate_static}};
+
+                function Purchasenet() {
+                    var purchasecost = document.getElementById("purchasecost").value;
+                    var giatransactionfee = (tipurchasecost * purchasecost) / exchangerategoc + ((purchasecost / 100) * transactionfeegd);
+                    document.getElementById('purchasenet').value = giatransactionfee;
+                }
+
+                var Enabled = true;
+
+                function Chietkhau() {
+                    if (Enabled == true) {
+                        var giatransactionfee = document.getElementById("purchasenet").value;
+                                @foreach($serverservice->serverservicequantityrange as $serverservicequantityrange )
+                                @if($cliendefault == null)
+                        var priceuser_{{$serverservicequantityrange->id}} = document.getElementById("credit_{{$serverservicequantityrange->id}}").value;
+                                @else
+                        var priceuser_{{$serverservicequantityrange->id}} = document.getElementById("sel_client_group_{{$cliendefault->id}}_{{$serverservicequantityrange->id}}").value;
+                        @endif
+
+
+                                @foreach($clientgroup as $cg)
+                                @foreach($serverservicequantityrange->serverserviceclientgroupcredit as $serverserviceclientgroupcredit)
+                                @if($serverserviceclientgroupcredit->currency=='USD' && $serverserviceclientgroupcredit->client_group_id==$cg->id )
+                            sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}} = (priceuser_{{$serverservicequantityrange->id}} - (((priceuser_{{$serverservicequantityrange->id}} - giatransactionfee) / 100) *{{$cg->chietkhau}}));
+                        console.log(sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}});
+
+                        @if($cliendefault == null)
+                        document.getElementById('sel_client_group_{{$cg->id}}_{{$serverservicequantityrange->id}}').value = sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}}.toFixed(2);
+                        @else
+                        @if($cg->id !== $cliendefault->id)
+                        document.getElementById('sel_client_group_{{$cg->id}}_{{$serverservicequantityrange->id}}').value = sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}}.toFixed(2);
+                        @endif
+                        @endif
+
+                        @endif
+
+                        @endforeach
+                        @endforeach
+                        @endforeach
+                    }
+                }
+
+                document.addEventListener('DOMContentLoaded', function () {
+                    Purchasenet();
+                }, false);
+
+            </script>
+            <!--wise service-->
         @endif
     @endif
 
