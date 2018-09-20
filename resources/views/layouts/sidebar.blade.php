@@ -47,24 +47,23 @@
                 <p>Supplier</p>
             </a>
         </li>
-    <li class="nav-item ">
-        <a class="nav-link" href="{{ url('clientgroup') }}">
-            <i class="material-icons">group</i>
-            <p>User Group</p>
-        </a>
-    </li>
-    <li class="nav-item ">
-        <a class="nav-link" href="{{ url('currencie') }}">
-            <i class="material-icons">credit_card</i>
-            <p>Currency</p>
-        </a>
-    </li>
-    <li class="nav-item ">
-        <a class="nav-link" href="{{ url('role') }}">
-            <i class="material-icons">fingerprint</i>
-            <p>Role</p>
-        </a>
-    </li>
-
-
+        <li class="nav-item ">
+            <a class="nav-link" href="{{ url('clientgroup') }}">
+                <i class="material-icons">group</i>
+                <p>User Group</p>
+            </a>
+        </li>
+        <li class="nav-item ">
+            <a class="nav-link" href="{{ url('currencie') }}">
+                <i class="material-icons">credit_card</i>
+                <p>Currency</p>
+            </a>
+        </li>
+        <li class="nav-item ">
+            <a class="nav-link" href="{{ url('role') }}">
+                <i class="material-icons">fingerprint</i>
+                <p>Role</p>
+            </a>
+        </li>
+    </ul>
 </ul>
