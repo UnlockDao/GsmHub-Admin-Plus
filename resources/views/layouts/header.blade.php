@@ -83,8 +83,8 @@
 <script src="{{ asset('assets/js/plugins/bootstrap-notify.js') }}"></script>
 <!--  DataTables.net Plugin, full documentation here: https://datatables.net/    -->
 <script src="{{ asset('assets/js/plugins/jquery.datatables.js') }}"></script>
-<script type="text/javascript" src="{{ asset('source/jquery.fancybox.pack.js?v=2.1.5') }}"></script>
-<link rel="stylesheet" type="text/css" href="{{ asset('source/jquery.fancybox.css?v=2.1.5') }}" media="screen"/>
+<script type="text/javascript" src="{{ asset('theme/source/jquery.fancybox.pack.js?v=2.1.5') }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ asset('theme/source/jquery.fancybox.css?v=2.1.5') }}" media="screen"/>
 <script type="text/javascript">
     $(document).ready(function () {
         $(".fancybox").fancybox({
