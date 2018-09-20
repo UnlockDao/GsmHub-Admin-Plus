@@ -101,4 +101,9 @@ class ClientController extends Controller
         }
         return;
     }
+    public function delete($id)
+    {
+        Clientgroup::find($id)->delete();
+        return back();
+    }
 }

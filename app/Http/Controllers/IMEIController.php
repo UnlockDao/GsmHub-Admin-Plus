@@ -227,5 +227,10 @@ class IMEIController extends Controller
         }
         return;
     }
+    public function delete($id)
+    {
+        Imeiservice::find($id)->delete();
+        return back();
+    }
 
 }

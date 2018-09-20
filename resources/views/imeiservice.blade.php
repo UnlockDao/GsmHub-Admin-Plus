@@ -52,12 +52,14 @@
                                     <th width="5%">{{$u->group_name}}</th>
                                 @endforeach
                                 <th width="3%"></th>
+                                <th></th>
                                 </thead>
                                 <tbody>
                                 @foreach($group as $g)
                                     <tr class="table-warning">
                                         <td><i class="material-icons">monetization_on</i></td>
                                         <td><strong style="font-weight:700;">{{$g->group_name}}</strong></td>
+                                        <td></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -117,6 +119,7 @@
                                                 <td width="2%">@if($v->imei->status == 'active')<a
                                                             class="material-icons fancybox fancybox.iframe"
                                                             href="{{ asset('') }}imei/{{$v->id}}">edit</a>@endif</td>
+                                                <td><a href="{{ asset('') }}imeidelete/{{$v->id}}" onclick="return confirm('OK to delete!');"><i class="material-icons">close</i></a></td>
                                             </tr>
                                         @endif
                                     @endforeach

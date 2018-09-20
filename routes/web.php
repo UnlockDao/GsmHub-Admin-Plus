@@ -30,6 +30,8 @@ Route::get('/logout', function () {
 Route::get('imei', 'IMEIController@imei');
 //hiển thị dịch vụ theo id
 Route::get('imei/{id}', 'IMEIController@show');
+//xóa dịch vụ imei
+Route::get('imeidelete/{id}', 'IMEIController@delete');
 //cập nhập giá nhập, giá bản lẻ tự động
 Route::post('imei/{id}', 'IMEIController@edit');
 //cập nhập nhà cung cấp
@@ -42,6 +44,7 @@ Route::get('clientgroup', 'ClientController@index');
 Route::get('clientgroup/{id}', 'ClientController@show');
 Route::post('clientgroup/{id}', 'ClientController@edit');
 Route::get('clientgroup/{squirrel}/{any}', 'ClientController@status');
+Route::get('clientgroupdelete/{id}', 'ClientController@delete');
 
 //thêm sửa xóa nhà cung cấp, phí giao dịch, tỉ giá
 Route::get('supplier', 'SupplierController@index');
@@ -65,6 +68,7 @@ Route::post('updatesupplierserver/{id}', 'ServerserviceController@updatesupplier
 Route::post('serverservice/{id}', 'ServerserviceController@edit');
 Route::post('serverservicewise/{id}', 'ServerserviceController@editwise');
 Route::get('service/{squirrel}/{any}', 'ServerserviceController@status');
+Route::get('serverdelete/{id}', 'ServerserviceController@delete');
 
 Route::get('role', 'Auth\LoginController@role');
 Route::get('role/{squirrel}/{any}', 'Auth\LoginController@status');

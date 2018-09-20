@@ -271,4 +271,9 @@ class ServerserviceController extends Controller
         }
         return;
     }
+    public function delete($id)
+    {
+        Serverservice::find($id)->delete();
+        return back();
+    }
 }

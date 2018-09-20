@@ -48,6 +48,7 @@
                                 <th>Status</th>
                                 <th>%</th>
                                 <th>Edit</th>
+                                <th>Delete</th>
 
                                 </thead>
                                 <tbody>
@@ -65,6 +66,7 @@
                                         <td>{{$v->chietkhau}}</td>
                                         <td><a class="material-icons "
                                                href="{{ asset('') }}clientgroup/{{$v->id}}">edit</a></td>
+                                        <td><a href="{{ asset('') }}clientgroupdelete/{{$v->id}}" onclick="return confirm('OK to delete!');"><i class="material-icons">close</i></a></td>
                                     </tr>
                                 @endforeach
                                 </tbody>
