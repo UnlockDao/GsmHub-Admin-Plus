@@ -58,7 +58,7 @@ class IMEIController extends Controller
         $exchangerate = Currencie::find($defaultcurrency->currency_id);
         //
         $group = Imeiservicegroup::get();
-        $imei_service = Imeiservicepricing::get();
+        $imei_service = Imeiservice::orderBy('service_name')->get();
         $usergroup = Clientgroup::where('status','active')->where('status', 'active')->orderBy('chietkhau')->get();
 
         return view('imeiservice', compact('imei_service', 'group', 'usergroup', 'exchangerate'));

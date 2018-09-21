@@ -16,7 +16,7 @@
                     type: 'get',
                     data: 'id=' + ida,
                     success: function (result) {
-                       // $.notify({icon: "notifications", message: result});
+                        // $.notify({icon: "notifications", message: result});
                     },
                     error: function(result) {
                         alert('error');
@@ -72,51 +72,51 @@
                                         @endforeach
                                     </tr>
                                     @foreach($imei_service as $v)
-                                        @if($v->imei->imei_service_group_id == $g->id )
+                                        @if($v->imei_service_group_id == $g->id )
                                             <tr>
                                                 <td width="2%">{{$v->id}}</td>
-                                                <td width="30%" @if($v->imei->status == 'soft_deleted' )style="text-decoration: line-through;"@endif><a href="https://s-unlock.com/admin/imei-service/edit/{{$v->id}}" target="_blank">{{$v->imei->service_name}}</a> </td>
-                                                <td width="10%">@if($v->imei->api_id ==! null)<span
+                                                <td width="30%" @if($v->status == 'soft_deleted' )style="text-decoration: line-through;"@endif><a href="https://s-unlock.com/admin/imei-service/edit/{{$v->id}}" target="_blank">{{$v->service_name}}</a> </td>
+                                                <td width="10%">@if($v->api_id ==! null)<span
                                                             class="badge badge-pill badge-success">API<span>  @else<span
                                                                     class="badge badge-pill badge-info">Manual<span>  @endif
                                                 </td>
                                                 <td width="5%">
                                                     <div class="togglebutton">
                                                         <label id="{{$v->id}}">
-                                                            <input onfocus="window.location.reload()" class="status" id="check{{$v->id}}" type="checkbox" @if($v->imei->status == 'active' )checked="" @endif>
+                                                            <input onfocus="window.location.reload()" class="status" id="check{{$v->id}}" type="checkbox" @if($v->status == 'active' )checked="" @endif>
                                                             <span class="toggle"></span>
                                                         </label>
                                                     </div>
                                                 </td>
-                                                <td width="5%">@if($v->nhacungcap ==! null){{$v->nhacungcap->name}}@endif</td>
-                                                @if($v->imei->api_id ==! null)
-                                                    <td width="10%">@if($v->imei->apiserverservices ==! null)<a rel="tooltip"  data-original-title="{{number_format($v->imei->apiserverservices->credits*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->apiserverservices->credits, 2); ?></a>@endif</td>
+                                                <td width="5%">@if($v->imeipricing->nhacungcap ==! null){{$v->imeipricing->nhacungcap->name}}@endif</td>
+                                                @if($v->api_id ==! null)
+                                                    <td width="10%">@if($v->apiserverservices ==! null)<a rel="tooltip"  data-original-title="{{number_format($v->apiserverservices->credits*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->apiserverservices->credits, 2); ?></a>@endif</td>
                                                 @else
                                                     <td width="10%"><a rel="tooltip"  data-original-title="{{number_format($v->purchasecost*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->purchasecost, 2); ?></a></td>
                                                 @endif
 
 
-                                                <td width="10%"><a rel="tooltip"  data-original-title="{{number_format($v->imei->purchase_cost*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->purchase_cost, 2); ?></a></td>
+                                                <td width="10%"><a rel="tooltip"  data-original-title="{{number_format($v->purchase_cost*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->purchase_cost, 2); ?></a></td>
                                                 <td width="5%">
-                                                   @if($v->imei->purchase_cost > $v->imei->credit)
-                                                        <span class="badge badge-pill badge-danger">{{number_format($v->imei->credit, 2)}}<span>
+                                                    @if($v->purchase_cost > $v->credit)
+                                                        <span class="badge badge-pill badge-danger">{{number_format($v->credit, 2)}}<span>
                                                    @else
-                                                       <a rel="tooltip" data-original-title="{{number_format($v->imei->credit*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->credit, 2); ?></a>
-                                                   @endif
+                                                                    <a rel="tooltip" data-original-title="{{number_format($v->credit*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->credit, 2); ?></a>
+                                                    @endif
                                                 </td>
                                                 @foreach($usergroup as $u)
-                                                    <td width="5%">  @foreach($v->imei->clientgroupprice as $cl)
+                                                    <td width="5%">  @foreach($v->clientgroupprice as $cl)
                                                             @if($cl->currency == 'USD' && $cl->service_type == 'imei' && $cl->group_id == $u->id )
-                                                                @if($v->imei->purchase_cost > $v->imei->credit + $cl->discount)
-                                                                    <span class="badge badge-pill badge-danger"><?php echo number_format($v->imei->credit + $cl->discount, 2); ?><span>
+                                                                @if($v->purchase_cost > $v->credit + $cl->discount)
+                                                                    <span class="badge badge-pill badge-danger"><?php echo number_format($v->credit + $cl->discount, 2); ?><span>
                                                                 @else
-                                                                    <a rel="tooltip" data-original-title="{{number_format(($v->imei->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imei->credit + $cl->discount, 2); ?></a>
+                                                                                <a rel="tooltip" data-original-title="{{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->credit + $cl->discount, 2); ?></a>
                                                                 @endif
                                                             @endif
                                                         @endforeach</td>
                                                 @endforeach
 
-                                                <td width="2%">@if($v->imei->status == 'active')<a
+                                                <td width="2%">@if($v->status == 'active')<a
                                                             class="material-icons fancybox fancybox.iframe"
                                                             href="{{ asset('') }}imei/{{$v->id}}">edit</a>@endif</td>
                                                 <td><a href="{{ asset('') }}imeidelete/{{$v->id}}" onclick="return confirm('OK to delete!');"><i class="material-icons">close</i></a></td>

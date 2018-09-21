@@ -20,5 +20,9 @@ class Imeiservice extends Model
     {
         return $this->belongsTo('App\Apiserverservices','api_id','id');
     }
+    public function imeipricing()
+    {
+        return $this->belongsTo('App\Imeiservicepricing','id','id');
+    }
 }
 

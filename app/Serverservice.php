@@ -21,7 +21,7 @@ class Serverservice extends Model
     }
     public function serverservicetypewiseprice()
     {
-        return $this->hasMany('App\Serverservicetypewiseprice','server_service_id','id');
+        return $this->hasMany('App\Serverservicetypewiseprice','server_service_id','id')->orderBy('amount');
     }
     public function servicepricing()
     {
