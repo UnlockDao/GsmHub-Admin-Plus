@@ -27,6 +27,49 @@
     </script>
     <div class="container-fluid">
         <div class="row">
+            <div class="card">
+                <div class="card-body">
+                    <form action="" method="GET">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <strong>Service Group</strong>
+                                <select class="form-control" name="group_name">
+                                    @foreach($groupsearch as $g )
+                                        <option value="{{$g->id}}">{{$g->group_name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <strong>Service Type</strong>
+                                <select class="form-control" name="type">
+                                    <option value="api">API</option>
+                                    <option value="manual">MANUAL</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <strong>Status</strong>
+                                <select class="form-control" name="status">
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <strong>Supplier</strong>
+                                <select class="form-control" name="supplier">
+                                    @foreach($supplier as $s)
+                                        <option value="{{$s->id}}">{{$s->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-info" type="submit"><i class="material-icons">search</i></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header card-header-icon card-header-rose">

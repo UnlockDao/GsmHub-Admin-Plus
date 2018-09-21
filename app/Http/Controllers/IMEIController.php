@@ -57,11 +57,40 @@ class IMEIController extends Controller
         $defaultcurrency = Currenciepricing::where('type', '1')->first();
         $exchangerate = Currencie::find($defaultcurrency->currency_id);
         //
-        $group = Imeiservicegroup::get();
-        $imei_service = Imeiservice::orderBy('service_name')->get();
-        $usergroup = Clientgroup::where('status','active')->where('status', 'active')->orderBy('chietkhau')->get();
 
-        return view('imeiservice', compact('imei_service', 'group', 'usergroup', 'exchangerate'));
+        $groupsearch = Imeiservicegroup::get();
+
+        $usergroup = Clientgroup::where('status','active')->where('status', 'active')->orderBy('chietkhau')->get();
+        $supplier =Supplier::get();
+        $suppliersearch =$request->supplier;
+
+        if($request->group_name == null){
+            $imei_service = Imeiservice::orderBy('service_name')->get();
+            $group = Imeiservicegroup::get();
+        }else{
+            $group = Imeiservicegroup::where('id',$request->group_name)->get();
+            if($request->type == 'api'){
+            $imei_service = Imeiservice::orderBy('service_name')
+                                        ->where('status',$request->status)
+                                        ->whereHas('imeipricing', function($query) use ($suppliersearch) {
+                                            $query->where('id_supplier',$suppliersearch);
+                                        })
+                                        ->where('api','>','0')
+                                        ->get();
+            }
+            else{
+                $imei_service = Imeiservice::orderBy('service_name')
+                    ->where('status',$request->status)
+                    ->whereHas('imeipricing', function($query) use ($suppliersearch) {
+                        $query->where('id_supplier',$suppliersearch);
+                    })
+                    ->where('api','')
+                    ->get();
+            }
+        }
+
+
+        return view('imeiservice', compact('imei_service', 'group', 'usergroup', 'exchangerate','groupsearch','supplier'));
     }
 
     public function checkNullUser()
