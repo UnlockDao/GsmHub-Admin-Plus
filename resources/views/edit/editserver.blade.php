@@ -358,7 +358,14 @@
                                             @if($serverservice->serverservicequantityrange->isEmpty())
                                                 <tr>
                                                     <td></td>
-                                                    <td>1-1</td>
+                                                    <td><span>1-</span>
+                                                        <span class="pull-right">
+                                                        <input class="form-control"
+                                                               name="to_range"
+                                                               autocomplete="off"
+                                                               value="1"
+                                                               type="text">
+                                                        </span></td>
                                                     <td><input class="form-control"
                                                                    name="credit_new"
                                                                    autocomplete="off"

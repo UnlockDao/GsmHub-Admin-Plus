@@ -212,7 +212,7 @@ class ServerserviceController extends Controller
             $newquantityrange = new Serverservicequantityrange();
             $newquantityrange->server_service_id = $id;
             $newquantityrange->from_range = 1;
-            $newquantityrange->to_range = 1;
+            $newquantityrange->to_range = $request->to_range;
             $newquantityrange->save();
             foreach ($currencies as $cu) {
                 $server_service_user_credit = new Serverserviceusercredit();
