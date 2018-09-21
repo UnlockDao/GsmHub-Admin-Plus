@@ -9,6 +9,7 @@ use App\Currencie;
 use App\Http\Requests;
 use App\Imeiservice;
 use App\Imeiservicepricing;
+use App\Serviceservicepricing;
 use App\Supplier;
 use Excel;
 use Illuminate\Http\Request;
@@ -88,5 +89,12 @@ class SupplierController extends Controller
             }
         }
         return;
+    }
+    public function delete($id)
+    {
+        Supplier::find($id)->delete();
+        $imei = Imeiservicepricing::where('id_supplier',$id)->update(['id_supplier' => null]);
+        $server = Serviceservicepricing::where('id_supplier',$id)->update(['id_supplier' => null]);
+        return back();
     }
 }

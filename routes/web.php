@@ -51,6 +51,7 @@ Route::get('supplier', 'SupplierController@index');
 Route::post('supplier/{id}', 'SupplierController@edit');
 Route::post('addsupplier', 'SupplierController@add');
 Route::get('supplier/{id}', 'SupplierController@show');
+Route::get('supplierdelete/{id}', 'SupplierController@delete');
 
 
 //thêm sửa xóa currencie

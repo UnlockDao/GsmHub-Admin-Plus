@@ -35,6 +35,7 @@
                                         <th>Exchange rate </th>
                                         <th> Transaction fee</th>
                                         <th> Edit </th>
+                                        <th> Delete </th>
 
                                         </thead>
                                         <tbody>
@@ -45,6 +46,7 @@
                                                 <td><?php echo number_format($v->exchangerate) ?></td>
                                                 <td>{{$v->transactionfee}} %</td>
                                                 <td><a class="material-icons " href="{{ asset('') }}supplier/{{$v->id}}">edit</a></td>
+                                                <td><a href="{{ asset('') }}supplierdelete/{{$v->id}}" onclick="return confirm('OK to delete!');"><i class="material-icons">close</i></a></td>
                                             </tr>
                                         @endforeach
                                         </tbody>
