@@ -74,36 +74,47 @@ class ServerserviceController extends Controller
         $defaultcurrency = Currenciepricing::where('type', '1')->first();
         $exchangerate = Currencie::find($defaultcurrency->currency_id);
         //
-
+        $cachesearch = $request;
         $clientgroup = Clientgroup::where('status','active')->orderBy('chietkhau')->get();
         $supplier =Supplier::get();
         $suppliersearch =$request->supplier;
         $groupsearch = Serverservicegroup::get();
-        if($request->group_name == null){
-            $server_service_group = Serverservicegroup::get();
-            $serverservice = Serverservice::get();
-        }else{
-            $server_service_group = Serverservicegroup::where('id',$request->group_name)->get();
-            if($request->type == 'api'){
-                $serverservice = Serverservice::orderBy('service_name')
-                    ->where('status',$request->status)
-                    ->whereHas('servicepricing', function($query) use ($suppliersearch) {
-                        $query->where('id_supplier',$suppliersearch);
-                    })
-                    ->where('api','>','0')
-                    ->get();
-            }
-            else{
-                $serverservice = Serverservice::orderBy('service_name')
-                    ->where('status',$request->status)
-                    ->whereHas('servicepricing', function($query) use ($suppliersearch) {
-                        $query->where('id_supplier',$suppliersearch);
-                    })
-                    ->where('api','')
-                    ->get();
-            }
+
+        //search
+        $server_service_group = Serverservicegroup::where('id','LIKE',$request->group_name)->get();
+        if($request->type == 'api'){
+            $serverservice = Serverservice::orderBy('service_name')
+                ->where('status','LIKE',$request->status)
+                ->whereHas('servicepricing', function($query) use ($suppliersearch) {
+                    if($suppliersearch ==! null){
+                        $query->where('id_supplier','LIKE',$suppliersearch);
+                    }
+                })
+                ->where('api','>','0')
+                ->get();
         }
-        return view('serverservice', compact('serverservice','server_service_group','clientgroup','exchangerate','supplier','groupsearch'));
+        elseif($request->type == 'manual'){
+            $serverservice = Serverservice::orderBy('service_name')
+                ->where('status','LIKE',$request->status)
+                ->whereHas('servicepricing', function($query) use ($suppliersearch) {
+                    if($suppliersearch ==! null){
+                        $query->where('id_supplier','LIKE',$suppliersearch);
+                    }
+                })
+                ->where('api','')
+                ->get();
+        }else{
+            $serverservice = Serverservice::orderBy('service_name')
+                ->where('status','LIKE',$request->status)
+                ->whereHas('servicepricing', function($query) use ($suppliersearch) {
+                    if($suppliersearch ==! null){
+                        $query->where('id_supplier','LIKE',$suppliersearch);
+                    }
+                })
+                ->get();
+        }
+        
+        return view('serverservice', compact('serverservice','server_service_group','clientgroup','exchangerate','supplier','groupsearch','cachesearch'));
     }
 
     public function checkServer()

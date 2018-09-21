@@ -63,34 +63,44 @@ class IMEIController extends Controller
         $usergroup = Clientgroup::where('status','active')->where('status', 'active')->orderBy('chietkhau')->get();
         $supplier =Supplier::get();
         $suppliersearch =$request->supplier;
+        $cachesearch = $request;
 
-        if($request->group_name == null){
-            $imei_service = Imeiservice::orderBy('service_name')->get();
-            $group = Imeiservicegroup::get();
-        }else{
-            $group = Imeiservicegroup::where('id',$request->group_name)->get();
+            $group = Imeiservicegroup::where('id','LIKE',$request->group_name)->get();
             if($request->type == 'api'){
             $imei_service = Imeiservice::orderBy('service_name')
-                                        ->where('status',$request->status)
+                                        ->where('status','LIKE',$request->status)
                                         ->whereHas('imeipricing', function($query) use ($suppliersearch) {
-                                            $query->where('id_supplier',$suppliersearch);
+                                            if($suppliersearch ==! null){
+                                            $query->where('id_supplier','LIKE',$suppliersearch);
+                                            }
                                         })
                                         ->where('api','>','0')
                                         ->get();
             }
-            else{
+            elseif($request->type == 'manual'){
                 $imei_service = Imeiservice::orderBy('service_name')
-                    ->where('status',$request->status)
+                    ->where('status','LIKE',$request->status)
                     ->whereHas('imeipricing', function($query) use ($suppliersearch) {
-                        $query->where('id_supplier',$suppliersearch);
+                        if($suppliersearch ==! null){
+                            $query->where('id_supplier','LIKE',$suppliersearch);
+                        }
                     })
                     ->where('api','')
                     ->get();
+            }else{
+                $imei_service = Imeiservice::orderBy('service_name')
+                    ->where('status','LIKE',$request->status)
+                    ->whereHas('imeipricing', function($query) use ($suppliersearch) {
+                        if($suppliersearch ==! null){
+                            $query->where('id_supplier','LIKE',$suppliersearch);
+                        }
+                    })
+                    ->get();
             }
-        }
 
 
-        return view('imeiservice', compact('imei_service', 'group', 'usergroup', 'exchangerate','groupsearch','supplier'));
+
+        return view('imeiservice', compact('imei_service', 'group', 'usergroup', 'exchangerate','groupsearch','supplier','cachesearch'));
     }
 
     public function checkNullUser()
