@@ -102,7 +102,7 @@
                                 <th width="2%"></th>
                                 </thead>
                                 <tbody>
-                                @foreach($server_service_group as $g)
+                                @foreach($server_service_group->where('servergroup','<>','') as $g)
                                     <tr class="table-warning">
                                         <td><i class="material-icons">monetization_on</i></td>
                                         <td><strong style="font-weight:700;">{{$g->group_name}}</strong></td>
