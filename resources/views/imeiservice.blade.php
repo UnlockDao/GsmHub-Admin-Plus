@@ -139,7 +139,7 @@
                                                 @if($v->api_id ==! null)
                                                     <td width="10%">@if($v->apiserverservices ==! null)<a rel="tooltip"  data-original-title="{{number_format($v->apiserverservices->credits*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->apiserverservices->credits, 2); ?></a>@endif</td>
                                                 @else
-                                                    <td width="10%"><a rel="tooltip"  data-original-title="{{number_format($v->purchasecost*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->purchasecost, 2); ?></a></td>
+                                                    <td width="10%"><a rel="tooltip"  data-original-title="{{number_format($v->imeipricing->purchasecost*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imeipricing->purchasecost, 2); ?></a></td>
                                                 @endif
 
 
