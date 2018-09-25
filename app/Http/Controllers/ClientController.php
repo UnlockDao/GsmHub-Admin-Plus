@@ -71,12 +71,14 @@ class ClientController extends Controller
                     ->where('server_service_range_id',$ra->server_service_range_id)
                     ->first();
                 $giabanle = $i->credit;
-                $chietkhau = ($giabanle - ((($giabanle - $ra->serverservicequantityrange->serverservicequantityrange->purchase_cost) / 100) *$request->chietkhau));
-                foreach ($currencies as $cu) {
-                        $update = Serverserviceclientgroupcredit::where('server_service_range_id',$ra->server_service_range_id)
-                            ->where('client_group_id', $id)
-                            ->where('currency',$cu->currency_code)
-                            ->update(['credit' => $chietkhau* $cu->exchange_rate_static]);
+                if($ra->serverservicequantityrange->serverservicequantityrange ==! null){
+                    $chietkhau = ($giabanle - ((($giabanle - $ra->serverservicequantityrange->serverservicequantityrange->purchase_cost) / 100) *$request->chietkhau));
+                    foreach ($currencies as $cu) {
+                            $update = Serverserviceclientgroupcredit::where('server_service_range_id',$ra->server_service_range_id)
+                                ->where('client_group_id', $id)
+                                ->where('currency',$cu->currency_code)
+                                ->update(['credit' => $chietkhau* $cu->exchange_rate_static]);
+                    }
                 }
 
             }
