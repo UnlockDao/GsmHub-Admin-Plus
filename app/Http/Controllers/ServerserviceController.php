@@ -289,7 +289,7 @@ class ServerserviceController extends Controller
 
 
         $clientgroup = Clientgroup::where('status','active')->get();
-        $server_service_type_wise_price = Serverservicetypewiseprice::get();
+        $server_service_type_wise_price = Serverservicetypewiseprice::where('server_service_id', $id)->get();
         foreach ($server_service_type_wise_price as $sp){
             $pc = $request->input('purchase_cost_vip_' . $sp->id);
             if ($pc == !null) {
