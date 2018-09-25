@@ -18,7 +18,7 @@
                             {{ csrf_field() }}
                             <div class="col-md-12">
                                 <strong>Phần trăm chiết khấu</strong>
-                                <input type="text" name="chietkhau"  class="form-control" value="{{$client->chietkhau}}" placeholder="%" autocomplete="off" required>
+                                <input type="number" name="chietkhau" max="100" min="0" class="form-control" value="{{$client->chietkhau}}" placeholder="%" autocomplete="off" required>
                             </div>
                             <input class="btn btn-primary pull-right" type="submit" name="myButton" value="Sửa">
                             <div class="clearfix"></div>
