@@ -342,4 +342,35 @@ class ServerserviceController extends Controller
         Serverservice::find($id)->delete();
         return back();
     }
+
+    public function reloadserver(){
+        $cliendefault = Clientgroup::where('status','active')->where('chietkhau', '0')->first();
+        //refresh
+        $cliengroup =Clientgroup::get();
+        if($cliendefault ==! null){
+            foreach ($cliengroup as $clg){
+                $range = Serverserviceclientgroupcredit::where('client_group_id',$clg->id)->where('currency','USD')->get();
+                $currencies = Currencie::where('display_currency', 'Yes')->get();
+                foreach ($range as $ra) {
+                    $i = Serverserviceclientgroupcredit::where('client_group_id',$cliendefault->id)
+                        ->where('currency','USD')
+                        ->where('server_service_range_id',$ra->server_service_range_id)
+                        ->first();
+                    $giabanle = $i->credit;
+                    if($ra->serverservicequantityrange->serverservicequantityrange ==! null){
+                        $chietkhau = ($giabanle - ((($giabanle - $ra->serverservicequantityrange->serverservicequantityrange->purchase_cost) / 100) *$clg->chietkhau));
+                        foreach ($currencies as $cu) {
+                            $update = Serverserviceclientgroupcredit::where('server_service_range_id',$ra->server_service_range_id)
+                                ->where('client_group_id', $clg->id)
+                                ->where('currency',$cu->currency_code)
+                                ->update(['credit' => $chietkhau* $cu->exchange_rate_static]);
+                        }
+                    }
+
+                }
+            }
+        }
+        return back();
+
+    }
 }

@@ -77,8 +77,8 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header card-header-icon card-header-rose">
-                        <button type="button" onfocus="tableToExcel('testTable', 'W3C Example Table')"
-                                class="btn btn-info pull-right"><i class="material-icons">cloud_download</i>
+                        <button type="button" onclick="location.href='/reloadserver'"
+                                class="btn btn-info pull-right"><i class="material-icons">refresh</i>
                         </button>
                         <h3 class="card-title ">Server Services</h3>
 
