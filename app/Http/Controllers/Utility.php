@@ -6,11 +6,15 @@ namespace App\Http\Controllers;
 use App\Clientgroup;
 use App\Clientgroupprice;
 use App\Currencie;
+use App\Currenciepricing;
 use App\Imeiservice;
+use App\Serverservice;
 use App\Serverserviceclientgroupcredit;
 use App\Serverservicetypewisegroupprice;
 use App\Serverservicetypewiseprice;
+use App\Serviceservicepricing;
 use App\Supplier;
+use Illuminate\Http\Request;
 
 class Utility
 {
@@ -109,6 +113,7 @@ class Utility
         }
         if($type == 'server'){
             //services
+            $this->UpdatePurchaseCostVipServer();
             if($cliendefault ==! null){
                 foreach ($cliengroup as $clg){
                     $range = Serverserviceclientgroupcredit::where('client_group_id',$clg->id)->where('currency','USD')->get();
@@ -156,6 +161,37 @@ class Utility
                             echo '<br>';
                         }
                         echo '<hr>';
+                    }
+                }
+            }
+        }
+    }
+    public function UpdatePurchaseCostVipServer(){
+        $defaultcurrency = Currenciepricing::where('type', '1')->first();
+        $exchangerate = Currencie::find($defaultcurrency->currency_id);
+        $serviceservicepricing = Serviceservicepricing::get();
+        foreach ($serviceservicepricing as $sr){
+            if($sr->id_supplier ==!null){
+                $serverservice= Serverservice::find($sr->id);
+                $tipurchasecost = $serverservice->servicepricing->nhacungcap->exchangerate;
+                $transactionfeegd = $serverservice->servicepricing->nhacungcap->transactionfee;
+                $exchangerategoc = $exchangerate->exchange_rate_static;
+                if(!$serverservice->serverservicequantityrange->isEmpty()){
+                    if($serverservice->api_id ==! null){
+                        $purchasecost = $serverservice->apiserverservices->credits;
+                        $giatransactionfee = ($tipurchasecost * $purchasecost) / $exchangerategoc + (($purchasecost / 100) * $transactionfeegd);
+                        Serverservice::where('id', $sr->id)->update(['purchase_cost' => $giatransactionfee]);
+                    }
+                if(!$serverservice->serverservicetypewiseprice->isEmpty())
+                    if($serverservice->api_id ==! null){
+                        foreach($serverservice->serverservicetypewiseprice as $a){
+                            foreach($serverservice->apiserverservicetypeprice as $apiserverservicetypeprice){
+                                if($apiserverservicetypeprice->service_type==$a->service_type){
+                                    $purchasecost=  $apiserverservicetypeprice->api_price;
+                                }}
+                            $giatransactionfee = ($tipurchasecost * $purchasecost) / $exchangerategoc + (($purchasecost / 100) * $transactionfeegd);
+                            Serverservicetypewiseprice::where('id', $a->id)->update(['purchase_cost' => $giatransactionfee]);
+                        }
                     }
                 }
             }
