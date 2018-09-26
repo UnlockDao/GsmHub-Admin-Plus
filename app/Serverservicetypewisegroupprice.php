@@ -18,6 +18,10 @@ class Serverservicetypewisegroupprice extends Model
         'currency',
         'amount'
     ];
+    public function clientgroup()
+    {
+        return $this->belongsTo('App\Clientgroup','group_id','id');
+    }
 
 
 }

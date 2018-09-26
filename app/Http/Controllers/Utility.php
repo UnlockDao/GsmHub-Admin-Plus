@@ -8,6 +8,8 @@ use App\Clientgroupprice;
 use App\Currencie;
 use App\Imeiservice;
 use App\Serverserviceclientgroupcredit;
+use App\Serverservicetypewisegroupprice;
+use App\Serverservicetypewiseprice;
 use App\Supplier;
 
 class Utility
@@ -23,12 +25,12 @@ class Utility
     public function Reload($type,$cliengroup,$supplier)
     {
 
-        if($cliengroup == null || $type == 'all'){
+        if($cliengroup == null){
             $cliengroup =Clientgroup::get();
         }else{
             $cliengroup =Clientgroup::where('id',$cliengroup)->get();
         }
-        if($supplier == null || $type == 'all'){
+        if($supplier == null){
             $supplier =Supplier::get();
         }else{
             $supplier =Supplier::where('id',$supplier)->get();
@@ -125,6 +127,35 @@ class Utility
                                     ->update(['credit' => $chietkhau* $cu->exchange_rate_static]);
                             }
                         }
+                    }
+                }
+            }
+            //services wise
+            if($cliendefault ==! null){
+                $wise = Serverservicetypewiseprice::get();
+                foreach($wise as $wi) {
+                    echo '<hr>';
+                    echo '---------------------services wise------------------------';
+                    echo '<br>';
+                    echo $wi->service_type;
+                    echo '<br>';
+                    echo 'Purchase Cost(Net) :'.$wi->purchase_cost;
+                    if($wi->adminplus_service ==! null){
+                        echo '<br>';
+                        echo 'Giá bán lẻ: '.$wi->servicetypegroupprice->where('group_id',$cliendefault->id)->first()->amount;
+                        $giabanle =$wi->servicetypegroupprice->where('group_id',$cliendefault->id)->first()->amount;
+                        echo '<br>';
+                        foreach ($wi->servicetypegroupprice as $groupprice){
+                            if($groupprice->clientgroup ==! null){
+                                echo 'Chiết khấu :'.$chietkhau = ($giabanle - ((($giabanle - $wi->purchase_cost) / 100) *$groupprice->clientgroup->chietkhau));
+                                echo '|'.$groupprice->clientgroup->group_name. '|'.$groupprice->id;
+                                Serverservicetypewisegroupprice::where('id',$groupprice->id)
+                                                               ->update(['amount' => $chietkhau]);
+                            }
+
+                            echo '<br>';
+                        }
+                        echo '<hr>';
                     }
                 }
             }
