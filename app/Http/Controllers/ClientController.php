@@ -46,7 +46,8 @@ class ClientController extends Controller
         $type ='all';
         $cliengroup= $id;
         $supplier='';
-        new Utility($type,$cliengroup,$supplier);
+        $utility = new Utility();
+        $utility->Reload($type,$cliengroup,$supplier);
 
         return redirect('/clientgroup');
     }

@@ -25,8 +25,6 @@ class ServerserviceController extends Controller
 
     public function checkNullUser(){
 
-
-
         $clientgroup = Clientgroup::where('status','active')->orderBy('chietkhau')->get();
 
         $serverservices = Serverservice::get();
@@ -340,14 +338,6 @@ class ServerserviceController extends Controller
     public function delete($id)
     {
         Serverservice::find($id)->delete();
-        return back();
-    }
-
-    public function reloadserver(){
-        $type ='server';
-        $cliengroup='';
-        $supplier='';
-        new Utility($type,$cliengroup,$supplier);
         return back();
     }
 }

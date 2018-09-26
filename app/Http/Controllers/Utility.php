@@ -18,14 +18,6 @@ use Illuminate\Http\Request;
 
 class Utility
 {
-    public function __construct($type,$cliengroup,$supplier)
-    {
-        $this->type = $type;
-        $this->cliengroup = $cliengroup;
-        $this->supplier = $supplier;
-
-        $this->Reload($type,$cliengroup,$supplier);
-    }
     public function Reload($type,$cliengroup,$supplier)
     {
 
@@ -196,5 +188,13 @@ class Utility
                 }
             }
         }
+    }
+
+    public function Request(Request $request){
+        $type = $request->type;
+        $cliengroup= $request->cliengroup;
+        $supplier= $request->supplier;
+        $this->Reload($type,$cliengroup,$supplier);
+        return back();
     }
 }

@@ -64,7 +64,6 @@ Route::get('defaultcurrency/{squirrel}/{any}', 'CurrencieController@defaultcurre
 
 //ServerserviceController
 Route::get('serverservice', 'ServerserviceController@index');
-Route::get('reloadserver', 'ServerserviceController@reloadserver');
 Route::get('serverservice/{id}', 'ServerserviceController@show');
 Route::post('updatesupplierserver/{id}', 'ServerserviceController@updatesupplier');
 Route::post('serverservice/{id}', 'ServerserviceController@edit');
@@ -74,3 +73,5 @@ Route::get('serverdelete/{id}', 'ServerserviceController@delete');
 
 Route::get('role', 'Auth\LoginController@role');
 Route::get('role/{squirrel}/{any}', 'Auth\LoginController@status');
+//Utility
+Route::get('reload', 'Utility@Request');
