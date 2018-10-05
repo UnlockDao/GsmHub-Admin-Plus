@@ -34,7 +34,7 @@ class ServerorderController extends Controller
                 ->where('server_service_id','LIKE',$request->service_name)
                 ->where('status','LIKE',$request->status)
                 ->whereBetween('date_added',$tg)
-                ->paginate(50);
+                ->paginate(5000);
         }
         return view('serverorder', compact('serverorder','groupsearch','cachesearch'));
     }

@@ -1,5 +1,8 @@
 @extends('layouts.header')
 @section('content')
+    <?php $profit = 0 ?>
+    <?php $credit = 0 ?>
+    <?php $count = 0 ?>
     <style>
         .pagination > li > a, .pagination > li > span {
             border: 0;
@@ -119,15 +122,29 @@
                                         <td>{{$v->id}}</td>
                                         <td>{{$v->order_code}}</td>
                                         <td>@if($v->serverservice == null) @else {{$v->serverservice->service_name}} @endif</td>
-                                        <td>{{number_format($v->credit,2)}}</td>
-                                        <td>{{$v->credit-$v->purchase_cost}}</td>
+                                        <td>{{number_format($v->credit_default_currency,2)}}</td>
+                                        <td>{{$v->credit_default_currency-$v->purchase_cost}}</td>
                                         <td><a rel="tooltip" class="max-lines"
                                                data-original-title="{{$v->result}}">{{$v->result}}</a></td>
                                         <td>{{$v->date_added}}</td>
                                         <td>{{$v->completed_on}}</td>
                                         <td>{{$v->status}}</td>
                                     </tr>
+                                    <?php $profit += $v->credit_default_currency-$v->purchase_cost ?>
+                                    <?php $credit += $v->credit_default_currency ?>
+                                    <?php $count += 1 ?>
                                 @endforeach
+                                <tr>
+                                    <td style="font-weight: bold">SUM</td>
+                                    <td style="font-weight: bold">{{$count}}</td>
+                                    <td></td>
+                                    <td style="font-weight: bold">{{$credit}} USD</td>
+                                    <td style="font-weight: bold">{{$profit}} USD</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
                                 </tbody>
                             </table>
                             {{ $serverorder->appends($_GET)->links() }}
