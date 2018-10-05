@@ -75,3 +75,7 @@ Route::get('role', 'Auth\LoginController@role');
 Route::get('role/{squirrel}/{any}', 'Auth\LoginController@status');
 //Utility
 Route::get('reload', 'Utility@Request');
+
+
+Route::get('serverorder', 'ServerorderController@index');
+

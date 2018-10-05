@@ -42,6 +42,12 @@
             </a>
         </li>
         <li class="nav-item ">
+            <a class="nav-link" href="{{ url('serverorder') }}">
+                <i class="material-icons">present_to_all</i>
+                <p>Server Order Report</p>
+            </a>
+        </li>
+        <li class="nav-item ">
             <a class="nav-link" href="{{ url('supplier') }}">
                 <i class="material-icons">account_balance</i>
                 <p>Supplier</p>
