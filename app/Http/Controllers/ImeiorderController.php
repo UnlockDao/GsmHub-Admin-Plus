@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CUtil;
 use App\Imeiserviceorder;
-use App\imeiservice;
+use App\Imeiservice;
 use Illuminate\Http\Request;
 
 class ImeiorderController extends Controller
