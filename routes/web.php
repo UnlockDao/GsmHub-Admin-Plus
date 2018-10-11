@@ -10,20 +10,24 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 use App\Http\Controllers\SQL;
 use Illuminate\Support\Facades\Auth;
-Route::get('login','Auth\LoginController@getLogin')->name('login');
-Route::post('login','Auth\LoginController@postLogin')->name('login');
 Route::get('/', function () {
     $sql = new SQL();
     $sql->run();
-    return redirect('imei');
+    return redirect('home');
 });
 Route::get('/logout', function () {
     Auth::logout();
-    return redirect('imei');
+    return redirect('home');
 });
+
+Route::get('login','Auth\LoginController@getLogin')->name('login');
+Route::post('login','Auth\LoginController@postLogin')->name('login');
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+
 //trang chủ
 //imeiserver
 //hiển thị danh sách dịch vụ, tiền tệ
@@ -76,6 +80,6 @@ Route::get('role/{squirrel}/{any}', 'Auth\LoginController@status');
 //Utility
 Route::get('reload', 'Utility@Request');
 
-
 Route::get('serverorder', 'ServerorderController@index');
+Route::get('imeiorder', 'ImeiorderController@index');
 

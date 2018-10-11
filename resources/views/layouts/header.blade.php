@@ -1,91 +1,88 @@
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}">
+<html>
+
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="https://s-unlock.com/default/images/header/favicon/favicon.ico">
-
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Pricing | S-Unlock</title>
-    <link href="{{ asset('assets/css/material-dashboard.min.css?v=2.0.1') }}" rel="stylesheet"/>
-    <!--     Fonts and icons     -->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,300|Material+Icons' rel='stylesheet'
-          type='text/css'>
-    <script src="{{ asset('excel/tableToExcel.js') }}"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Pricing - S Unlock</title>
+    <!-- Favicon -->
+    <link href="{{ asset('assets/img/brand/favicon.png" rel="icon" type="image/png') }}">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+    <!-- Icons -->
+    <link href="{{ asset('assets/vendor/nucleo/css/nucleo.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/vendor/@fortawesome/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+    <!-- Argon CSS -->
+    <link type="text/css" href="{{ asset('assets/css/argon.css?v=1.0.0') }}" rel="stylesheet">
 </head>
 <style>
     /* for custom scrollbar for webkit browser*/
 
     ::-webkit-scrollbar {
-        width: 6px;
+        width: 3px;
     }
     ::-webkit-scrollbar-track {
-        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 75, 180, 0.3);
     }
     ::-webkit-scrollbar-thumb {
         -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
     }
-    .sticky {
-        position: fixed;
-        top: 0;
-    }
-    #myHeader {
-        background: #fff;
-        z-index: 10;
-        margin-left: -20px;
-        margin-right: 30px;
-
-    }
 </style>
-<body class="sidebar-mini">
-<div class="wrapper">
-    <div class="sidebar" data-color="rose" data-background-color="black">
-        <div class="logo">
-            <a href="{{ url('') }}" class="simple-text logo-mini">
-                SU
-            </a>
 
-            <a href="{{ url('') }}" class="simple-text logo-normal">
-                S-Unlock
-            </a>
-        </div>
-        <div class="sidebar-wrapper">
-            @include('layouts.sidebar')
-        </div>
-    </div>
+<body>
+<!-- Sidenav -->
+@include('layouts.sidebar')
+<!-- Main content -->
+<div class="main-content">
+    <!-- Top navbar -->
+@include('layouts.navbar')
+    <!-- Header -->
 
-    <div class="main-panel">
-        <nav class="navbar navbar-expand-lg navbar-transparent  navbar-absolute fixed-top">
-            @include('layouts.navbar')
-        </nav>
-        <div class="content">
-            @yield('content')
+    <!-- Page content -->
+    @yield('content')
+<!-- Footer -->
+
+    <footer class="footer">
+        <div class="row align-items-center justify-content-xl-between">
+            <div class="col-xl-6">
+                <div class="copyright text-center text-xl-left text-muted">
+                    &copy; 2018 <a href="" class="font-weight-bold ml-1" target="_blank">S-Developers</a>
+                </div>
+            </div>
+            <div class="col-xl-6">
+                <ul class="nav nav-footer justify-content-center justify-content-xl-end">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" target="_blank">Giới thiệu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="https://s-unlock.com/" class="nav-link" target="_blank">Trang chủ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" target="_blank">MIT License</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
+
+    </footer>
+
 </div>
-<div class="beep" style="display: none;"></div>
-</body>
-<!--   Core JS Files   -->
-<script src="{{ asset('assets/js/core/jquery.min.js') }}"></script>
-<script src="{{ asset('assets/js/plugins/bootstrap-notify.js') }}"></script>
-<script src="{{ asset('assets/js/core/popper.min.js') }}"></script>
-<script src="{{ asset('assets/js/bootstrap-material-design.min.js') }}"></script>
-<script src="{{ asset('assets/js/plugins/perfect-scrollbar.jquery.min.js') }}"></script>
-<!--  Plugin for Date Time Picker and Full Calendar Plugin  -->
-<script src="{{ asset('assets/js/plugins/moment.min.js') }}"></script>
-<script src="{{ asset('assets/js/material-dashboard.js?v=2.0.1') }}"></script>
-<!-- Forms Validations Plugin -->
-<script src="{{ asset('assets/js/plugins/jquery.validate.min.js') }}"></script>
-<!--  Notifications Plugin, full documentation here: http://bootstrap-notify.remabledesigns.com/    -->
-<script src="{{ asset('assets/js/plugins/bootstrap-notify.js') }}"></script>
-<!--  DataTables.net Plugin, full documentation here: https://datatables.net/    -->
-<script src="{{ asset('assets/js/plugins/jquery.datatables.js') }}"></script>
-<script src="{{ asset('assets/js/plugins/bootstrap-datetimepicker.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('theme/source/jquery.fancybox.pack.js?v=2.1.5') }}"></script>
-<link rel="stylesheet" type="text/css" href="{{ asset('theme/source/jquery.fancybox.css?v=2.1.5') }}" media="screen"/>
+</div>
+<!-- Argon Scripts -->
+<!-- Core -->
+<script src="{{ asset('assets/vendor/jquery/dist/jquery.min.js') }}"></script>
+<script src="{{ asset('assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+<!-- Optional JS -->
+<script src="{{ asset('assets/vendor/chart.js/dist/Chart.min.js') }}"></script>
+<script src="{{ asset('assets/vendor/chart.js/dist/Chart.extension.js') }}"></script>
+<!-- Argon JS -->
+<script src="{{ asset('assets/js/argon.js?v=1.0.0') }}"></script>
+
+<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+<script type="text/javascript" src="{{ asset('source/jquery.fancybox.pack.js?v=2.1.5') }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ asset('source/jquery.fancybox.css?v=2.1.5') }}" media="screen"/>
 <script type="text/javascript">
     $(document).ready(function () {
         $(".fancybox").fancybox({
@@ -100,8 +97,21 @@
 
 </script>
 <script type="text/javascript">
-    $('.defaultcurrency').on('change', function () {
-        $('.defaultcurrency').not(this).prop('checked', false);
+    $(function() {
+        $('input[name="datefilter"]').daterangepicker({
+            autoUpdateInput: false,
+            locale: {
+                format: 'Y/MM/DD H:mm:s',
+                cancelLabel: 'Clear'
+            }
+        });
+        $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
+            $(this).val(picker.startDate.format('Y/MM/DD H:mm:s') + ' - ' + picker.endDate.format('Y/MM/DD H:mm:s'));
+        });
+
+        $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
+        });
     });
 </script>
 
@@ -119,5 +129,11 @@
         }
     }
 </script>
+<script type="text/javascript">
+    $('.defaultcurrency').on('change', function () {
+        $('.defaultcurrency').not(this).prop('checked', false);
+    });
+</script>
+</body>
 
 </html>

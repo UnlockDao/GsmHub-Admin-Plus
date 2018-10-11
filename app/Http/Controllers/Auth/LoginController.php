@@ -20,6 +20,7 @@ class LoginController extends Controller
     public function postLogin(Request $request)
     {
         $users = User::where('user_name', $request->email)->where('user_access', 'Admin')->first();
+        if($users ==! null){
         $admin = Administrator::where('user_id', $users->user_id)->where('administrator_role_id', '1')->first();
         if ($admin == !null) {
             if ($users == !null) {
@@ -58,6 +59,9 @@ class LoginController extends Controller
             } else {
                 return redirect('/');
             }
+        }
+        }else{
+            return redirect('/');
         }
     }
 

@@ -85,13 +85,13 @@
                                                 <option value="VND">VND</option>
                                             </select>
                                         </div>
-                                        <div class="col-md-1">
+                                        <div class="col-md-2">
                                             <strong>To</strong>
                                             <select class="form-control" id="valueTo">
                                                 <option value="USD">USD</option>
                                             </select>
                                         </div>
-                                        <div class="col-md-5">
+                                        <div class="col-md-4">
                                             <strong>Result</strong>
                                             <input onchange="USDtoVND();" onfocus="Enabled=3;VNtoUSD();Enabled=2;USDtoVND();" id=results class="form-control" autocomplete="off">
                                         </div>
@@ -121,7 +121,7 @@
                                             <th width="2%">ID</th>
                                             <th>Type</th>
                                             <th>Purchase Cost</th>
-                                            <th>Purchase Cost (Net)</th>
+                                            <th>PC (Net)</th>
                                             <th>Credit</th>
                                             @foreach($clientgroup as $cg)
                                                 <th>{{$cg->group_name}}</th>

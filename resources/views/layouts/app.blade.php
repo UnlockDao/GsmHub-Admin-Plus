@@ -1,55 +1,46 @@
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Kế Toán</title>
+    <title>S-Unlock</title>
 
-    <link href="{{ asset('assets/css/material-dashboard.min.css?v=2.0.1') }}" rel="stylesheet"/>
-    <!--     Fonts and icons     -->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,300|Material+Icons' rel='stylesheet'
-          type='text/css'>
-    <script src="{{ asset('excel/tableToExcel.js') }}"></script>
+    <!-- Fonts -->
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
+    <!-- Icons -->
+    <link href="{{ asset('assets/vendor/nucleo/css/nucleo.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/vendor/@fortawesome/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+    <!-- Styles -->
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body class="">
-<div class="wrapper">
+<style>
+    /* for custom scrollbar for webkit browser*/
 
+    ::-webkit-scrollbar {
+        width: 3px;
+    }
+    ::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 75, 180, 0.3);
+    }
+    ::-webkit-scrollbar-thumb {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    }
+</style>
+<body>
+    <div id="app">
+        <main class="py-4">
             @yield('content')
-
-</div>
+        </main>
+    </div>
 </body>
-<!--   Core JS Files   -->
-<script src="{{ asset('assets/js/core/jquery.min.js') }}"></script>
-<script src="{{ asset('assets/js/core/popper.min.js') }}"></script>
+<script src="{{ asset('assets/vendor/jquery/dist/jquery.min.js') }}"></script>
+<script src="{{ asset('assets/js/popper.min.js') }}"></script>
 <script src="{{ asset('assets/js/bootstrap-material-design.min.js') }}"></script>
-<script src="{{ asset('assets/js/plugins/perfect-scrollbar.jquery.min.js') }}"></script>
-<!--  Plugin for Date Time Picker and Full Calendar Plugin  -->
-<script src="{{ asset('assets/js/plugins/moment.min.js') }}"></script>
+<script src="{{ asset('assets/js/perfect-scrollbar.jquery.min.js') }}"></script>
 <script src="{{ asset('assets/js/material-dashboard.js?v=2.0.1') }}"></script>
-<!-- Forms Validations Plugin -->
-<script src="{{ asset('assets/js/plugins/jquery.validate.min.js') }}"></script>
-<!--  Notifications Plugin, full documentation here: https://bootstrap-notify.remabledesigns.com/    -->
-<script src="{{ asset('assets/js/plugins/bootstrap-notify.js') }}"></script>
-<!--  DataTables.net Plugin, full documentation here: https://datatables.net/    -->
-<script src="{{ asset('assets/js/plugins/jquery.datatables.js') }}"></script>
-<script type="text/javascript" src="{{ asset('theme/source/jquery.fancybox.pack.js?v=2.1.5') }}"></script>
-<link rel="stylesheet" type="text/css" href="{{ asset('theme/source/jquery.fancybox.css?v=2.1.5') }}" media="screen" />
-<script type="text/javascript">
-    $(document).ready(function() {
-        $(".fancybox").fancybox({
-            type: 'iframe',
-            afterClose: function () { // USE THIS IT IS YOUR ANSWER THE KEY WORD IS "afterClose"
-                parent.location.reload(true);
-            }
-        });
-
-    });
-</script>
-
 </html>

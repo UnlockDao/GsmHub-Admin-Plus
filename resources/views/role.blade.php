@@ -25,52 +25,52 @@
             });
         }, false);
     </script>
-    <div class="container-fluid">
-
+    <!-- Page content -->
+    <div class="container-fluid mt--7">
+        <!-- Table -->
         <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header card-header-icon card-header-rose">
-                        <div class="card-icon">
-                            <i class="material-icons">monetization_on</i>
-                        </div>
-                        <h4 class="card-title ">Currency</h4>
-
+            <div class="col">
+                <div class="card shadow">
+                    <div class="card-header border-0">
+                        <h3 class="mb-0">Role</h3>
                     </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="testTable" class="table">
-                                <thead class="text-primary">
-                                <th width="2%">ID</th>
-                                <th>Name</th>
-                                <th>Role</th>
+                    <div class="table-responsive">
+                        <table class="table align-items-center table-flush">
+                            <thead class="text-primary">
+                            <th width="2%">ID</th>
+                            <th>Name</th>
+                            <th>Role</th>
 
 
-                                </thead>
-                                <tbody>
-                                @foreach($administrator as $v)
-                                    <tr>
-                                        <td>{{$v->id}}</td>
-                                        <td>{{$v->user->user_name}}</td>
-                                        <td>
-                                            <div class="togglebutton">
-                                                <label id="{{$v->id}}">
-                                                    <input class="status" id="check{{$v->id}}" type="checkbox" @if($v->administrator_role_id == '1') disabled checked @endif
-                                                           @if($v->role_adminplus == '1' )checked="" @endif>
-                                                    <span class="toggle"></span>
-                                                </label>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                            </thead>
+                            <tbody>
+                            @foreach($administrator as $v)
+                                <tr>
+                                    <td>{{$v->id}}</td>
+                                    <td>{{$v->user->user_name}}</td>
+                                    <td>
+                                        <div class="togglebutton">
+                                            <label id="{{$v->id}}" class="custom-toggle">
+                                                <input class="status" id="check{{$v->id}}" type="checkbox" @if($v->administrator_role_id == '1') disabled checked @endif
+                                                @if($v->role_adminplus == '1' )checked="" @endif>
+                                                <span class="custom-toggle-slider rounded-circle"></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer py-4">
+                        <nav aria-label="...">
+                            <ul class="pagination justify-content-end mb-0">
+
+                            </ul>
+                        </nav>
                     </div>
                 </div>
-
             </div>
         </div>
-    </div>
-@endsection
 
+@endsection

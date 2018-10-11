@@ -43,13 +43,13 @@
                                             <option value="VND">VND</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-1">
+                                    <div class="col-md-2">
                                         <strong>To</strong>
                                         <select class="form-control" id="valueTo">
                                             <option value="USD">USD</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-5">
+                                    <div class="col-md-4">
                                         <strong>Result</strong>
                                         <input onchange="USDtoVND();" onfocus="Enabled=3;VNtoUSD();Enabled=2;USDtoVND();" id=results class="form-control" autocomplete="off">
                                     </div>
@@ -107,7 +107,7 @@
                                                            id="chietkhau{{$c->group_id}}"
                                                            @if($cliendefault ==! null)
                                                                @if($c->group_id== $cliendefault->id) onchange="Chietkhau();"
-                                                               onfocus="Enabled=true;Chietkhau();"
+                                                               onfocus="Enabled=true; Chietkhau();"
                                                                @endif
                                                                @if($c->group_id !== $cliendefault->id) onfocus="Enabled=false;Chietkhau();"
                                                                @endif

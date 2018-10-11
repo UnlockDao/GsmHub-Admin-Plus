@@ -48,79 +48,69 @@
             });
         }, false);
     </script>
-    <div class="container-fluid">
-
+    <!-- Page content -->
+    <div class="container-fluid mt--7">
+        <!-- Table -->
         <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header card-header-icon card-header-rose">
-                        <div class="card-icon">
-                            <i class="material-icons">monetization_on</i>
-                        </div>
-                        <button type="button" onfocus="tableToExcel('testTable', 'W3C Example Table')"
-                                class="btn btn-info pull-right"><i class="material-icons">cloud_download</i>
-                        </button>
-                        <h4 class="card-title ">Currency</h4>
-
+            <div class="col">
+                <div class="card shadow">
+                    <div class="card-header border-0">
+                        <h3 class="mb-0">Currencie</h3>
                     </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="testTable" class="table">
-                                <thead class="text-primary">
-                                <th width="2%">ID</th>
-                                <th>Currency Code</th>
-                                <th>Currency Name</th>
-                                <th>Exchange Rate</th>
-                                <th>Status</th>
-                                <th>Display</th>
-                                <th>Default</th>
-                                <th>Edit</th>
+                    <div class="table-responsive">
+                        <table class="table align-items-center table-flush">
+                            <thead class="text-primary">
+                            <th width="2%">ID</th>
+                            <th>Currency Code</th>
+                            <th>Currency Name</th>
+                            <th>Exchange Rate</th>
+                            <th>Status</th>
+                            <th>Display</th>
+                            <th>Default</th>
+                            <th>Edit</th>
 
-                                </thead>
-                                <tbody>
-                                @foreach($currencie as $v)
-                                    <tr>
-                                        <td>{{$v->id}}</td>
-                                        <td>{{$v->currency_code}}</td>
-                                        <td>{{$v->currency_name}}</td>
-                                        <td>{{$v->exchange_rate_static}}</td>
-                                        <td>{{$v->status}}</td>
-                                        <td>
-                                            <div class="togglebutton">
-                                                <label id="{{$v->id}}">
-                                                    <input class="status" id="check{{$v->id}}" type="checkbox"
-                                                           @if($v->display_currency == 'Yes' )checked="" @endif>
-                                                    <span class="toggle"></span>
-                                                </label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="form-check">
-                                                <label class="form-check-label" id="{{$v->id}}">
-                                                    <input class="form-check-input defaultcurrency" id="defaultcurrency{{$v->id}}" type="checkbox" @if($v->currenciepricing ==! null  )checked @endif>
-                                                      <span class="form-check-sign">
-                                                     <span class="check"></span> </span>
-                                                </label>
-                                            </div>
-                                        </td>
-                                        <td><a class="material-icons "
-                                               href="{{ asset('') }}currencie/{{$v->id}}">edit</a></td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                            </thead>
+                            <tbody>
+                            @foreach($currencie as $v)
+                                <tr>
+                                    <td>{{$v->id}}</td>
+                                    <td>{{$v->currency_code}}</td>
+                                    <td>{{$v->currency_name}}</td>
+                                    <td>{{$v->exchange_rate_static}}</td>
+                                    <td>{{$v->status}}</td>
+                                    <td>
+                                        <div class="togglebutton">
+                                            <label id="{{$v->id}}" class="custom-toggle">
+                                                <input class="status" id="check{{$v->id}}" type="checkbox"
+                                                       @if($v->display_currency == 'Yes' )checked="" @endif>
+                                                <span class="custom-toggle-slider rounded-circle"></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-check">
+                                            <label class="custom-toggle" id="{{$v->id}}">
+                                                <input class="form-check-input defaultcurrency" id="defaultcurrency{{$v->id}}" type="checkbox" @if($v->currenciepricing ==! null  )checked @endif>
+                                                <span class="custom-toggle-slider rounded-circle"></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td><a class="material-icons "
+                                           href="{{ asset('') }}currencie/{{$v->id}}"><i class="ni ni-zoom-split-in"></i></a></td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer py-4">
+                        <nav aria-label="...">
+                            <ul class="pagination justify-content-end mb-0">
+
+                            </ul>
+                        </nav>
                     </div>
                 </div>
-
             </div>
         </div>
 
-
-    </div>
-
-
-
-
 @endsection
-

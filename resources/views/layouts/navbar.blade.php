@@ -1,25 +1,48 @@
-<div class="container-fluid">
-        <div class="navbar-wrapper">
-            <div class="navbar-minimize">
-                <button id="minimizeSidebar" class="btn btn-just-icon btn-white btn-fab btn-round">
-                    <i class="material-icons text_align-center visible-on-sidebar-regular">more_vert</i>
-                    <i class="material-icons design_bullet-list-67 visible-on-sidebar-mini">view_list</i>
-                </button>
+<nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
+    <div class="container-fluid">
+        <!-- Form -->
+        <form class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ">
+            <div class="form-group mb-0">
+                <div class="input-group input-group-alternative">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" onclick="form.submit();"><i class="fas fa-search"></i></span>
+                    </div>
+                    <input class="form-control" type="text" name="datefilter" value="" style="width:300px" autocomplete="off"/>
+                </div>
             </div>
-        </div>
+        </form>
+        <!-- User -->
+        <ul class="navbar-nav align-items-center d-none d-md-flex">
+            <li class="nav-item dropdown">
+                <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="media align-items-center">
+                <span class="avatar avatar-sm rounded-circle">
+                  <img alt="Image placeholder" src="{{ asset('assets/img/theme/team-4-800x800.jpg') }}">
+                </span>
+                        <div class="media-body ml-2 d-none d-lg-block">
+                            <span class="mb-0 text-sm  font-weight-bold">{{Auth::user()->user_name}}</span>
+                        </div>
+                    </div>
+                </a>
+                <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
+                    <div class=" dropdown-header noti-title">
+                        <h6 class="text-overflow m-0">Welcome!</h6>
+                    </div>
+                    <a href="{{ url('/profile') }}" class="dropdown-item">
+                        <i class="ni ni-single-02"></i>
+                        <span>My profile</span>
+                    </a>
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="navbar-toggler-icon icon-bar"></span>
-            <span class="navbar-toggler-icon icon-bar"></span>
-            <span class="navbar-toggler-icon icon-bar"></span>
-        </button>
-
-    <div class="collapse navbar-collapse justify-content-end">
-
-
-        <ul class="navbar-nav">
-
+                    <div class="dropdown-divider"></div>
+                    <a href="{{ url('/logout') }}" class="dropdown-item">
+                        <i class="ni ni-user-run"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </li>
         </ul>
     </div>
+</nav>
+<div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+    @yield('dashboard')
 </div>

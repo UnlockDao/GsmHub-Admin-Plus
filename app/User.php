@@ -16,8 +16,9 @@ class User extends Authenticatable
      */
     public $remember_token = false;
     protected $primaryKey = 'user_id';
+    public $timestamps = false;
     protected $fillable = [
-        'user_name', 'email', 'password',
+        'user_name', 'email', 'password','api_credits'
     ];
 
     /**
