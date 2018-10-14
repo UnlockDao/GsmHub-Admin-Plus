@@ -107,14 +107,14 @@
                                     <td scope="row">@if($v->serverservice == null) @else <a data-toggle="tooltip" data-placement="top" class="max-lines"
                                                                                                               data-original-title="{{$v->serverservice->service_name}}">{{$v->serverservice->service_name}}</a> @endif</td>
                                     <td scope="row">{{number_format($v->credit_default_currency,2)}}</td>
-                                    <td scope="row">{{$v->credit_default_currency-$v->purchase_cost}}</td>
+                                    <td scope="row">{{$v->credit_default_currency-($v->purchase_cost*$v->quantity)}}</td>
                                     <td scope="row"><a data-toggle="tooltip" data-placement="top" class="max-lines"
                                            data-original-title="{{$v->result}}">{{$v->result}}</a></td>
                                     <td scope="row">{{CUtil::convertDate($v->date_added, 'd-m-Y h:i a') }}</td>
                                     <td scope="row">{{CUtil::convertDate($v->completed_on, 'd-m-Y h:i a') }}</td>
                                     <td scope="row">{{$v->status}}</td>
                                 </tr>
-                                <?php $profit += $v->credit_default_currency-$v->purchase_cost ?>
+                                <?php $profit += $v->credit_default_currency-($v->purchase_cost*$v->quantity) ?>
                                 <?php $credit += $v->credit_default_currency ?>
                                 <?php $count += 1 ?>
                             @endforeach

@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => 'mysql',
+    'default' => env('DB_CONNECTION', 'mysql'),
 
     /*
     |--------------------------------------------------------------------------
@@ -41,14 +41,14 @@ return [
 
         'mysql' => [
             'driver' => 'mysql',
-            'host' => 'localhost',
-            'port' => '3306',
-            'database'  => 'junlock_maindb',
-            'username'  => 'junlockdb',
-            'password'  => 'dbcCRNJHsa&u705',
-            'unix_socket' => '',
-            'charset' => 'utf8',
-            'collation' => 'utf8_unicode_ci',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'forge'),
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',
             'prefix_indexes' => true,
             'strict' => false,
