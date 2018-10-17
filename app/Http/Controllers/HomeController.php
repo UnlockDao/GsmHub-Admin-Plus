@@ -130,6 +130,29 @@ class HomeController extends Controller
         $chart2->dataset('IMEI', 'bar', $imeichart->pluck('profit'))->color('blue');
         $chart2->dataset('Server', 'bar', $serverchart->pluck('profit'))->color('red');
 
-        return view('home', compact('chart','chart2', 'serveroder', 'imeioder', 'serveroderday', 'serveroderyesterday', 'serverodermonth', 'serveroderweek', 'imeioderday', 'imeioderyesterday', 'imeioderweek', 'imeiodermonth'));
+        $serverchart2 = Serverserviceorder::where('status', 'COMPLETED')
+            ->where('ignore_profit',0)
+            ->whereBetween('completed_on', [$tg1, $tg2])
+            ->get();
+        foreach ($serverchart2 as $s){
+            $data_array[] =
+                array(
+                    'completed_on' => CUtil::convertDate($s->completed_on,'d-m-Y'),
+                    'credit_default_currency' => $s->credit_default_currency,
+                    'purchase_cost' => $s->purchase_cost,
+                    'quantity' => $s->quantity,
+                    'profit' => $s->credit_default_currency-($s->purchase_cost*$s->quantity)
+                );
+        }
+        $collectserver = collect($data_array)->sortBy('completed_on');
+        $chartserver = $collectserver->groupBy('completed_on')->map(function ($item) {
+            return $item->sum(function ($item) {
+                return ($item['profit']);
+            });
+        })
+            ->toArray();
+        $chartserver3 = array_keys($chartserver);
+
+        return view('home', compact('chartserver3','serverchart','imeichart','chart','chart2', 'serveroder', 'imeioder', 'serveroderday', 'serveroderyesterday', 'serverodermonth', 'serveroderweek', 'imeioderday', 'imeioderyesterday', 'imeioderweek', 'imeiodermonth'));
     }
 }

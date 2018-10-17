@@ -355,21 +355,106 @@
 @endsection
 @section('content')
     <div class="container-fluid mt--7">
-        <div class="col-xl-12 col-lg-12">
+        <div class="row">
+        <div class="col-xl-6 col-lg-6">
             <div class="card card-stats mb-4 mb-xl-0">
                 <div class="card-body">
-                    {!! $chart->container() !!}
+                    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                 </div>
             </div>
         </div>
-<hr>
-        <div class="col-xl-12 col-lg-12">
+        <div class="col-xl-6 col-lg-6">
             <div class="card card-stats mb-4 mb-xl-0">
                 <div class="card-body">
-                    {!! $chart2->container() !!}
+                    <div id="pricing" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                 </div>
             </div>
         </div>
-    {!! $chart->script() !!}
-    {!! $chart2->script() !!}
+
+    </div>
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+
+
+<script>
+
+    Highcharts.chart('container', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: ''
+        },
+        xAxis: {
+            categories: {!!  $serverchart->pluck('date')!!}
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Total '
+            },
+            stackLabels: {
+                enabled: true,
+                style: {
+                    fontWeight: 'bold',
+                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                }
+            }
+        },
+        plotOptions: {
+            column: {
+                stacking: 'normal',
+            }
+        },
+        series: [{
+            name: 'IMEI',
+            data: {!!  $imeichart->pluck('value')!!}
+        }, {
+            name: 'Server',
+            data: {!!  $serverchart->pluck('value')!!}
+        }]
+    });
+
+
+    Highcharts.chart('pricing', {
+        chart: {
+            type: 'line'
+        },
+        title: {
+            text: ''
+        },
+        xAxis: {
+            categories: {!!  $serverchart->pluck('date')!!}
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Total profit'
+            },
+            stackLabels: {
+                enabled: true,
+                style: {
+                    fontWeight: 'bold',
+                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                }
+            }
+        },
+        plotOptions: {
+            column: {
+                stacking: 'normal',
+            }
+        },
+        series: [{
+            name: 'IMEI',
+            data: {!!  $imeichart->pluck('profit')!!}
+        }, {
+            name: 'Server',
+            data: {!!  $serverchart->pluck('profit')!!}
+        }]
+    });
+
+
+</script>
 @endsection
