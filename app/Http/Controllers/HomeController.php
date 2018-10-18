@@ -71,64 +71,15 @@ class HomeController extends Controller
         $datefilter = $request->datefilter;
         $tg = explode(" - ", $datefilter);
         if ($datefilter == null) {
-            $datefilter = date("Y/m/01 0:00:00") . ' - ' . date("Y/m/d H:i:s");
+            $datefilter = date("Y/m/01 0:00:00") . ' - ' . date("Y/m/d 23:59:59");
             $tg = explode(" - ", $datefilter);
             $tg1 = CUtil::convertDateS($tg[0]);
             $tg2 = CUtil::convertDateS($tg[1]);
-
-            $serverchart = Serverserviceorder::where('status', 'COMPLETED')
-                ->groupBy('date')
-                ->orderBy('date', 'ASC')
-                ->whereBetween('completed_on', [$tg1, $tg2])
-                ->get([
-                    DB::raw('Date(completed_on) as date'),
-                    DB::raw('COUNT(*) as value'),
-                    DB::raw('SUM(credit_default_currency-(purchase_cost*quantity)) as profit')
-                ]);
-            $imeichart = Imeiserviceorder::where('status', 'COMPLETED')
-                ->groupBy('date')
-                ->orderBy('date', 'ASC')
-                ->whereBetween('completed_on', [$tg1, $tg2])
-                ->get([
-                    DB::raw('Date(completed_on) as date'),
-                    DB::raw('COUNT(*) as value'),
-                    DB::raw('SUM(credit_default_currency-purchase_cost) as profit')
-                ]);
         } else {
             $tg1 = CUtil::convertDateS($tg[0]);
             $tg2 = CUtil::convertDateS($tg[1]);
-            $serverchart = Serverserviceorder::where('status', 'COMPLETED')
-                ->groupBy('date')
-                ->orderBy('date', 'ASC')
-                ->whereBetween('completed_on', [$tg1, $tg2])
-                ->get([
-                    DB::raw('Date(completed_on) as date'),
-                    DB::raw('COUNT(*) as value'),
-                    DB::raw('SUM(credit_default_currency-(purchase_cost*quantity)) as profit')
-                ]);
-            $imeichart = Imeiserviceorder::where('status', 'COMPLETED')
-                ->groupBy('date')
-                ->orderBy('date', 'ASC')
-                ->whereBetween('completed_on', [$tg1, $tg2])
-                ->get([
-                    DB::raw('Date(completed_on) as date'),
-                    DB::raw('COUNT(*) as value'),
-                    DB::raw('SUM(credit_default_currency-purchase_cost) as profit')
-                ]);
         }
 
-
-        $chart = new SampleChart;
-        $chart->labels($serverchart->pluck('date'));
-        $chart->displayLegend(true);
-        $chart->dataset('IMEI', 'bar', $imeichart->pluck('value'))->color('blue');
-        $chart->dataset('Server', 'bar', $serverchart->pluck('value'))->color('red');
-
-        $chart2 = new SampleChart;
-        $chart2->labels($serverchart->pluck('date'));
-        $chart2->displayLegend(true);
-        $chart2->dataset('IMEI', 'bar', $imeichart->pluck('profit'))->color('blue');
-        $chart2->dataset('Server', 'bar', $serverchart->pluck('profit'))->color('red');
 
         //server
         $serverchart2 = Serverserviceorder::where('status', 'COMPLETED')
@@ -199,6 +150,6 @@ class HomeController extends Controller
         $chartcountimeivalue = json_encode(array_values($chartimeicount));
 
 
-        return view('home', compact('chartcountservervalue','chartcountimeivalue','chartimeivalue','chartserverdate','chartservervalue','serverchart','imeichart','chart','chart2', 'serveroder', 'imeioder', 'serveroderday', 'serveroderyesterday', 'serverodermonth', 'serveroderweek', 'imeioderday', 'imeioderyesterday', 'imeioderweek', 'imeiodermonth'));
+        return view('home', compact('chartcountservervalue','chartcountimeivalue','chartimeivalue','chartserverdate','chartservervalue','serveroder', 'imeioder', 'serveroderday', 'serveroderyesterday', 'serverodermonth', 'serveroderweek', 'imeioderday', 'imeioderyesterday', 'imeioderweek', 'imeiodermonth'));
     }
 }
