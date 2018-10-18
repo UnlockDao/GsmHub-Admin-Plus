@@ -138,7 +138,7 @@ class HomeController extends Controller
         foreach ($serverchart2 as $s){
             $data_array[] =
                 array(
-                    'completed_on' => CUtil::convertDate($s->completed_on,'d-m-Y'),
+                    'completed_on' => CUtil::convertDate($s->completed_on,'d'),
                     'credit_default_currency' => $s->credit_default_currency,
                     'purchase_cost' => $s->purchase_cost,
                     'quantity' => $s->quantity,
@@ -163,7 +163,6 @@ class HomeController extends Controller
                     'completed_on' => CUtil::convertDate($s->completed_on, 'd-m-Y'),
                     'credit_default_currency' => $s->credit_default_currency,
                     'purchase_cost' => $s->purchase_cost,
-                    'quantity' => $s->quantity,
                     'profit' => $s->credit_default_currency - $s->purchase_cost
                 );
         }
@@ -177,11 +176,29 @@ class HomeController extends Controller
 
 
         $chartserverdate = json_encode(array_keys($chartserver));
-        $chartservervalue = json_encode(array_values($chartserver));
 
+        $chartservervalue = json_encode(array_values($chartserver));
         $chartimeivalue = json_encode(array_values($chartimei));
 
+        //count
+        //server
+        $chartservercount = $collectserver->groupBy('completed_on')->map(function ($item) {
+            return $item->count(function ($item) {
+                return (number_format($item['profit']));
+            });
+        })
+            ->toArray();
+        //imei
+        $chartimeicount = $collectimei->groupBy('completed_on')->map(function ($item) {
+            return $item->count(function ($item) {
+                return (number_format($item['profit']));
+            });
+        })
+            ->toArray();
+        $chartcountservervalue = json_encode(array_values($chartservercount));
+        $chartcountimeivalue = json_encode(array_values($chartimeicount));
 
-        return view('home', compact('chartimeivalue','chartserverdate','chartservervalue','serverchart','imeichart','chart','chart2', 'serveroder', 'imeioder', 'serveroderday', 'serveroderyesterday', 'serverodermonth', 'serveroderweek', 'imeioderday', 'imeioderyesterday', 'imeioderweek', 'imeiodermonth'));
+
+        return view('home', compact('chartcountservervalue','chartcountimeivalue','chartimeivalue','chartserverdate','chartservervalue','serverchart','imeichart','chart','chart2', 'serveroder', 'imeioder', 'serveroderday', 'serveroderyesterday', 'serverodermonth', 'serveroderweek', 'imeioderday', 'imeioderyesterday', 'imeioderweek', 'imeiodermonth'));
     }
 }

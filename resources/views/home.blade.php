@@ -388,7 +388,7 @@
             text: ''
         },
         xAxis: {
-            categories: {!!  $serverchart->pluck('date')!!}
+            categories: {!! $chartserverdate !!}
         },
         yAxis: {
             min: 0,
@@ -410,10 +410,10 @@
         },
         series: [{
             name: 'IMEI',
-            data: {!!  $imeichart->pluck('value')!!}
+            data: {!! $chartcountimeivalue !!}
         }, {
             name: 'Server',
-            data: {!!  $serverchart->pluck('value')!!}
+            data: {!!  $chartcountservervalue!!}
         }]
     });
 
