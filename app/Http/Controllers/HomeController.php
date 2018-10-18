@@ -138,7 +138,7 @@ class HomeController extends Controller
         foreach ($serverchart2 as $s){
             $data_array[] =
                 array(
-                    'completed_on' => CUtil::convertDate($s->completed_on,'d'),
+                    'completed_on' => CUtil::convertDate($s->completed_on,'d-m-Y'),
                     'credit_default_currency' => $s->credit_default_currency,
                     'purchase_cost' => $s->purchase_cost,
                     'quantity' => $s->quantity,
@@ -164,7 +164,7 @@ class HomeController extends Controller
                     'credit_default_currency' => $s->credit_default_currency,
                     'purchase_cost' => $s->purchase_cost,
                     'quantity' => $s->quantity,
-                    'profit' => $s->credit_default_currency - ($s->purchase_cost * $s->quantity)
+                    'profit' => $s->credit_default_currency - $s->purchase_cost
                 );
         }
         $collectimei = collect($data_arrayi)->sortBy('completed_on');
