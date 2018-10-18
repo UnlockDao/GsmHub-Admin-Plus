@@ -420,13 +420,13 @@
 
     Highcharts.chart('pricing', {
         chart: {
-            type: 'line'
+            type: 'column'
         },
         title: {
             text: ''
         },
         xAxis: {
-            categories: {!!  $serverchart->pluck('date')!!}
+            categories:  {!! $chartserverdate !!}
         },
         yAxis: {
             min: 0,
@@ -448,10 +448,10 @@
         },
         series: [{
             name: 'IMEI',
-            data: {!!  $imeichart->pluck('profit')!!}
+            data: {!! $chartimeivalue !!}
         }, {
             name: 'Server',
-            data: {!!  $serverchart->pluck('profit')!!}
+            data: {!! $chartservervalue !!}
         }]
     });
 

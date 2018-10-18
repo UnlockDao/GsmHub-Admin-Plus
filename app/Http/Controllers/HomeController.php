@@ -130,6 +130,7 @@ class HomeController extends Controller
         $chart2->dataset('IMEI', 'bar', $imeichart->pluck('profit'))->color('blue');
         $chart2->dataset('Server', 'bar', $serverchart->pluck('profit'))->color('red');
 
+        //server
         $serverchart2 = Serverserviceorder::where('status', 'COMPLETED')
             ->where('ignore_profit',0)
             ->whereBetween('completed_on', [$tg1, $tg2])
@@ -137,7 +138,7 @@ class HomeController extends Controller
         foreach ($serverchart2 as $s){
             $data_array[] =
                 array(
-                    'completed_on' => CUtil::convertDate($s->completed_on,'d-m-Y'),
+                    'completed_on' => CUtil::convertDate($s->completed_on,'d'),
                     'credit_default_currency' => $s->credit_default_currency,
                     'purchase_cost' => $s->purchase_cost,
                     'quantity' => $s->quantity,
@@ -147,12 +148,40 @@ class HomeController extends Controller
         $collectserver = collect($data_array)->sortBy('completed_on');
         $chartserver = $collectserver->groupBy('completed_on')->map(function ($item) {
             return $item->sum(function ($item) {
-                return ($item['profit']);
+                return (number_format($item['profit']));
             });
         })
             ->toArray();
-        $chartserver3 = array_keys($chartserver);
+        //imei
+        $imeichart2 = Imeiserviceorder::where('status', 'COMPLETED')
+            ->where('ignore_profit', 0)
+            ->whereBetween('completed_on', [$tg1, $tg2])
+            ->get();
+        foreach ($imeichart2 as $s) {
+            $data_arrayi[] =
+                array(
+                    'completed_on' => CUtil::convertDate($s->completed_on, 'd-m-Y'),
+                    'credit_default_currency' => $s->credit_default_currency,
+                    'purchase_cost' => $s->purchase_cost,
+                    'quantity' => $s->quantity,
+                    'profit' => $s->credit_default_currency - ($s->purchase_cost * $s->quantity)
+                );
+        }
+        $collectimei = collect($data_arrayi)->sortBy('completed_on');
+        $chartimei = $collectimei->groupBy('completed_on')->map(function ($item) {
+            return $item->sum(function ($item) {
+                return (number_format($item['profit']));
+            });
+        })
+            ->toArray();
 
-        return view('home', compact('chartserver3','serverchart','imeichart','chart','chart2', 'serveroder', 'imeioder', 'serveroderday', 'serveroderyesterday', 'serverodermonth', 'serveroderweek', 'imeioderday', 'imeioderyesterday', 'imeioderweek', 'imeiodermonth'));
+
+        $chartserverdate = json_encode(array_keys($chartserver));
+        $chartservervalue = json_encode(array_values($chartserver));
+
+        $chartimeivalue = json_encode(array_values($chartimei));
+
+
+        return view('home', compact('chartimeivalue','chartserverdate','chartservervalue','serverchart','imeichart','chart','chart2', 'serveroder', 'imeioder', 'serveroderday', 'serveroderyesterday', 'serverodermonth', 'serveroderweek', 'imeioderday', 'imeioderyesterday', 'imeioderweek', 'imeiodermonth'));
     }
 }
