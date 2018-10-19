@@ -403,9 +403,14 @@
                 }
             }
         },
+        colors: [
+            '#5e72e4',
+            '#2dce89',
+        ],
         plotOptions: {
             column: {
                 stacking: 'normal',
+                colorByPoint: false,
             }
         },
         series: [{
@@ -441,9 +446,14 @@
                 }
             }
         },
+        colors: [
+            '#5e72e4',
+            '#2dce89',
+        ],
         plotOptions: {
             column: {
                 stacking: 'normal',
+                colorByPoint: false,
             }
         },
         series: [{
