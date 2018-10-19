@@ -356,22 +356,21 @@
 @section('content')
     <div class="container-fluid mt--7">
         <div class="row">
-        <div class="col-xl-6 col-lg-6">
-            <div class="card card-stats mb-4 mb-xl-0">
-                <div class="card-body">
-                    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            <div class="col-xl-12 col-lg-12">
+                <div class="card card-stats mb-4 mb-xl-0">
+                    <div class="card-body">
+                        <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-12 col-lg-12" style="padding-top: 10px">
+                <div class="card card-stats mb-4 mb-xl-0">
+                    <div class="card-body">
+                        <div id="pricing" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-6 col-lg-6">
-            <div class="card card-stats mb-4 mb-xl-0">
-                <div class="card-body">
-                    <div id="pricing" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                </div>
-            </div>
-        </div>
-
-    </div>
 
 
         <script src="{{ asset('js/highcharts.js') }}"></script>
@@ -382,7 +381,7 @@
             type: 'column'
         },
         title: {
-            text: ''
+            text: 'Total Order'
         },
         xAxis: {
             categories: {!! $chartserverdate !!}
@@ -390,7 +389,7 @@
         yAxis: {
             min: 0,
             title: {
-                text: 'Total '
+                text: ''
             },
             stackLabels: {
                 enabled: true,
@@ -425,7 +424,7 @@
             type: 'column'
         },
         title: {
-            text: ''
+            text: 'Total profit'
         },
         xAxis: {
             categories:  {!! $chartserverdate !!}
@@ -433,7 +432,7 @@
         yAxis: {
             min: 0,
             title: {
-                text: 'Total profit'
+                text: ''
             },
             stackLabels: {
                 enabled: true,

@@ -1920,7 +1920,9 @@ pre code
 .table th,
 .table td
 {
-    padding: 1rem;
+    padding-left: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 
     vertical-align: top;
 
@@ -20865,8 +20867,6 @@ textarea[resize='horizontal']
 
     padding-top: .75rem;
     padding-bottom: .75rem;
-
-    letter-spacing: 1px;
     text-transform: uppercase;
 
     border-bottom: 1px solid #e9ecef;
@@ -20944,12 +20944,6 @@ textarea[resize='horizontal']
 .card .table
 {
     margin-bottom: 0;
-}
-.card .table td,
-.card .table th
-{
-    padding-right: 1.5rem; 
-    padding-left: 1.5rem;
 }
 
 p

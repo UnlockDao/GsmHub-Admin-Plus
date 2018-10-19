@@ -19,7 +19,7 @@
     /* for custom scrollbar for webkit browser*/
 
     ::-webkit-scrollbar {
-        width: 3px;
+        width: 10px;
     }
     ::-webkit-scrollbar-track {
         -webkit-box-shadow: inset 0 0 6px rgba(0, 75, 180, 0.3);
