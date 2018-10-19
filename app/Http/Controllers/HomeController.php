@@ -40,7 +40,7 @@ class HomeController extends Controller
         $month1 = CUtil::convertDateS(date('Y-m-1'));
         $month2 = CUtil::convertDateS(date('Y-m-d 23:59:59'));
 
-        $serveroder = Serverserviceorder::where('ignore_profit',0)->where('status', 'COMPLETED')->select(DB::raw('SUM(credit_default_currency-(purchase_cost*quantity)) as profit'))->first();
+
         $serveroderday = Serverserviceorder::where('status', 'COMPLETED')->whereBetween('completed_on', [$day1, $day2])
             ->select(DB::raw('SUM(credit_default_currency-(purchase_cost*quantity)) as profit'))
             ->first();
@@ -54,7 +54,7 @@ class HomeController extends Controller
             ->select(DB::raw('SUM(credit_default_currency-(purchase_cost*quantity)) as profit'))
             ->first();
 
-        $imeioder = Imeiserviceorder::where('ignore_profit',0)->where('status', 'COMPLETED')->select(DB::raw('SUM(credit_default_currency-purchase_cost) as profit'))->first();
+
         $imeioderday = Imeiserviceorder::where('ignore_profit',0)->where('status', 'COMPLETED')->whereBetween('completed_on', [$day1, $day2])
             ->select(DB::raw('SUM(credit_default_currency-purchase_cost) as profit'))
             ->first();
@@ -79,6 +79,9 @@ class HomeController extends Controller
             $tg1 = CUtil::convertDateS($tg[0]);
             $tg2 = CUtil::convertDateS($tg[1]);
         }
+
+        $imeioder = Imeiserviceorder::where('ignore_profit',0)->whereBetween('completed_on', [$tg1, $tg2])->where('status', 'COMPLETED')->select(DB::raw('SUM(credit_default_currency-purchase_cost) as profit'))->first();
+        $serveroder = Serverserviceorder::where('ignore_profit',0)->whereBetween('completed_on', [$tg1, $tg2])->where('status', 'COMPLETED')->select(DB::raw('SUM(credit_default_currency-(purchase_cost*quantity)) as profit'))->first();
 
 
         //server

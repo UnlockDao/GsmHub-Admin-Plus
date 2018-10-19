@@ -9,7 +9,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col">
-                                <h5 class="card-title text-uppercase text-muted mb-0">Tổng lợi nhuận Server</h5>
+                                <h5 class="card-title text-uppercase text-muted mb-0">Lợi nhuận Server</h5>
                                 <span class="h2 font-weight-bold mb-0">{{$serveroder->profit}} USD</span>
                             </div>
                             <div class="col-auto">
@@ -30,7 +30,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col">
-                                <h5 class="card-title text-uppercase text-muted mb-0">Tổng lợi nhuận IMEI</h5>
+                                <h5 class="card-title text-uppercase text-muted mb-0">Lợi nhuận IMEI</h5>
                                 <span class="h2 font-weight-bold mb-0">{{$imeioder->profit}} USD</span>
                             </div>
                             <div class="col-auto">
