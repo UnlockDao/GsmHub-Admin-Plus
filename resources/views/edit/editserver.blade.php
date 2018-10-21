@@ -211,7 +211,7 @@
                             @foreach($serverservice->serverservicetypewiseprice as $a)
                     var purchase_cost_{{$a->id}} = document.getElementById("purchase_cost_{{$a->id}}").value;
                     var giatransactionfee = (tipurchasecost * purchase_cost_{{$a->id}}) / exchangerategoc + ((purchase_cost_{{$a->id}} / 100) * transactionfeegd);
-                    document.getElementById('purchase_cost_vip_{{$a->id}}').value = giatransactionfee.toFixed(2);
+                    document.getElementById('purchase_cost_vip_{{$a->id}}').value = giatransactionfee.toFixed(4);
                     @endforeach
                 }
                 var Enabled = true;
@@ -226,7 +226,7 @@
                                 @if($serverservicetypewisegroupprice->service_type_id == $a->id &&$serverservicetypewisegroupprice->group_id == $cg->id)
                         var client_group_amount_{{$cg->id}}_{{$serverservicetypewisegroupprice->id}} = (priceuser_{{$a->id}} - (((priceuser_{{$a->id}} - purchase_cost_vip_{{$a->id}}) / 100) *{{$cg->chietkhau}}));
                         @if($cg->id !== $cliendefault->id)
-                        document.getElementById('client_group_amount_{{$serverservicetypewisegroupprice->group_id}}_{{$a->id}}').value = client_group_amount_{{$cg->id}}_{{$serverservicetypewisegroupprice->id}}.toFixed(2);
+                        document.getElementById('client_group_amount_{{$serverservicetypewisegroupprice->group_id}}_{{$a->id}}').value = client_group_amount_{{$cg->id}}_{{$serverservicetypewisegroupprice->id}}.toFixed(4);
                         @endif
                         @endif
                         @endforeach
@@ -424,10 +424,10 @@
                         console.log(sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}});
 
                         @if($cliendefault == null)
-                        document.getElementById('sel_client_group_{{$cg->id}}_{{$serverservicequantityrange->id}}').value = sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}}.toFixed(2);
+                        document.getElementById('sel_client_group_{{$cg->id}}_{{$serverservicequantityrange->id}}').value = sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}}.toFixed(4);
                         @else
                         @if($cg->id !== $cliendefault->id)
-                        document.getElementById('sel_client_group_{{$cg->id}}_{{$serverservicequantityrange->id}}').value = sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}}.toFixed(2);
+                        document.getElementById('sel_client_group_{{$cg->id}}_{{$serverservicequantityrange->id}}').value = sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}}.toFixed(4);
                         @endif
                         @endif
 
