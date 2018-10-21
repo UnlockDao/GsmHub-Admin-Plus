@@ -79,7 +79,7 @@ class ServerserviceController extends Controller
         $groupsearch = Serverservicegroup::get();
 
         //search
-        $server_service_group = Serverservicegroup::where('id','LIKE',$request->group_name)->get();
+        $server_service_group = Serverservicegroup::orderBy('display_order','desc')->where('id','LIKE',$request->group_name)->get();
         if($request->type == 'api'){
             $serverservice = Serverservice::orderBy('service_name')
                 ->where('status','LIKE',$request->status)

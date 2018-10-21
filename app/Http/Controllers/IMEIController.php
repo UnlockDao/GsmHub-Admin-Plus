@@ -65,7 +65,7 @@ class IMEIController extends Controller
         $suppliersearch =$request->supplier;
         $cachesearch = $request;
 
-            $group = Imeiservicegroup::where('id','LIKE',$request->group_name)->get();
+            $group = Imeiservicegroup::orderBy('display_order','desc')->where('id','LIKE',$request->group_name)->get();
             if($request->type == 'api'){
             $imei_service = Imeiservice::orderBy('service_name')
                                         ->where('status','LIKE',$request->status)
