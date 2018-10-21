@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Charts\SampleChart;
 use App\CUtil;
 use App\Imeiserviceorder;
 use App\Serverserviceorder;
@@ -44,27 +43,27 @@ class HomeController extends Controller
         $serveroderday = Serverserviceorder::where('status', 'COMPLETED')->whereBetween('completed_on', [$day1, $day2])
             ->select(DB::raw('SUM(credit_default_currency-(purchase_cost*quantity)) as profit'))
             ->first();
-        $serveroderyesterday = Serverserviceorder::where('ignore_profit',0)->where('status', 'COMPLETED')->whereBetween('completed_on', [$yesterday1, $yesterday2])
+        $serveroderyesterday = Serverserviceorder::where('ignore_profit', 0)->where('status', 'COMPLETED')->whereBetween('completed_on', [$yesterday1, $yesterday2])
             ->select(DB::raw('SUM(credit_default_currency-(purchase_cost*quantity)) as profit'))
             ->first();
-        $serveroderweek = Serverserviceorder::where('ignore_profit',0)->where('status', 'COMPLETED')->whereBetween('completed_on', [$week1, $week2])
+        $serveroderweek = Serverserviceorder::where('ignore_profit', 0)->where('status', 'COMPLETED')->whereBetween('completed_on', [$week1, $week2])
             ->select(DB::raw('SUM(credit_default_currency-(purchase_cost*quantity)) as profit'))
             ->first();
-        $serverodermonth = Serverserviceorder::where('ignore_profit',0)->where('status', 'COMPLETED')->whereBetween('completed_on', [$month1, $month2])
+        $serverodermonth = Serverserviceorder::where('ignore_profit', 0)->where('status', 'COMPLETED')->whereBetween('completed_on', [$month1, $month2])
             ->select(DB::raw('SUM(credit_default_currency-(purchase_cost*quantity)) as profit'))
             ->first();
 
 
-        $imeioderday = Imeiserviceorder::where('ignore_profit',0)->where('status', 'COMPLETED')->whereBetween('completed_on', [$day1, $day2])
+        $imeioderday = Imeiserviceorder::where('ignore_profit', 0)->where('status', 'COMPLETED')->whereBetween('completed_on', [$day1, $day2])
             ->select(DB::raw('SUM(credit_default_currency-purchase_cost) as profit'))
             ->first();
-        $imeioderyesterday = Imeiserviceorder::where('ignore_profit',0)->where('status', 'COMPLETED')->whereBetween('completed_on', [$yesterday1, $yesterday2])
+        $imeioderyesterday = Imeiserviceorder::where('ignore_profit', 0)->where('status', 'COMPLETED')->whereBetween('completed_on', [$yesterday1, $yesterday2])
             ->select(DB::raw('SUM(credit_default_currency-purchase_cost) as profit'))
             ->first();
-        $imeioderweek = Imeiserviceorder::where('ignore_profit',0)->where('status', 'COMPLETED')->whereBetween('completed_on', [$week1, $week2])
+        $imeioderweek = Imeiserviceorder::where('ignore_profit', 0)->where('status', 'COMPLETED')->whereBetween('completed_on', [$week1, $week2])
             ->select(DB::raw('SUM(credit_default_currency-purchase_cost) as profit'))
             ->first();
-        $imeiodermonth = Imeiserviceorder::where('ignore_profit',0)->where('status', 'COMPLETED')->whereBetween('completed_on', [$month1, $month2])
+        $imeiodermonth = Imeiserviceorder::where('ignore_profit', 0)->where('status', 'COMPLETED')->whereBetween('completed_on', [$month1, $month2])
             ->select(DB::raw('SUM(credit_default_currency-purchase_cost) as profit'))
             ->first();
 
@@ -80,23 +79,39 @@ class HomeController extends Controller
             $tg2 = CUtil::convertDateS($tg[1]);
         }
 
-        $imeioder = Imeiserviceorder::where('ignore_profit',0)->whereBetween('completed_on', [$tg1, $tg2])->where('status', 'COMPLETED')->select(DB::raw('SUM(credit_default_currency-purchase_cost) as profit'))->first();
-        $serveroder = Serverserviceorder::where('ignore_profit',0)->whereBetween('completed_on', [$tg1, $tg2])->where('status', 'COMPLETED')->select(DB::raw('SUM(credit_default_currency-(purchase_cost*quantity)) as profit'))->first();
+        $imeioder = Imeiserviceorder::whereBetween('completed_on', [$tg1, $tg2])
+            ->where('ignore_profit', 0)
+            ->where('purchase_cost', '>', 0)
+            ->where('credit_default_currency', '!=', 0)
+            ->where('status', '=', 'Completed')
+            ->where('amount_debitted', '=', 1)
+            ->selectRaw('sum(if(link_order_id != 0, credit_default_currency, credit_default_currency - purchase_cost)) as profit, sum(if(link_order_id != 0, credit_default_currency, 0 )) as linked_profit')
+            ->first();
+        $serveroder = Serverserviceorder::whereBetween('completed_on', [$tg1, $tg2])
+            ->where('ignore_profit', 0)
+            ->where('purchase_cost', '>', 0)
+            ->where('status', '=', 'Completed')
+            ->where('credit_default_currency', '!=', 0)
+            ->selectRaw('sum(credit_default_currency - ( purchase_cost * IF( quantity >0, quantity, 1 ) ) ) as profit')
+            ->first();
 
 
         //server
-        $serverchart2 = Serverserviceorder::where('status', 'COMPLETED')
-            ->where('ignore_profit',0)
+        $serverchart2 = Serverserviceorder::where('ignore_profit', 0)
+            ->where('purchase_cost', '>', 0)
+            ->where('credit_default_currency', '!=', 0)
+            ->where('status', '=', 'Completed')
+            ->where('amount_debitted', '=', 1)
             ->whereBetween('completed_on', [$tg1, $tg2])
             ->get();
-        foreach ($serverchart2 as $s){
+        foreach ($serverchart2 as $s) {
             $data_array[] =
                 array(
-                    'completed_on' => CUtil::convertDate($s->completed_on,'d'),
+                    'completed_on' => CUtil::convertDate($s->completed_on, 'd'),
                     'credit_default_currency' => $s->credit_default_currency,
                     'purchase_cost' => $s->purchase_cost,
                     'quantity' => $s->quantity,
-                    'profit' => $s->credit_default_currency-($s->purchase_cost*$s->quantity)
+                    'profit' => $s->credit_default_currency - ($s->purchase_cost * $s->quantity)
                 );
         }
         $collectserver = collect($data_array)->sortBy('completed_on');
@@ -107,8 +122,11 @@ class HomeController extends Controller
         })
             ->toArray();
         //imei
-        $imeichart2 = Imeiserviceorder::where('status', 'COMPLETED')
-            ->where('ignore_profit', 0)
+        $imeichart2 = Imeiserviceorder::where('ignore_profit', 0)
+            ->where('purchase_cost', '>', 0)
+            ->where('credit_default_currency', '!=', 0)
+            ->where('status', '=', 'Completed')
+            ->where('amount_debitted', '=', 1)
             ->whereBetween('completed_on', [$tg1, $tg2])
             ->get();
         foreach ($imeichart2 as $s) {
@@ -153,6 +171,6 @@ class HomeController extends Controller
         $chartcountimeivalue = json_encode(array_values($chartimeicount));
 
 
-        return view('home', compact('chartcountservervalue','chartcountimeivalue','chartimeivalue','chartserverdate','chartservervalue','serveroder', 'imeioder', 'serveroderday', 'serveroderyesterday', 'serverodermonth', 'serveroderweek', 'imeioderday', 'imeioderyesterday', 'imeioderweek', 'imeiodermonth'));
+        return view('home', compact('chartcountservervalue', 'chartcountimeivalue', 'chartimeivalue', 'chartserverdate', 'chartservervalue', 'serveroder', 'imeioder', 'serveroderday', 'serveroderyesterday', 'serverodermonth', 'serveroderweek', 'imeioderday', 'imeioderyesterday', 'imeioderweek', 'imeiodermonth'));
     }
 }
