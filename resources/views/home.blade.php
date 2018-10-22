@@ -19,7 +19,7 @@
                             </div>
                         </div>
                         <p class="mt-3 mb-0 text-muted text-sm">
-                            <span class="text-success mr-2"><i class="fa"></i> {{number_format($serveroder->profit*22000)}} </span>
+                            <span class="text-success mr-2">{{number_format($serveroder->profit*22000)}} </span>
                             <span class="text-nowrap">VND</span>
                         </p>
                     </div>
@@ -40,7 +40,7 @@
                             </div>
                         </div>
                         <p class="mt-3 mb-0 text-muted text-sm">
-                            <span class="text-success mr-2"><i class="fas"></i> {{number_format($imeioder->profit*22000)}}</span>
+                            <span class="text-success mr-2">{{number_format($imeioder->profit*22000)}}</span>
                             <span class="text-nowrap">VND</span>
                         </p>
                     </div>
@@ -82,7 +82,7 @@
                             </div>
                         </div>
                         <p class="mt-3 mb-0 text-muted text-sm">
-                            <span class="text-success mr-2"><i class="fas"></i> {{number_format(($serveroder->profit+$imeioder->profit)*22000)}}</span>
+                            <span class="text-success mr-2">{{number_format(($serveroder->profit+$imeioder->profit)*22000)}}</span>
                             <span class="text-nowrap">VND</span>
                         </p>
                     </div>
