@@ -81,7 +81,7 @@ class HomeController extends Controller
 
         $imeioder = Imeiserviceorder::whereBetween('completed_on', [$tg1, $tg2])
             ->where('ignore_profit', 0)
-            ->where('purchase_cost', '>', 0)
+            //->where('purchase_cost', '>', 0) // wrong condition
             ->where('credit_default_currency', '!=', 0)
             ->where('status', '=', 'Completed')
             ->where('amount_debitted', '=', 1)
@@ -89,7 +89,7 @@ class HomeController extends Controller
             ->first();
         $serveroder = Serverserviceorder::whereBetween('completed_on', [$tg1, $tg2])
             ->where('ignore_profit', 0)
-            ->where('purchase_cost', '>', 0)
+            //->where('purchase_cost', '>', 0) // wrong condition
             ->where('status', '=', 'Completed')
             ->where('credit_default_currency', '!=', 0)
             ->selectRaw('sum(credit_default_currency - ( purchase_cost * IF( quantity >0, quantity, 1 ) ) ) as profit')
@@ -98,7 +98,7 @@ class HomeController extends Controller
 
         //server
         $serverchart2 = Serverserviceorder::where('ignore_profit', 0)
-            ->where('purchase_cost', '>', 0)
+            // ->where('purchase_cost', '>', 0) // wrong condition
             ->where('credit_default_currency', '!=', 0)
             ->where('status', '=', 'Completed')
             ->where('amount_debitted', '=', 1)
@@ -123,7 +123,7 @@ class HomeController extends Controller
             ->toArray();
         //imei
         $imeichart2 = Imeiserviceorder::where('ignore_profit', 0)
-            ->where('purchase_cost', '>', 0)
+            // ->where('purchase_cost', '>', 0) // wrong condition
             ->where('credit_default_currency', '!=', 0)
             ->where('status', '=', 'Completed')
             ->where('amount_debitted', '=', 1)
