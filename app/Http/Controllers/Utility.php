@@ -88,6 +88,16 @@ class Utility
                     foreach ($imei as $i) {
                         $imeiprice = Clientgroupprice::where('service_id', $i->id)->where('group_id', $cliendefault->id)->where('currency', 'USD')->first();
                         if ($imeiprice == !null) {
+                            if($i->purchase_cost > $i->credit + $imeiprice->discount){
+                                foreach ($currencies as $c) {
+                                    Clientgroupprice::where('group_id', $cliendefault->id)
+                                        ->where('service_type', 'imei')
+                                        ->where('currency', $c->currency_code)
+                                        ->where('service_id', $i->id)
+                                        ->update(['discount' => ($i->purchase_cost - $i->credit) * $c->exchange_rate_static]);
+                                }
+                            }
+
                             $giabanle = $i->credit + $imeiprice->discount;
                             $chietkhau = ($giabanle - ((($giabanle - $i->purchase_cost) / 100) * $clg->chietkhau));
                             $y = $chietkhau - $i->credit;

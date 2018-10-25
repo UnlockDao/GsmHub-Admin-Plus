@@ -147,8 +147,10 @@
 
                                             <td><a data-toggle="tooltip" data-placement="top"  data-original-title="{{number_format($v->purchase_cost*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->purchase_cost, 2); ?></a></td>
                                             <td>
-                                                @if($v->purchase_cost > $v->credit)
-                                                    <span class="badge badge-pill badge-danger">{{number_format($v->credit, 2)}}<span>
+                                                @if($v->purchase_cost == $v->credit)
+                                                    <span class="badge badge-pill badge-warning">{{number_format($v->credit, 2)}}<span>
+                                                @elseif($v->purchase_cost > $v->credit)
+                                                                <span class="badge badge-pill badge-danger">{{number_format($v->credit, 2)}}<span>
                                                    @else
                                                                 <a data-toggle="tooltip" data-placement="top" data-original-title="{{number_format($v->credit*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->credit, 2); ?></a>
                                                 @endif
@@ -156,9 +158,11 @@
                                             @foreach($usergroup as $u)
                                                 <td>  @foreach($v->clientgroupprice as $cl)
                                                         @if($cl->currency == 'USD' && $cl->service_type == 'imei' && $cl->group_id == $u->id )
-                                                            @if($v->purchase_cost > $v->credit + $cl->discount)
-                                                                <span class="badge badge-pill badge-danger"><?php echo number_format($v->credit + $cl->discount, 2); ?><span>
-                                                                @else
+                                                            @if($v->purchase_cost == $v->credit + $cl->discount)
+                                                                <span class="badge badge-pill badge-warning"><?php echo number_format($v->credit + $cl->discount, 2); ?><span>
+                                                            @elseif($v->purchase_cost > $v->credit + $cl->discount)
+                                                                            <span class="badge badge-pill badge-danger"><?php echo number_format($v->credit + $cl->discount, 2); ?><span>
+                                                                    @else
                                                                             <a data-toggle="tooltip" data-placement="top" data-original-title="{{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->credit + $cl->discount, 2); ?></a>
                                                             @endif
                                                         @endif
