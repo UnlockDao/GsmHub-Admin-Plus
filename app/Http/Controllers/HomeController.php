@@ -99,6 +99,7 @@ class HomeController extends Controller
         //server
         $serverchart2 = Serverserviceorder::where('ignore_profit', 0)
             // ->where('purchase_cost', '>', 0) // wrong condition
+            ->orderBy('completed_on')
             ->where('credit_default_currency', '!=', 0)
             ->where('status', '=', 'Completed')
             ->where('amount_debitted', '=', 1)
@@ -107,14 +108,14 @@ class HomeController extends Controller
         foreach ($serverchart2 as $s) {
             $data_array[] =
                 array(
-                    'completed_on' => CUtil::convertDate($s->completed_on, 'd'),
+                    'completed_on' => CUtil::convertDate($s->completed_on, 'd-m-Y'),
                     'credit_default_currency' => $s->credit_default_currency,
                     'purchase_cost' => $s->purchase_cost,
                     'quantity' => $s->quantity,
                     'profit' => $s->credit_default_currency - ($s->purchase_cost * $s->quantity)
                 );
         }
-        $collectserver = collect($data_array)->sortBy('completed_on');
+        $collectserver = collect($data_array);
         $chartserver = $collectserver->groupBy('completed_on')->map(function ($item) {
             return $item->sum(function ($item) {
                 return (number_format($item['profit']));
@@ -124,6 +125,7 @@ class HomeController extends Controller
         //imei
         $imeichart2 = Imeiserviceorder::where('ignore_profit', 0)
             // ->where('purchase_cost', '>', 0) // wrong condition
+            ->orderBy('completed_on')
             ->where('credit_default_currency', '!=', 0)
             ->where('status', '=', 'Completed')
             ->where('amount_debitted', '=', 1)
@@ -138,7 +140,7 @@ class HomeController extends Controller
                     'profit' => $s->credit_default_currency - $s->purchase_cost
                 );
         }
-        $collectimei = collect($data_arrayi)->sortBy('completed_on');
+        $collectimei = collect($data_arrayi);
         $chartimei = $collectimei->groupBy('completed_on')->map(function ($item) {
             return $item->sum(function ($item) {
                 return (number_format($item['profit']));
