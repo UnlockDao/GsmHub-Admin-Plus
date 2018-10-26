@@ -14,6 +14,7 @@ use App\Serverserviceclientgroupcredit;
 use App\Serverservicetypewisegroupprice;
 use App\Serverservicetypewiseprice;
 use App\Serviceservicepricing;
+use App\Supplier;
 use Illuminate\Http\Request;
 
 class Utility
@@ -218,10 +219,12 @@ class Utility
         if ($type == 'supplier' && $id == !null) {
             //cập nhập phí+ tỉ giá
             $imeiprice = Imeiservicepricing::where('id_supplier', $id)->get();
+            $supplier = Supplier::find($id);
             foreach ($imeiprice as $i) {
                 if ($i->purchasecost == !null) {
-                    $giatransactionfee = ($i->exchangerate * $i->purchasecost) / $exchangerate->exchange_rate_static + (($i->purchasecost / 100) * $i->transactionfee);
+                    $giatransactionfee = ($supplier->exchangerate * $i->purchasecost) / $exchangerate->exchange_rate_static + (($i->purchasecost / 100) * $i->transactionfee);
                     Imeiservice::where('id', $i->id)->update(['purchase_cost' => $giatransactionfee]);
+                    echo $giatransactionfee;
                 }
             }
             // cập nhập lại giá user
