@@ -34,7 +34,7 @@ class ClientController extends Controller
 
         //cập nhập tất cả chiết khấu
         $utility = new Utility();
-        $utility->ReLoadd($type = 'clientgroup', $id);
+        $utility->Repricing($type = 'clientgroup', $id);
 
         return redirect('/clientgroup');
     }

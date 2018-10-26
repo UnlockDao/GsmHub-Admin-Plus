@@ -34,7 +34,7 @@ class CurrencieController extends Controller
         $currencie->save();
         //cập nhập phí+ tỉ giá + giá user
         $utility = new Utility();
-        $utility->ReLoadd($type = 'all', $id = NULL);
+        $utility->Repricing($type = 'all', $id = NULL);
         return redirect('/currencie');
     }
 

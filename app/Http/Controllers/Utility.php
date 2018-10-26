@@ -22,11 +22,11 @@ class Utility
     {
         $type = $request->type;
         $id = $request->id;
-        $this->Reloadd($type, $id);
+        $this->Repricing($type, $id);
         return back();
     }
 
-    public function ReLoadd($type, $id)
+    public function Repricing($type, $id)
     {
         $defaultcurrency = Currenciepricing::where('type', '1')->first();
         $exchangerate = Currencie::find($defaultcurrency->currency_id);

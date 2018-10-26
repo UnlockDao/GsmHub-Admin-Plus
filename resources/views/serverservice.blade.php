@@ -30,7 +30,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
-            max-width: 150px;
+            max-width: 250px;
             -webkit-line-clamp: 1;
             -webkit-box-orient: vertical
         }
@@ -50,7 +50,8 @@
                                     <select class="form-control form-control-alternative" name="group_name">
                                         <option value="">...</option>
                                         @foreach($groupsearch as $g )
-                                            <option value="{{$g->id}}" @if($cachesearch->group_name == $g->id) selected @endif>{{$g->group_name}}</option>
+                                            <option value="{{$g->id}}"
+                                                    @if($cachesearch->group_name == $g->id) selected @endif>{{$g->group_name}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -59,15 +60,21 @@
                                     <select class="form-control form-control-alternative" name="type">
                                         <option value="">...</option>
                                         <option value="api" @if($cachesearch->type == 'api')selected @endif>API</option>
-                                        <option value="manual" @if($cachesearch->type == 'manual')selected @endif>MANUAL</option>
+                                        <option value="manual" @if($cachesearch->type == 'manual')selected @endif>
+                                            MANUAL
+                                        </option>
                                     </select>
                                 </div>
                                 <div class="col-md-2">
                                     <strong>Status</strong>
                                     <select class="form-control form-control-alternative" name="status">
                                         <option value="">...</option>
-                                        <option value="active" @if($cachesearch->status == 'active')selected @endif>Active</option>
-                                        <option value="inactive" @if($cachesearch->status == 'inactive')selected @endif>Inactive</option>
+                                        <option value="active" @if($cachesearch->status == 'active')selected @endif>
+                                            Active
+                                        </option>
+                                        <option value="inactive" @if($cachesearch->status == 'inactive')selected @endif>
+                                            Inactive
+                                        </option>
                                     </select>
                                 </div>
                                 <div class="col-md-2">
@@ -75,7 +82,8 @@
                                     <select class="form-control form-control-alternative" name="supplier">
                                         <option value="">...</option>
                                         @foreach($supplier as $s)
-                                            <option value="{{$s->id}}" @if($cachesearch->supplier == $s->id)selected @endif>{{$s->name}}</option>
+                                            <option value="{{$s->id}}"
+                                                    @if($cachesearch->supplier == $s->id)selected @endif>{{$s->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -116,7 +124,8 @@
                                     @if($v->server_service_group_id == $g->id )
                                         <tr class="table-info">
                                             <td>{{$v->id}}</td>
-                                            <td><a href="https://s-unlock.com/admin/server-service/edit/{{$v->id}}" class="max-lines" target="_blank">{{$v->service_name}}</a> </td>
+                                            <td><a href="https://s-unlock.com/admin/server-service/edit/{{$v->id}}"
+                                                   class="max-lines" target="_blank" data-toggle="tooltip" data-placement="top"  data-original-title="{{$v->service_name}}">{{$v->service_name}}</a></td>
                                             <td>@if($v->api_id ==! null)<span
                                                         class="badge badge-pill badge-success">API<span>  @else<span
                                                                 class="badge badge-pill badge-info">Manual<span>  @endif
@@ -124,7 +133,8 @@
                                             <td>
                                                 <div class="togglebutton">
                                                     <label id="{{$v->id}}" class="custom-toggle">
-                                                        <input class="status" id="check{{$v->id}}" type="checkbox" onfocus="window.location.reload()"
+                                                        <input class="status" id="check{{$v->id}}" type="checkbox"
+                                                               onfocus="window.location.reload()"
                                                                @if($v->status == 'active' )checked="" @endif>
                                                         <span class="custom-toggle-slider rounded-circle"></span>
                                                     </label>
@@ -138,8 +148,11 @@
                                                 <td></td>
                                             @endforeach
                                             <td><a class="material-icons fancybox fancybox.iframe"
-                                                   href="{{ asset('') }}serverservice/{{$v->id}}"><i class="ni ni-zoom-split-in"></i></a></td>
-                                            <td><a href="{{ asset('') }}serverdelete/{{$v->id}}" onclick="return confirm('OK to delete!');"><i class="ni ni-fat-remove"></i></a></td>
+                                                   href="{{ asset('') }}serverservice/{{$v->id}}"><i
+                                                            class="ni ni-zoom-split-in"></i></a></td>
+                                            <td><a href="{{ asset('') }}serverdelete/{{$v->id}}"
+                                                   onclick="return confirm('OK to delete!');"><i
+                                                            class="ni ni-fat-remove"></i></a></td>
                                         </tr>
                                         @if(!$v->serverservicetypewiseprice->isEmpty())
                                             @foreach($v->serverservicetypewiseprice as $a)
@@ -148,25 +161,37 @@
                                                     <td colspan="4"><a>{{$a->service_type}}</a></td>
                                                     <td>@if($v->api_id ==! null)
                                                             @foreach($v->apiserverservicetypeprice as $apiserverservicetypeprice)@if($apiserverservicetypeprice->service_type==$a->service_type)
-                                                                {{$apiserverservicetypeprice->api_price}}
+                                                                <a data-toggle="tooltip"
+                                                                   data-placement="top"
+                                                                   data-original-title="{{number_format($apiserverservicetypeprice->api_price*$exchangerate->exchange_rate_static)}} đ">{{$apiserverservicetypeprice->api_price}}</a>
                                                             @endif
                                                             @endforeach
-                                                        @else{{ number_format($a->purchase_cost_not_net, 2) }}@endif</td>
-                                                    <td>{{ number_format($a->purchase_cost, 2) }}</td>
+                                                        @else<a data-toggle="tooltip"
+                                                                data-placement="top"
+                                                                data-original-title="{{number_format($a->purchase_cost_not_net*$exchangerate->exchange_rate_static)}} đ">{{ number_format($a->purchase_cost_not_net, 2) }}</a>@endif</td>
+                                                    <td><a data-toggle="tooltip"
+                                                           data-placement="top"
+                                                           data-original-title="{{number_format($a->purchase_cost*$exchangerate->exchange_rate_static)}} đ">{{ number_format($a->purchase_cost, 2) }}</a></td>
                                                     <td>
                                                         @if($a->purchase_cost > $a->amount)
-                                                            <span class="badge badge-pill badge-danger">{{ number_format( $a->amount , 2) }}<span>
+                                                            <span class="badge badge-pill badge-danger">{{ number_format( $a->amount , 2) }}
+                                                                <span>
                                                         @else
-                                                            {{ number_format( $a->amount , 2) }}
+                                                                        <a data-toggle="tooltip"
+                                                                           data-placement="top"
+                                                                           data-original-title="{{number_format($a->amount*$exchangerate->exchange_rate_static)}} đ">{{ number_format( $a->amount , 2) }}</a>
                                                         @endif
                                                     </td>
                                                     @foreach($clientgroup as $cg)
-                                                        <td  width="5%">@foreach($a->serverservicetypewisegroupprice as $serverservicetypewisegroupprice)
+                                                        <td width="5%">@foreach($a->serverservicetypewisegroupprice as $serverservicetypewisegroupprice)
                                                                 @if($serverservicetypewisegroupprice->service_type_id == $a->id &&$serverservicetypewisegroupprice->group_id == $cg->id)
                                                                     @if($a->purchase_cost > $serverservicetypewisegroupprice->amount)
-                                                                        <span class="badge badge-pill badge-danger">{{ number_format( $serverservicetypewisegroupprice->amount , 2) }}<span>
+                                                                        <span class="badge badge-pill badge-danger">{{ number_format( $serverservicetypewisegroupprice->amount , 2) }}
+                                                                            <span>
                                                                            @else
-                                                                                    <a data-toggle="tooltip" data-placement="top" data-original-title="{{number_format($serverservicetypewisegroupprice->amount*$exchangerate->exchange_rate_static)}} đ" >{{ number_format( $serverservicetypewisegroupprice->amount , 2) }}</a>
+                                                                                    <a data-toggle="tooltip"
+                                                                                       data-placement="top"
+                                                                                       data-original-title="{{number_format($serverservicetypewisegroupprice->amount*$exchangerate->exchange_rate_static)}} đ">{{ number_format( $serverservicetypewisegroupprice->amount , 2) }}</a>
                                                                     @endif
                                                                 @endif
                                                             @endforeach
@@ -186,14 +211,31 @@
                                                         - {{$serverservicequantityrange->to_range}}</td>
                                                     <td></td>
                                                     <td></td>
-                                                    <td>@if($v->api_id ==! null){{number_format($v->apiserverservices->credits,2)}}@elseif($v->servicepricing->purchasecost == null){{number_format($v->purchase_cost,2)}}@else{{number_format($v->servicepricing->purchasecost,2)}}@endif</td>
-                                                    <td>{{number_format($v->purchase_cost,2)}}</td>
+                                                    <td>@if($v->api_id ==! null)
+                                                            <a data-toggle="tooltip"
+                                                               data-placement="top"
+                                                               data-original-title="{{number_format($v->apiserverservices->credits*$exchangerate->exchange_rate_static)}} đ">{{number_format($v->apiserverservices->credits,2)}}</a>
+                                                        @elseif($v->servicepricing->purchasecost == null)
+                                                            <a data-toggle="tooltip"
+                                                               data-placement="top"
+                                                               data-original-title="{{number_format($v->purchase_cost*$exchangerate->exchange_rate_static)}} đ">{{number_format($v->purchase_cost,2)}}</a>
+                                                        @else
+                                                            <a data-toggle="tooltip"
+                                                               data-placement="top"
+                                                               data-original-title="{{number_format($v->servicepricing->purchasecost*$exchangerate->exchange_rate_static)}} đ">{{number_format($v->servicepricing->purchasecost,2)}}</a>
+                                                        @endif</td>
+                                                    <td><a data-toggle="tooltip"
+                                                           data-placement="top"
+                                                           data-original-title="{{number_format($v->purchase_cost*$exchangerate->exchange_rate_static)}} đ">{{number_format($v->purchase_cost,2)}}</a></td>
                                                     <td>@foreach($serverservicequantityrange->serverserviceusercredit as $serverserviceusercredit)
                                                             @if($serverserviceusercredit->currency == 'USD')
                                                                 @if($v->purchase_cost > $serverserviceusercredit->credit)
-                                                                    <span class="badge badge-pill badge-danger">{{number_format($serverserviceusercredit->credit,2)}}<span>
+                                                                    <span class="badge badge-pill badge-danger">{{number_format($serverserviceusercredit->credit,2)}}
+                                                                        <span>
                                                                 @else
-                                                                    {{number_format($serverserviceusercredit->credit,2)}}
+                                                                                <a data-toggle="tooltip"
+                                                                                   data-placement="top"
+                                                                                   data-original-title="{{number_format($serverserviceusercredit->credit*$exchangerate->exchange_rate_static)}} đ">{{number_format($serverserviceusercredit->credit,2)}}</a>
                                                                 @endif
                                                             @endif
                                                         @endforeach</td>
@@ -201,9 +243,12 @@
                                                         <td>@foreach($serverservicequantityrange->serverserviceclientgroupcredit as $serverserviceclientgroupcredit)
                                                                 @if($serverserviceclientgroupcredit->currency=='USD' && $serverserviceclientgroupcredit->client_group_id==$cg->id )
                                                                     @if($v->purchase_cost > $serverserviceclientgroupcredit->credit)
-                                                                        <span class="badge badge-pill badge-danger">{{number_format($serverserviceclientgroupcredit->credit,2)}}<span>
+                                                                        <span class="badge badge-pill badge-danger">{{number_format($serverserviceclientgroupcredit->credit,2)}}
+                                                                            <span>
                                                                             @else
-                                                                                    <a data-toggle="tooltip" data-placement="top"  data-original-title="{{number_format($serverserviceclientgroupcredit->credit*$exchangerate->exchange_rate_static)}} đ" >{{number_format($serverserviceclientgroupcredit->credit,2)}}</a>
+                                                                                    <a data-toggle="tooltip"
+                                                                                       data-placement="top"
+                                                                                       data-original-title="{{number_format($serverserviceclientgroupcredit->credit*$exchangerate->exchange_rate_static)}} đ">{{number_format($serverserviceclientgroupcredit->credit,2)}}</a>
                                                                     @endif
                                                                 @endif
                                                             @endforeach

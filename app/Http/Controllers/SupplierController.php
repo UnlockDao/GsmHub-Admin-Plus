@@ -34,7 +34,7 @@ class SupplierController extends Controller
         $supplier->save();
         //cập nhập phí+ tỉ giá
         $utility = new Utility();
-        $utility->ReLoadd($type = 'supplier', $id);
+        $utility->Repricing($type = 'supplier', $id);
         return redirect('/supplier');
     }
 
