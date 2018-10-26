@@ -138,7 +138,7 @@
                                                 <td></td>
                                             @endforeach
                                             <td><a class="material-icons fancybox fancybox.iframe"
-                                                              href="{{ asset('') }}serverservice/{{$v->id}}"><i class="ni ni-zoom-split-in"></i></a></td>
+                                                   href="{{ asset('') }}serverservice/{{$v->id}}"><i class="ni ni-zoom-split-in"></i></a></td>
                                             <td><a href="{{ asset('') }}serverdelete/{{$v->id}}" onclick="return confirm('OK to delete!');"><i class="ni ni-fat-remove"></i></a></td>
                                         </tr>
                                         @if(!$v->serverservicetypewiseprice->isEmpty())
@@ -166,7 +166,7 @@
                                                                     @if($a->purchase_cost > $serverservicetypewisegroupprice->amount)
                                                                         <span class="badge badge-pill badge-danger">{{ number_format( $serverservicetypewisegroupprice->amount , 2) }}<span>
                                                                            @else
-                                                                                    <a rel="tooltip"  data-original-title="{{number_format($serverservicetypewisegroupprice->amount*$exchangerate->exchange_rate_static)}} đ" >{{ number_format( $serverservicetypewisegroupprice->amount , 2) }}</a>
+                                                                                    <a data-toggle="tooltip" data-placement="top" data-original-title="{{number_format($serverservicetypewisegroupprice->amount*$exchangerate->exchange_rate_static)}} đ" >{{ number_format( $serverservicetypewisegroupprice->amount , 2) }}</a>
                                                                     @endif
                                                                 @endif
                                                             @endforeach
@@ -203,7 +203,7 @@
                                                                     @if($v->purchase_cost > $serverserviceclientgroupcredit->credit)
                                                                         <span class="badge badge-pill badge-danger">{{number_format($serverserviceclientgroupcredit->credit,2)}}<span>
                                                                             @else
-                                                                                    <a rel="tooltip"  data-original-title="{{number_format($serverserviceclientgroupcredit->credit*$exchangerate->exchange_rate_static)}} đ" >{{number_format($serverserviceclientgroupcredit->credit,2)}}</a>
+                                                                                    <a data-toggle="tooltip" data-placement="top"  data-original-title="{{number_format($serverserviceclientgroupcredit->credit*$exchangerate->exchange_rate_static)}} đ" >{{number_format($serverserviceclientgroupcredit->credit,2)}}</a>
                                                                     @endif
                                                                 @endif
                                                             @endforeach

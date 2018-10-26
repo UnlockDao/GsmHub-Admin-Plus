@@ -3,15 +3,8 @@
 namespace App\Http\Controllers;
 
 
-use App\Clientgroup;
-use App\Clientgroupprice;
 use App\Currencie;
 use App\Currenciepricing;
-use App\Http\Requests;
-use App\Imeiservice;
-use App\Imeiservicepricing;
-use App\Supplier;
-use Excel;
 use Illuminate\Http\Request;
 
 class CurrencieController extends Controller
@@ -39,6 +32,9 @@ class CurrencieController extends Controller
         $currencie = Currencie::find($id);
         $currencie->exchange_rate_static = $request->exchange_rate_static;
         $currencie->save();
+        //cập nhập phí+ tỉ giá + giá user
+        $utility = new Utility();
+        $utility->ReLoadd($type = 'all', $id = NULL);
         return redirect('/currencie');
     }
 
@@ -63,7 +59,7 @@ class CurrencieController extends Controller
     {
         $id = $_GET['id'];
         if ($par2 == 'yes') {
-            $defaultcurrency = Currenciepricing::where('type','1')->update(['currency_id' => $id]);
+            $defaultcurrency = Currenciepricing::where('type', '1')->update(['currency_id' => $id]);
             echo 'Change Default Currency';
         }
 

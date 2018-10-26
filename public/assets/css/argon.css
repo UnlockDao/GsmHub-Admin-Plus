@@ -6258,8 +6258,8 @@ input[type='button'].btn-block
 
 .badge-warning
 {
-    color: #ff3709;
-    background-color: rgba(254, 201, 189, .5);
+    color: #000;
+    background-color: yellow;
 }
 .badge-warning[href]:hover,
 .badge-warning[href]:focus
@@ -6272,8 +6272,8 @@ input[type='button'].btn-block
 
 .badge-danger
 {
-    color: #f80031;
-    background-color: rgba(251, 175, 190, .5);
+    color: #FFF;
+    background-color: red;
 }
 .badge-danger[href]:hover,
 .badge-danger[href]:focus

@@ -8,87 +8,45 @@ use App\Clientgroupprice;
 use App\Currencie;
 use App\Currenciepricing;
 use App\Imeiservice;
+use App\Imeiservicepricing;
 use App\Serverservice;
 use App\Serverserviceclientgroupcredit;
 use App\Serverservicetypewisegroupprice;
 use App\Serverservicetypewiseprice;
 use App\Serviceservicepricing;
-use App\Supplier;
 use Illuminate\Http\Request;
 
 class Utility
 {
-    public function Reload($type,$cliengroup,$supplier)
+    public function Request(Request $request)
     {
+        $type = $request->type;
+        $id = $request->id;
+        $this->Reloadd($type, $id);
+        return back();
+    }
 
-        if($cliengroup == null){
-            $cliengroup =Clientgroup::get();
-        }else{
-            $cliengroup =Clientgroup::where('id',$cliengroup)->get();
-        }
-        if($supplier == null){
-            $supplier =Supplier::get();
-        }else{
-            $supplier =Supplier::where('id',$supplier)->get();
-        }
-
-        $cliendefault = Clientgroup::where('status','active')->where('chietkhau', '0')->first();
+    public function ReLoadd($type, $id)
+    {
+        $defaultcurrency = Currenciepricing::where('type', '1')->first();
+        $exchangerate = Currencie::find($defaultcurrency->currency_id);
         $currencies = Currencie::where('display_currency', 'Yes')->get();
+        $cliendefault = Clientgroup::where('status', 'active')->where('chietkhau', '0')->first();
 
-        if($type == 'all'){
+        if ($type == 'all' || $type == 'clientgroup') {
+            if ($id == null) {
+                $cliengroup = Clientgroup::get();
+            } else {
+                $cliengroup = Clientgroup::where('id', $id)->get();
+            }
             //imei
-            if ($cliendefault==! null) {
+            if ($cliendefault == !null) {
                 $imei = Imeiservice::get();
-                foreach ($cliengroup as $clg){
+                foreach ($cliengroup as $clg) {
                     foreach ($imei as $i) {
                         $imeiprice = Clientgroupprice::where('service_id', $i->id)->where('group_id', $cliendefault->id)->where('currency', 'USD')->first();
                         if ($imeiprice == !null) {
-                            $giabanle = $i->credit + $imeiprice->discount;
-                            $chietkhau = ($giabanle - ((($giabanle - $i->purchase_cost) / 100) * $clg->chietkhau));
-                            $y = $chietkhau - $i->credit;
-                            foreach ($currencies as $c) {
-                                $updatepriceuse = Clientgroupprice::where('group_id', $clg->id)
-                                    ->where('service_type', 'imei')
-                                    ->where('currency', $c->currency_code)
-                                    ->where('service_id', $i->id)
-                                    ->update(['discount' => $y * $c->exchange_rate_static]);
-                            }
-                        }
-                    }
-                }
-            }
-            //services
-            if($cliendefault ==! null){
-                foreach ($cliengroup as $clg){
-                    $range = Serverserviceclientgroupcredit::where('client_group_id',$clg->id)->where('currency','USD')->get();
-                    foreach ($range as $ra) {
-                        $i = Serverserviceclientgroupcredit::where('client_group_id',$cliendefault->id)
-                            ->where('currency','USD')
-                            ->where('server_service_range_id',$ra->server_service_range_id)
-                            ->first();
-                        $giabanle = $i->credit;
-                        if($ra->serverservicequantityrange->serverservicequantityrange ==! null){
-                            $chietkhau = ($giabanle - ((($giabanle - $ra->serverservicequantityrange->serverservicequantityrange->purchase_cost) / 100) *$clg->chietkhau));
-                            foreach ($currencies as $cu) {
-                                $update = Serverserviceclientgroupcredit::where('server_service_range_id',$ra->server_service_range_id)
-                                    ->where('client_group_id', $clg->id)
-                                    ->where('currency',$cu->currency_code)
-                                    ->update(['credit' => $chietkhau* $cu->exchange_rate_static]);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        if($type == 'imei'){
-            //imei
-            if ($cliendefault==! null) {
-                $imei = Imeiservice::get();
-                foreach ($cliengroup as $clg){
-                    foreach ($imei as $i) {
-                        $imeiprice = Clientgroupprice::where('service_id', $i->id)->where('group_id', $cliendefault->id)->where('currency', 'USD')->first();
-                        if ($imeiprice == !null) {
-                            if($i->purchase_cost > $i->credit + $imeiprice->discount){
+                            if ($i->purchase_cost > $i->credit + $imeiprice->discount) {
                                 foreach ($currencies as $c) {
                                     Clientgroupprice::where('group_id', $cliendefault->id)
                                         ->where('service_type', 'imei')
@@ -112,52 +70,51 @@ class Utility
                     }
                 }
             }
-        }
-        if($type == 'server'){
+
             //services
             $this->UpdatePurchaseCostVipServer();
-            if($cliendefault ==! null){
-                foreach ($cliengroup as $clg){
-                    $range = Serverserviceclientgroupcredit::where('client_group_id',$clg->id)->where('currency','USD')->get();
+            if ($cliendefault == !null) {
+                foreach ($cliengroup as $clg) {
+                    $range = Serverserviceclientgroupcredit::where('client_group_id', $clg->id)->where('currency', 'USD')->get();
                     foreach ($range as $ra) {
-                        $i = Serverserviceclientgroupcredit::where('client_group_id',$cliendefault->id)
-                            ->where('currency','USD')
-                            ->where('server_service_range_id',$ra->server_service_range_id)
+                        $i = Serverserviceclientgroupcredit::where('client_group_id', $cliendefault->id)
+                            ->where('currency', 'USD')
+                            ->where('server_service_range_id', $ra->server_service_range_id)
                             ->first();
                         $giabanle = $i->credit;
-                        if($ra->serverservicequantityrange->serverservicequantityrange ==! null){
-                            $chietkhau = ($giabanle - ((($giabanle - $ra->serverservicequantityrange->serverservicequantityrange->purchase_cost) / 100) *$clg->chietkhau));
+                        if ($ra->serverservicequantityrange->serverservicequantityrange == !null) {
+                            $chietkhau = ($giabanle - ((($giabanle - $ra->serverservicequantityrange->serverservicequantityrange->purchase_cost) / 100) * $clg->chietkhau));
                             foreach ($currencies as $cu) {
-                                $update = Serverserviceclientgroupcredit::where('server_service_range_id',$ra->server_service_range_id)
+                                $update = Serverserviceclientgroupcredit::where('server_service_range_id', $ra->server_service_range_id)
                                     ->where('client_group_id', $clg->id)
-                                    ->where('currency',$cu->currency_code)
-                                    ->update(['credit' => $chietkhau* $cu->exchange_rate_static]);
+                                    ->where('currency', $cu->currency_code)
+                                    ->update(['credit' => $chietkhau * $cu->exchange_rate_static]);
                             }
                         }
                     }
                 }
             }
             //services wise
-            if($cliendefault ==! null){
+            if ($cliendefault == !null) {
                 $wise = Serverservicetypewiseprice::get();
-                foreach($wise as $wi) {
+                foreach ($wise as $wi) {
                     echo '<hr>';
                     echo '---------------------services wise------------------------';
                     echo '<br>';
                     echo $wi->service_type;
                     echo '<br>';
-                    echo 'Purchase Cost(Net) :'.$wi->purchase_cost;
-                    if($wi->adminplus_service ==! null){
+                    echo 'Purchase Cost(Net) :' . $wi->purchase_cost;
+                    if ($wi->adminplus_service == !null) {
                         echo '<br>';
-                        echo 'Giá bán lẻ: '.$wi->servicetypegroupprice->where('group_id',$cliendefault->id)->first()->amount;
-                        $giabanle =$wi->servicetypegroupprice->where('group_id',$cliendefault->id)->first()->amount;
+                        echo 'Giá bán lẻ: ' . $wi->servicetypegroupprice->where('group_id', $cliendefault->id)->first()->amount;
+                        $giabanle = $wi->servicetypegroupprice->where('group_id', $cliendefault->id)->first()->amount;
                         echo '<br>';
-                        foreach ($wi->servicetypegroupprice as $groupprice){
-                            if($groupprice->clientgroup ==! null){
-                                echo 'Chiết khấu :'.$chietkhau = ($giabanle - ((($giabanle - $wi->purchase_cost) / 100) *$groupprice->clientgroup->chietkhau));
-                                echo '|'.$groupprice->clientgroup->group_name. '|'.$groupprice->id;
-                                Serverservicetypewisegroupprice::where('id',$groupprice->id)
-                                                               ->update(['amount' => $chietkhau]);
+                        foreach ($wi->servicetypegroupprice as $groupprice) {
+                            if ($groupprice->clientgroup == !null) {
+                                echo 'Chiết khấu :' . $chietkhau = ($giabanle - ((($giabanle - $wi->purchase_cost) / 100) * $groupprice->clientgroup->chietkhau));
+                                echo '|' . $groupprice->clientgroup->group_name . '|' . $groupprice->id;
+                                Serverservicetypewisegroupprice::where('id', $groupprice->id)
+                                    ->update(['amount' => $chietkhau]);
                             }
 
                             echo '<br>';
@@ -167,44 +124,230 @@ class Utility
                 }
             }
         }
-    }
-    public function UpdatePurchaseCostVipServer(){
-        $defaultcurrency = Currenciepricing::where('type', '1')->first();
-        $exchangerate = Currencie::find($defaultcurrency->currency_id);
-        $serviceservicepricing = Serviceservicepricing::get();
-        foreach ($serviceservicepricing as $sr){
-            if($sr->id_supplier ==!null){
-                $serverservice= Serverservice::find($sr->id);
-                $tipurchasecost = $serverservice->servicepricing->nhacungcap->exchangerate;
-                $transactionfeegd = $serverservice->servicepricing->nhacungcap->transactionfee;
-                $exchangerategoc = $exchangerate->exchange_rate_static;
-                if(!$serverservice->serverservicequantityrange->isEmpty()){
-                    if($serverservice->api_id ==! null){
-                        $purchasecost = $serverservice->apiserverservices->credits;
-                        $giatransactionfee = ($tipurchasecost * $purchasecost) / $exchangerategoc + (($purchasecost / 100) * $transactionfeegd);
-                        Serverservice::where('id', $sr->id)->update(['purchase_cost' => $giatransactionfee]);
-                    }
-                if(!$serverservice->serverservicetypewiseprice->isEmpty())
-                    if($serverservice->api_id ==! null){
-                        foreach($serverservice->serverservicetypewiseprice as $a){
-                            foreach($serverservice->apiserverservicetypeprice as $apiserverservicetypeprice){
-                                if($apiserverservicetypeprice->service_type==$a->service_type){
-                                    $purchasecost=  $apiserverservicetypeprice->api_price;
-                                }}
-                            $giatransactionfee = ($tipurchasecost * $purchasecost) / $exchangerategoc + (($purchasecost / 100) * $transactionfeegd);
-                            Serverservicetypewiseprice::where('id', $a->id)->update(['purchase_cost' => $giatransactionfee]);
+        if ($type == 'imei') {
+            $cliengroup = Clientgroup::get();
+            //imei
+            if ($cliendefault == !null) {
+                $imei = Imeiservice::get();
+                foreach ($cliengroup as $clg) {
+                    foreach ($imei as $i) {
+                        $imeiprice = Clientgroupprice::where('service_id', $i->id)->where('group_id', $cliendefault->id)->where('currency', 'USD')->first();
+                        if ($imeiprice == !null) {
+                            if ($i->purchase_cost > $i->credit + $imeiprice->discount) {
+                                foreach ($currencies as $c) {
+                                    Clientgroupprice::where('group_id', $cliendefault->id)
+                                        ->where('service_type', 'imei')
+                                        ->where('currency', $c->currency_code)
+                                        ->where('service_id', $i->id)
+                                        ->update(['discount' => ($i->purchase_cost - $i->credit) * $c->exchange_rate_static]);
+                                }
+                            }
+
+                            $giabanle = $i->credit + $imeiprice->discount;
+                            $chietkhau = ($giabanle - ((($giabanle - $i->purchase_cost) / 100) * $clg->chietkhau));
+                            $y = $chietkhau - $i->credit;
+                            foreach ($currencies as $c) {
+                                 Clientgroupprice::where('group_id', $clg->id)
+                                    ->where('service_type', 'imei')
+                                    ->where('currency', $c->currency_code)
+                                    ->where('service_id', $i->id)
+                                    ->update(['discount' => $y * $c->exchange_rate_static]);
+                            }
                         }
                     }
                 }
             }
         }
+
+
+        if ($type == 'server') {
+            $cliengroup = Clientgroup::get();
+            //services
+            $this->UpdatePurchaseCostVipServer();
+            if ($cliendefault == !null) {
+                foreach ($cliengroup as $clg) {
+                    $range = Serverserviceclientgroupcredit::where('client_group_id', $clg->id)->where('currency', 'USD')->get();
+                    foreach ($range as $ra) {
+                        $i = Serverserviceclientgroupcredit::where('client_group_id', $cliendefault->id)
+                            ->where('currency', 'USD')
+                            ->where('server_service_range_id', $ra->server_service_range_id)
+                            ->first();
+                        $giabanle = $i->credit;
+                        if ($ra->serverservicequantityrange->serverservicequantityrange == !null) {
+                            $chietkhau = ($giabanle - ((($giabanle - $ra->serverservicequantityrange->serverservicequantityrange->purchase_cost) / 100) * $clg->chietkhau));
+                            foreach ($currencies as $cu) {
+                                $update = Serverserviceclientgroupcredit::where('server_service_range_id', $ra->server_service_range_id)
+                                    ->where('client_group_id', $clg->id)
+                                    ->where('currency', $cu->currency_code)
+                                    ->update(['credit' => $chietkhau * $cu->exchange_rate_static]);
+                            }
+                        }
+                    }
+                }
+            }
+            //services wise
+            if ($cliendefault == !null) {
+                $wise = Serverservicetypewiseprice::get();
+                foreach ($wise as $wi) {
+                    echo '<hr>';
+                    echo '---------------------services wise------------------------';
+                    echo '<br>';
+                    echo $wi->service_type;
+                    echo '<br>';
+                    echo 'Purchase Cost(Net) :' . $wi->purchase_cost;
+                    if ($wi->adminplus_service == !null) {
+                        echo '<br>';
+                        echo 'Giá bán lẻ: ' . $wi->servicetypegroupprice->where('group_id', $cliendefault->id)->first()->amount;
+                        $giabanle = $wi->servicetypegroupprice->where('group_id', $cliendefault->id)->first()->amount;
+                        echo '<br>';
+                        foreach ($wi->servicetypegroupprice as $groupprice) {
+                            if ($groupprice->clientgroup == !null) {
+                                echo 'Chiết khấu :' . $chietkhau = ($giabanle - ((($giabanle - $wi->purchase_cost) / 100) * $groupprice->clientgroup->chietkhau));
+                                echo '|' . $groupprice->clientgroup->group_name . '|' . $groupprice->id;
+                                Serverservicetypewisegroupprice::where('id', $groupprice->id)
+                                    ->update(['amount' => $chietkhau]);
+                            }
+
+                            echo '<br>';
+                        }
+                        echo '<hr>';
+                    }
+                }
+            }
+        }
+        if ($type == 'supplier' && $id == !null) {
+            //cập nhập phí+ tỉ giá
+            $imeiprice = Imeiservicepricing::where('id_supplier', $id)->get();
+            foreach ($imeiprice as $i) {
+                if ($i->purchasecost == !null) {
+                    $giatransactionfee = ($i->exchangerate * $i->purchasecost) / $exchangerate->exchange_rate_static + (($i->purchasecost / 100) * $i->transactionfee);
+                    Imeiservice::where('id', $i->id)->update(['purchase_cost' => $giatransactionfee]);
+                }
+            }
+            // cập nhập lại giá user
+            $cliengroup = Clientgroup::get();
+            //imei
+            if ($cliendefault == !null) {
+                $imei = Imeiservice::whereHas('imeipricing', function ($query) use ($id){
+                    $query->where('id_supplier',$id);
+                })->get();
+                foreach ($cliengroup as $clg) {
+                    foreach ($imei as $i) {
+                        $imeiprice = Clientgroupprice::where('service_id', $i->id)->where('group_id', $cliendefault->id)->where('currency', 'USD')->first();
+                        if ($imeiprice == !null) {
+                            if ($i->purchase_cost > $i->credit + $imeiprice->discount) {
+                                foreach ($currencies as $c) {
+                                    Clientgroupprice::where('group_id', $cliendefault->id)
+                                        ->where('service_type', 'imei')
+                                        ->where('currency', $c->currency_code)
+                                        ->where('service_id', $i->id)
+                                        ->update(['discount' => ($i->purchase_cost - $i->credit) * $c->exchange_rate_static]);
+                                }
+                            }
+
+                            $giabanle = $i->credit + $imeiprice->discount;
+                            $chietkhau = ($giabanle - ((($giabanle - $i->purchase_cost) / 100) * $clg->chietkhau));
+                            $y = $chietkhau - $i->credit;
+                            foreach ($currencies as $c) {
+                                $updatepriceuse = Clientgroupprice::where('group_id', $clg->id)
+                                    ->where('service_type', 'imei')
+                                    ->where('currency', $c->currency_code)
+                                    ->where('service_id', $i->id)
+                                    ->update(['discount' => $y * $c->exchange_rate_static]);
+                            }
+                        }
+                    }
+                }
+            }
+
+            //services
+            $this->UpdatePurchaseCostVipServer();
+            if ($cliendefault == !null) {
+                foreach ($cliengroup as $clg) {
+                    $range = Serverserviceclientgroupcredit::where('client_group_id', $clg->id)->where('currency', 'USD')->get();
+                    foreach ($range as $ra) {
+                        $i = Serverserviceclientgroupcredit::where('client_group_id', $cliendefault->id)
+                            ->where('currency', 'USD')
+                            ->where('server_service_range_id', $ra->server_service_range_id)
+                            ->first();
+                        $giabanle = $i->credit;
+                        if ($ra->serverservicequantityrange->serverservicequantityrange == !null) {
+                            $chietkhau = ($giabanle - ((($giabanle - $ra->serverservicequantityrange->serverservicequantityrange->purchase_cost) / 100) * $clg->chietkhau));
+                            foreach ($currencies as $cu) {
+                                $update = Serverserviceclientgroupcredit::where('server_service_range_id', $ra->server_service_range_id)
+                                    ->where('client_group_id', $clg->id)
+                                    ->where('currency', $cu->currency_code)
+                                    ->update(['credit' => $chietkhau * $cu->exchange_rate_static]);
+                            }
+                        }
+                    }
+                }
+            }
+            //services wise
+            if ($cliendefault == !null) {
+                $wise = Serverservicetypewiseprice::get();
+                foreach ($wise as $wi) {
+                    echo '<hr>';
+                    echo '---------------------services wise------------------------';
+                    echo '<br>';
+                    echo $wi->service_type;
+                    echo '<br>';
+                    echo 'Purchase Cost(Net) :' . $wi->purchase_cost;
+                    if ($wi->adminplus_service == !null) {
+                        echo '<br>';
+                        echo 'Giá bán lẻ: ' . $wi->servicetypegroupprice->where('group_id', $cliendefault->id)->first()->amount;
+                        $giabanle = $wi->servicetypegroupprice->where('group_id', $cliendefault->id)->first()->amount;
+                        echo '<br>';
+                        foreach ($wi->servicetypegroupprice as $groupprice) {
+                            if ($groupprice->clientgroup == !null) {
+                                echo 'Chiết khấu :' . $chietkhau = ($giabanle - ((($giabanle - $wi->purchase_cost) / 100) * $groupprice->clientgroup->chietkhau));
+                                echo '|' . $groupprice->clientgroup->group_name . '|' . $groupprice->id;
+                                Serverservicetypewisegroupprice::where('id', $groupprice->id)
+                                    ->update(['amount' => $chietkhau]);
+                            }
+
+                            echo '<br>';
+                        }
+                        echo '<hr>';
+                    }
+                }
+            }
+        }
+
     }
 
-    public function Request(Request $request){
-        $type = $request->type;
-        $cliengroup= $request->cliengroup;
-        $supplier= $request->supplier;
-        $this->Reload($type,$cliengroup,$supplier);
-        return back();
+    public function UpdatePurchaseCostVipServer()
+    {
+        $defaultcurrency = Currenciepricing::where('type', '1')->first();
+        $exchangerate = Currencie::find($defaultcurrency->currency_id);
+        $serviceservicepricing = Serviceservicepricing::get();
+        foreach ($serviceservicepricing as $sr) {
+            if ($sr->id_supplier == !null) {
+                $serverservice = Serverservice::find($sr->id);
+                $tipurchasecost = $serverservice->servicepricing->nhacungcap->exchangerate;
+                $transactionfeegd = $serverservice->servicepricing->nhacungcap->transactionfee;
+                $exchangerategoc = $exchangerate->exchange_rate_static;
+                if (!$serverservice->serverservicequantityrange->isEmpty()) {
+                    if ($serverservice->api_id == !null) {
+                        $purchasecost = $serverservice->apiserverservices->credits;
+                        $giatransactionfee = ($tipurchasecost * $purchasecost) / $exchangerategoc + (($purchasecost / 100) * $transactionfeegd);
+                        Serverservice::where('id', $sr->id)->update(['purchase_cost' => $giatransactionfee]);
+                    }
+                    if (!$serverservice->serverservicetypewiseprice->isEmpty())
+                        if ($serverservice->api_id == !null) {
+                            foreach ($serverservice->serverservicetypewiseprice as $a) {
+                                foreach ($serverservice->apiserverservicetypeprice as $apiserverservicetypeprice) {
+                                    if ($apiserverservicetypeprice->service_type == $a->service_type) {
+                                        $purchasecost = $apiserverservicetypeprice->api_price;
+                                    }
+                                }
+                                $giatransactionfee = ($tipurchasecost * $purchasecost) / $exchangerategoc + (($purchasecost / 100) * $transactionfeegd);
+                                Serverservicetypewiseprice::where('id', $a->id)->update(['purchase_cost' => $giatransactionfee]);
+                            }
+                        }
+                }
+            }
+        }
     }
+
 }
