@@ -222,9 +222,8 @@ class Utility
             $supplier = Supplier::find($id);
             foreach ($imeiprice as $i) {
                 if ($i->purchasecost == !null) {
-                    $giatransactionfee = ($supplier->exchangerate * $i->purchasecost) / $exchangerate->exchange_rate_static + (($i->purchasecost / 100) * $i->transactionfee);
+                    $giatransactionfee = ($supplier->exchangerate * $i->purchasecost) / $exchangerate->exchange_rate_static + (($i->purchasecost / 100) * $supplier->transactionfee);
                     Imeiservice::where('id', $i->id)->update(['purchase_cost' => $giatransactionfee]);
-                    echo $giatransactionfee;
                 }
             }
             // cập nhập lại giá user
