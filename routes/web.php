@@ -43,7 +43,7 @@ Route::post('updatesupplier/{id}', 'IMEIController@updatesupplier');
 //cập nhập status
 Route::get('imei/{squirrel}/{any}', 'IMEIController@status');
 //xuất giá
-Route::get('imeiexport', 'IMEIController@export');
+Route::get('imeiexport', 'Export@exportimei');
 
 //chiết khấu phần trăm từng user
 Route::get('clientgroup', 'ClientController@index');
