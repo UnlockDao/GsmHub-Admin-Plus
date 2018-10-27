@@ -160,7 +160,8 @@
                                                     <td>*</td>
                                                     <td colspan="4"><a>{{$a->service_type}}</a></td>
                                                     <td>@if($v->api_id ==! null)
-                                                            @foreach($v->apiserverservicetypeprice as $apiserverservicetypeprice)@if($apiserverservicetypeprice->service_type==$a->service_type)
+                                                            @foreach($a->apiservicetypewisepriceid as $apiserverservicetypeprice)
+                                                                @if($apiserverservicetypeprice->id == $a->api_service_type_wise_price_id)
                                                                 <a data-toggle="tooltip"
                                                                    data-placement="top"
                                                                    data-original-title="{{number_format($apiserverservicetypeprice->api_price*$exchangerate->exchange_rate_static)}} đ">{{$apiserverservicetypeprice->api_price}}</a>

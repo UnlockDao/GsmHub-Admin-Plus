@@ -24,6 +24,10 @@ class Serverservicetypewiseprice extends Model
     {
         return $this->belongsTo('App\Serviceservicepricing','server_service_id','id');
     }
+    public function apiservicetypewisepriceid()
+    {
+        return $this->hasMany('App\Apiserverservicetypeprice','id','api_service_type_wise_price_id');
+    }
 
 
 }

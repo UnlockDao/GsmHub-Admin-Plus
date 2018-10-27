@@ -148,7 +148,7 @@ class Utility
                             $chietkhau = ($giabanle - ((($giabanle - $i->purchase_cost) / 100) * $clg->chietkhau));
                             $y = $chietkhau - $i->credit;
                             foreach ($currencies as $c) {
-                                 Clientgroupprice::where('group_id', $clg->id)
+                                Clientgroupprice::where('group_id', $clg->id)
                                     ->where('service_type', 'imei')
                                     ->where('currency', $c->currency_code)
                                     ->where('service_id', $i->id)
@@ -230,8 +230,8 @@ class Utility
             $cliengroup = Clientgroup::get();
             //imei
             if ($cliendefault == !null) {
-                $imei = Imeiservice::whereHas('imeipricing', function ($query) use ($id){
-                    $query->where('id_supplier',$id);
+                $imei = Imeiservice::whereHas('imeipricing', function ($query) use ($id) {
+                    $query->where('id_supplier', $id);
                 })->get();
                 foreach ($cliengroup as $clg) {
                     foreach ($imei as $i) {
@@ -338,8 +338,8 @@ class Utility
                     if (!$serverservice->serverservicetypewiseprice->isEmpty())
                         if ($serverservice->api_id == !null) {
                             foreach ($serverservice->serverservicetypewiseprice as $a) {
-                                foreach ($serverservice->apiserverservicetypeprice as $apiserverservicetypeprice) {
-                                    if ($apiserverservicetypeprice->service_type == $a->service_type) {
+                                foreach ($a->apiservicetypewisepriceid as $apiserverservicetypeprice) {
+                                    if ($apiserverservicetypeprice->id == $a->api_service_type_wise_price_id) {
                                         $purchasecost = $apiserverservicetypeprice->api_price;
                                     }
                                 }

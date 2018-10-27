@@ -133,7 +133,8 @@
                                                     <td>{{$a->id}}</td>
                                                     <td>{{$a->service_type}}</td>
                                                     <td>@if($serverservice->api_id ==! null)
-                                                            @foreach($serverservice->apiserverservicetypeprice as $apiserverservicetypeprice)@if($apiserverservicetypeprice->service_type==$a->service_type)
+                                                            @foreach($a->apiservicetypewisepriceid as $apiserverservicetypeprice)
+                                                                @if($apiserverservicetypeprice->id == $a->api_service_type_wise_price_id)
                                                                 <input
                                                                         id="purchase_cost_{{$a->id}}"
                                                                         class="form-control"

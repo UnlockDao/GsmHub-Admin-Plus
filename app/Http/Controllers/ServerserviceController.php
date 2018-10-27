@@ -66,7 +66,7 @@ class ServerserviceController extends Controller
     {
         $this->checkServer();
         $this->checkNullUser();
-        $this->UpdatePurchaseCostVip();
+//        $this->UpdatePurchaseCostNet();
         $this->checkApiToNull();
         //
         $defaultcurrency = Currenciepricing::where('type', '1')->first();
@@ -145,7 +145,7 @@ class ServerserviceController extends Controller
 
     }
 
-    public function UpdatePurchaseCostVip(){
+    public function UpdatePurchaseCostNet(){
         $defaultcurrency = Currenciepricing::where('type', '1')->first();
         $exchangerate = Currencie::find($defaultcurrency->currency_id);
         $serviceservicepricing = Serviceservicepricing::get();
@@ -164,8 +164,8 @@ class ServerserviceController extends Controller
                 }else{
                     if($serverservice->api_id ==! null){
                          foreach($serverservice->serverservicetypewiseprice as $a){
-                             foreach($serverservice->apiserverservicetypeprice as $apiserverservicetypeprice){
-                                 if($apiserverservicetypeprice->service_type==$a->service_type){
+                             foreach($a->apiservicetypewisepriceid as $apiserverservicetypeprice){
+                                 if($apiserverservicetypeprice->id == $a->api_service_type_wise_price_id){
                                      $purchasecost=  $apiserverservicetypeprice->api_price;
                                  }}
 
