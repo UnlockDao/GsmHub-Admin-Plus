@@ -20888,8 +20888,6 @@ textarea[resize='horizontal']
 .table th
 {
     font-size: .8125rem;
-
-    white-space: nowrap;
 }
 
 .table.align-items-center td,

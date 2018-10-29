@@ -25,16 +25,6 @@
             });
         }, false);
     </script>
-    <style>
-        .max-lines {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            max-width: 250px;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical
-        }
-    </style>
     <!-- Page content -->
     <div class="container-fluid mt--7">
         <!-- Table -->
