@@ -105,6 +105,7 @@ class HomeController extends Controller
             ->where('amount_debitted', '=', 1)
             ->whereBetween('completed_on', [$tg1, $tg2])
             ->get();
+        if(!$serverchart2->isEmpty()){
         foreach ($serverchart2 as $s) {
             $data_array[] =
                 array(
@@ -172,7 +173,14 @@ class HomeController extends Controller
         $chartcountservervalue = json_encode(array_values($chartservercount));
         $chartcountimeivalue = json_encode(array_values($chartimeicount));
 
+        } else{
+            $chartserverdate = "";
+            $chartcountimeivalue  = "";
+            $chartcountservervalue   = "";
+            $chartimeivalue   = "";
+            $chartservervalue    = "";
 
+        }
         return view('home', compact('chartcountservervalue', 'chartcountimeivalue', 'chartimeivalue', 'chartserverdate', 'chartservervalue', 'serveroder', 'imeioder', 'serveroderday', 'serveroderyesterday', 'serverodermonth', 'serveroderweek', 'imeioderday', 'imeioderyesterday', 'imeioderweek', 'imeiodermonth'));
     }
 }
