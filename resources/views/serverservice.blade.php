@@ -114,8 +114,9 @@
                                     @if($v->server_service_group_id == $g->id )
                                         <tr class="table-info">
                                             <td>{{$v->id}}</td>
-                                            <td><a href="https://s-unlock.com/admin/server-service/edit/{{$v->id}}"
-                                                   class="max-lines" target="_blank" data-toggle="tooltip" data-placement="top"  data-original-title="{{$v->service_name}}">{{$v->service_name}}</a></td>
+                                            <td><a @if($v->serverservicequantityrange->isEmpty() &&$v->serverservicetypewiseprice->isEmpty())
+                                                   style="color: red; background: yellow"
+                                                   @endif href="https://s-unlock.com/admin/server-service/edit/{{$v->id}}"target="_blank" data-toggle="tooltip" data-placement="top"  data-original-title="{{$v->service_name}}">{{$v->service_name}}</a></td>
                                             <td>@if($v->api_id ==! null)<span
                                                         class="badge badge-pill badge-success">API<span>  @else<span
                                                                 class="badge badge-pill badge-info">Manual<span>  @endif
