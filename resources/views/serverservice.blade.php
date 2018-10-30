@@ -220,7 +220,7 @@
                                                            data-placement="top"
                                                            data-original-title="{{number_format($v->purchase_cost*$exchangerate->exchange_rate_static)}} đ">{{number_format($v->purchase_cost,2)}}</a></td>
                                                     <td>@foreach($serverservicequantityrange->serverserviceusercredit as $serverserviceusercredit)
-                                                            @if($serverserviceusercredit->currency == 'USD')
+                                                            @if($serverserviceusercredit->currency == $currenciessite->config_value)
                                                                 @if($v->purchase_cost > $serverserviceusercredit->credit)
                                                                     <span class="badge badge-pill badge-danger">{{number_format($serverserviceusercredit->credit,2)}}
                                                                         <span>
@@ -233,7 +233,7 @@
                                                         @endforeach</td>
                                                     @foreach($clientgroup as $cg)
                                                         <td>@foreach($serverservicequantityrange->serverserviceclientgroupcredit as $serverserviceclientgroupcredit)
-                                                                @if($serverserviceclientgroupcredit->currency=='USD' && $serverserviceclientgroupcredit->client_group_id==$cg->id )
+                                                                @if($serverserviceclientgroupcredit->currency== $currenciessite->config_value && $serverserviceclientgroupcredit->client_group_id==$cg->id )
                                                                     @if($v->purchase_cost > $serverserviceclientgroupcredit->credit)
                                                                         <span class="badge badge-pill badge-danger">{{number_format($serverserviceclientgroupcredit->credit,2)}}
                                                                             <span>

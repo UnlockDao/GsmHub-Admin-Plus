@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Clientgroup;
 use App\Clientgroupprice;
+use App\Config;
 use App\Currencie;
 use App\Currenciepricing;
 use App\Imeiservice;
@@ -49,6 +50,7 @@ class IMEIController extends Controller
 
     public function imei(Request $request)
     {
+        $currenciessite = Config::where('config_var','site_default_currency')->first();
         $this->checkNullUser();
         $this->checkdelete();
         $this->checkimei();
@@ -100,7 +102,7 @@ class IMEIController extends Controller
 
 
 
-        return view('imeiservice', compact('imei_service', 'group', 'usergroup', 'exchangerate','groupsearch','supplier','cachesearch'));
+        return view('imeiservice', compact('imei_service', 'group', 'usergroup', 'exchangerate','groupsearch','supplier','cachesearch','currenciessite'));
     }
 
     public function checkNullUser()
@@ -172,6 +174,9 @@ class IMEIController extends Controller
 
     public function show($id)
     {
+        //get default currency site web
+        $currenciessite = Config::where('config_var','site_default_currency')->first();
+
         $clien = Clientgroup::where('status','active')->get();
         //find default currency
         $defaultcurrency = Currenciepricing::where('type', '1')->first();
@@ -186,7 +191,7 @@ class IMEIController extends Controller
 
         $imeiservice = Imeiservice::find($id);
 
-        $pricegroup = Clientgroupprice::orderBy('group_id', 'desc')->where('currency', 'USD')->where('service_type', 'imei')->where('service_id', $id)->get();
+        $pricegroup = Clientgroupprice::orderBy('group_id', 'desc')->where('currency', $currenciessite->config_value)->where('service_type', 'imei')->where('service_id', $id)->get();
 
 
 

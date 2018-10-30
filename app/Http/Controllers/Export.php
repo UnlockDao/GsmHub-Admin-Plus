@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Clientgroup;
+use App\Config;
 use App\Currencie;
 use App\Currenciepricing;
 use App\Imeiservice;
@@ -16,6 +17,7 @@ use Illuminate\Http\Request;
 class Export
 {
     public function exportimei(Request $request){
+        $currenciessite = Config::where('config_var','site_default_currency')->first();
         //
         $defaultcurrency = Currenciepricing::where('type', '1')->first();
         $exchangerate = Currencie::find($defaultcurrency->currency_id);
@@ -61,10 +63,11 @@ class Export
                 })
                 ->get();
         }
-        return view('export.imeiexport', compact('imei_service', 'group', 'usergroup', 'exchangerate','groupsearch','supplier','cachesearch','currencies'));
+        return view('export.imeiexport', compact('imei_service', 'group', 'usergroup', 'exchangerate','groupsearch','supplier','cachesearch','currencies','currenciessite'));
     }
 
     public function exportserver(Request $request){
+        $currenciessite = Config::where('config_var','site_default_currency')->first();
         $currencies = Currencie::where('display_currency', 'Yes')->get();
         $defaultcurrency = Currenciepricing::where('type', '1')->first();
         $exchangerate = Currencie::find($defaultcurrency->currency_id);
@@ -107,6 +110,6 @@ class Export
                 })
                 ->get();
         }
-        return view('export.serverexport', compact('serverservice','server_service_group','clientgroup','exchangerate','supplier','groupsearch','cachesearch','currencies'));
+        return view('export.serverexport', compact('serverservice','server_service_group','clientgroup','exchangerate','supplier','groupsearch','cachesearch','currencies','currenciessite'));
     }
 }

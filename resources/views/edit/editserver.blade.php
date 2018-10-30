@@ -325,7 +325,7 @@
                                                     <td>{{$serverservicequantityrange->id}}</td>
                                                     <td>{{$serverservicequantityrange->from_range}}
                                                         - {{$serverservicequantityrange->to_range}}</td>
-                                                    <td>@foreach($serverservicequantityrange->serverserviceusercredit as $serverserviceusercredit)@if($serverserviceusercredit->currency == 'USD')
+                                                    <td>@foreach($serverservicequantityrange->serverserviceusercredit as $serverserviceusercredit)@if($serverserviceusercredit->currency == $currenciessite->config_value)
                                                             <input class="form-control"
                                                                    name="credit_{{$serverservicequantityrange->id}}"
                                                                    id="credit_{{$serverservicequantityrange->id}}"
@@ -337,7 +337,7 @@
                                                                    type="text">@endif @endforeach</td>
                                                     @foreach($clientgroup as $cg)
                                                         <td>@foreach($serverservicequantityrange->serverserviceclientgroupcredit as $serverserviceclientgroupcredit)
-                                                                @if($serverserviceclientgroupcredit->currency=='USD' && $serverserviceclientgroupcredit->client_group_id==$cg->id )
+                                                                @if($serverserviceclientgroupcredit->currency== $currenciessite->config_value && $serverserviceclientgroupcredit->client_group_id==$cg->id )
                                                                     <input id="sel_client_group_{{$serverserviceclientgroupcredit->client_group_id}}_{{$serverservicequantityrange->id}}"
                                                                            class="form-control"
                                                                            @if($cliendefault ==! null)
@@ -420,7 +420,7 @@
 
                                 @foreach($clientgroup as $cg)
                                 @foreach($serverservicequantityrange->serverserviceclientgroupcredit as $serverserviceclientgroupcredit)
-                                @if($serverserviceclientgroupcredit->currency=='USD' && $serverserviceclientgroupcredit->client_group_id==$cg->id )
+                                @if($serverserviceclientgroupcredit->currency== $currenciessite->config_value && $serverserviceclientgroupcredit->client_group_id==$cg->id )
                             sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}} = (priceuser_{{$serverservicequantityrange->id}} - (((priceuser_{{$serverservicequantityrange->id}} - giatransactionfee) / 100) *{{$cg->chietkhau}}));
                         console.log(sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}});
 

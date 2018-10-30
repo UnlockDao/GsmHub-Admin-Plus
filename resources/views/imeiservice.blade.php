@@ -140,7 +140,7 @@
                                             </td>
                                             @foreach($usergroup as $u)
                                                 <td>  @foreach($v->clientgroupprice as $cl)
-                                                        @if($cl->currency == 'USD' && $cl->service_type == 'imei' && $cl->group_id == $u->id )
+                                                        @if($cl->currency == $currenciessite->config_value && $cl->service_type == 'imei' && $cl->group_id == $u->id )
                                                             @if($v->purchase_cost == $v->credit + $cl->discount)
                                                                 <span class="badge badge-pill badge-warning"><?php echo number_format($v->credit + $cl->discount, 2); ?><span>
                                                             @elseif($v->purchase_cost > $v->credit + $cl->discount)

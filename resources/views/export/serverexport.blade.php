@@ -135,13 +135,13 @@
                                                     @endif</td>
                                                 <td>{{number_format($v->purchase_cost,2)}}</td>
                                                 <td>@foreach($serverservicequantityrange->serverserviceusercredit as $serverserviceusercredit)
-                                                        @if($serverserviceusercredit->currency == 'USD')
+                                                        @if($serverserviceusercredit->currency == $currenciessite->config_value)
                                                             {{number_format($serverserviceusercredit->credit,2)}}
                                                         @endif
                                                     @endforeach</td>
                                                 @foreach($clientgroup as $cg)
                                                     <td>@foreach($serverservicequantityrange->serverserviceclientgroupcredit as $serverserviceclientgroupcredit)
-                                                            @if($serverserviceclientgroupcredit->currency=='USD' && $serverserviceclientgroupcredit->client_group_id==$cg->id )
+                                                            @if($serverserviceclientgroupcredit->currency==$currenciessite->config_value && $serverserviceclientgroupcredit->client_group_id==$cg->id )
                                                                 {{number_format($serverserviceclientgroupcredit->credit,2)}}
                                                             @endif
                                                         @endforeach

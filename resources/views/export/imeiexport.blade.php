@@ -96,7 +96,7 @@
                                         <td>{{number_format($v->credit, 2)}}</td>
                                         @foreach($usergroup as $u)
                                             <td>  @foreach($v->clientgroupprice as $cl)
-                                                    @if($cl->currency == 'USD' && $cl->service_type == 'imei' && $cl->group_id == $u->id )
+                                                    @if($cl->currency == $currenciessite->config_value && $cl->service_type == 'imei' && $cl->group_id == $u->id )
                                                             @if($cachesearch->currency == null)
                                                             {{number_format($v->credit + $cl->discount, 2)}}
                                                             @else

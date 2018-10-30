@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Clientgroup;
 use App\Clientgroupprice;
+use App\Config;
 use App\Currencie;
 use App\Currenciepricing;
 use App\Imeiservice;
@@ -29,6 +30,7 @@ class Utility
 
     public function Repricing($type, $id)
     {
+        $currenciessite = Config::where('config_var','site_default_currency')->first();
         $defaultcurrency = Currenciepricing::where('type', '1')->first();
         $exchangerate = Currencie::find($defaultcurrency->currency_id);
         $currencies = Currencie::where('display_currency', 'Yes')->get();
@@ -45,7 +47,7 @@ class Utility
                 $imei = Imeiservice::get();
                 foreach ($cliengroup as $clg) {
                     foreach ($imei as $i) {
-                        $imeiprice = Clientgroupprice::where('service_id', $i->id)->where('group_id', $cliendefault->id)->where('currency', 'USD')->first();
+                        $imeiprice = Clientgroupprice::where('service_id', $i->id)->where('group_id', $cliendefault->id)->where('currency', $currenciessite->config_value)->first();
                         if ($imeiprice == !null) {
                             if ($i->purchase_cost > $i->credit + $imeiprice->discount) {
                                 foreach ($currencies as $c) {
@@ -76,10 +78,10 @@ class Utility
             $this->UpdatePurchaseCostVipServer();
             if ($cliendefault == !null) {
                 foreach ($cliengroup as $clg) {
-                    $range = Serverserviceclientgroupcredit::where('client_group_id', $clg->id)->where('currency', 'USD')->get();
+                    $range = Serverserviceclientgroupcredit::where('client_group_id', $clg->id)->where('currency', $currenciessite->config_value)->get();
                     foreach ($range as $ra) {
                         $i = Serverserviceclientgroupcredit::where('client_group_id', $cliendefault->id)
-                            ->where('currency', 'USD')
+                            ->where('currency', $currenciessite->config_value)
                             ->where('server_service_range_id', $ra->server_service_range_id)
                             ->first();
                         $giabanle = $i->credit;
@@ -132,7 +134,7 @@ class Utility
                 $imei = Imeiservice::get();
                 foreach ($cliengroup as $clg) {
                     foreach ($imei as $i) {
-                        $imeiprice = Clientgroupprice::where('service_id', $i->id)->where('group_id', $cliendefault->id)->where('currency', 'USD')->first();
+                        $imeiprice = Clientgroupprice::where('service_id', $i->id)->where('group_id', $cliendefault->id)->where('currency', $currenciessite->config_value)->first();
                         if ($imeiprice == !null) {
                             if ($i->purchase_cost > $i->credit + $imeiprice->discount) {
                                 foreach ($currencies as $c) {
@@ -167,10 +169,10 @@ class Utility
             $this->UpdatePurchaseCostVipServer();
             if ($cliendefault == !null) {
                 foreach ($cliengroup as $clg) {
-                    $range = Serverserviceclientgroupcredit::where('client_group_id', $clg->id)->where('currency', 'USD')->get();
+                    $range = Serverserviceclientgroupcredit::where('client_group_id', $clg->id)->where('currency', $currenciessite->config_value)->get();
                     foreach ($range as $ra) {
                         $i = Serverserviceclientgroupcredit::where('client_group_id', $cliendefault->id)
-                            ->where('currency', 'USD')
+                            ->where('currency', $currenciessite->config_value)
                             ->where('server_service_range_id', $ra->server_service_range_id)
                             ->first();
                         $giabanle = $i->credit;
@@ -235,7 +237,7 @@ class Utility
                 })->get();
                 foreach ($cliengroup as $clg) {
                     foreach ($imei as $i) {
-                        $imeiprice = Clientgroupprice::where('service_id', $i->id)->where('group_id', $cliendefault->id)->where('currency', 'USD')->first();
+                        $imeiprice = Clientgroupprice::where('service_id', $i->id)->where('group_id', $cliendefault->id)->where('currency', $currenciessite->config_value)->first();
                         if ($imeiprice == !null) {
                             if ($i->purchase_cost > $i->credit + $imeiprice->discount) {
                                 foreach ($currencies as $c) {
@@ -266,10 +268,10 @@ class Utility
             $this->UpdatePurchaseCostVipServer();
             if ($cliendefault == !null) {
                 foreach ($cliengroup as $clg) {
-                    $range = Serverserviceclientgroupcredit::where('client_group_id', $clg->id)->where('currency', 'USD')->get();
+                    $range = Serverserviceclientgroupcredit::where('client_group_id', $clg->id)->where('currency', $currenciessite->config_value)->get();
                     foreach ($range as $ra) {
                         $i = Serverserviceclientgroupcredit::where('client_group_id', $cliendefault->id)
-                            ->where('currency', 'USD')
+                            ->where('currency', $currenciessite->config_value)
                             ->where('server_service_range_id', $ra->server_service_range_id)
                             ->first();
                         $giabanle = $i->credit;

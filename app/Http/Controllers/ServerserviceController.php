@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Clientgroup;
+use App\Config;
 use App\Currencie;
 use App\Currenciepricing;
 use App\Serverservice;
@@ -37,7 +38,7 @@ class ServerserviceController extends Controller
                         $create = Serverservicetypewisegroupprice::firstOrCreate(['server_service_id'=>$serverservice->id,
                             'service_type_id'=>$a->id,
                             'group_id'=>$cg->id,
-                            'currency'=>'USD',
+                            'currency'=>$currenciessite->config_value,
                             'amount'=>$a->amount]);
                     }
                 }
@@ -49,10 +50,10 @@ class ServerserviceController extends Controller
                     if ($check == null) {
                         $currencies = Currencie::where('display_currency', 'Yes')->get();
                         foreach ($currencies as $c) {
-                            if( $sr->serverserviceusercredit->where('currency','USD')->first() ==! null){
+                            if( $sr->serverserviceusercredit->where('currency',$currenciessite->config_value)->first() ==! null){
                             $create = Serverserviceclientgroupcredit::firstOrCreate(['server_service_range_id' => $sr->id,
                                 'client_group_id' => $cg->id,
-                                'credit' => $sr->serverserviceusercredit->where('currency','USD')->first()->credit* $c->exchange_rate_static,
+                                'credit' => $sr->serverserviceusercredit->where('currency',$currenciessite->config_value)->first()->credit* $c->exchange_rate_static,
                                 'currency' => $c->currency_code]);
                             }
                         }
@@ -68,6 +69,7 @@ class ServerserviceController extends Controller
         $this->checkNullUser();
         $this->UpdatePurchaseCostNetServer();
         $this->checkApiToNull();
+        $currenciessite = Config::where('config_var','site_default_currency')->first();
         //
         $defaultcurrency = Currenciepricing::where('type', '1')->first();
         $exchangerate = Currencie::find($defaultcurrency->currency_id);
@@ -112,7 +114,7 @@ class ServerserviceController extends Controller
                 ->get();
         }
         
-        return view('serverservice', compact('serverservice','server_service_group','clientgroup','exchangerate','supplier','groupsearch','cachesearch'));
+        return view('serverservice', compact('serverservice','server_service_group','clientgroup','exchangerate','supplier','groupsearch','cachesearch','currenciessite'));
     }
 
     public function checkServer()
@@ -194,7 +196,9 @@ class ServerserviceController extends Controller
 
         $allcurrencies = Currencie::get();
 
-        return view('edit.editserver', compact('serverservice', 'supplier', 'exchangerate','clientgroup','cliendefault','allcurrencies'));
+        $currenciessite = Config::where('config_var','site_default_currency')->first();
+
+        return view('edit.editserver', compact('serverservice', 'supplier', 'exchangerate','clientgroup','cliendefault','allcurrencies','currenciessite'));
     }
 
     public function updatesupplier($id, Request $request)
