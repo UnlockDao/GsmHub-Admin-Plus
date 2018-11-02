@@ -77,6 +77,7 @@
 <script src="{{ asset('assets/vendor/chart.js/dist/Chart.extension.js') }}"></script>
 <!-- Argon JS -->
 <script src="{{ asset('assets/js/argon.js?v=1.0.0') }}"></script>
+<script src="{{ asset('js/tableToExcel.js') }}"></script>
 
 <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>

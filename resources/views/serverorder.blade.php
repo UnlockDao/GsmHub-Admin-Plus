@@ -33,7 +33,7 @@
                         <div class="row">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         <label class="form-control-label">Service Name</label>
                                         <input list="brow" name="service_name" class="form-control form-control-alternative" value="{{$cachesearch->service_name}}">
                                         <datalist id="brow">
@@ -44,7 +44,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-control-label">Time</label>
-                                            <input class="form-control form-control-alternative" type="text" name="datefilter" value="{{$cachesearch->datefilter}}" style="width:300px" autocomplete="off"/>
+                                            <input class="form-control form-control-alternative" type="text" name="datefilter" value="{{$cachesearch->datefilter}}" autocomplete="off"/>
                                     </div>
                                     <div class="col-md-2">
                                         <label class="form-control-label">Status</label>
@@ -79,6 +79,10 @@
                                         <br>
                                         <button class="btn btn-info" type="submit"><i class="fas fa-search"></i></button>
                                     </div>
+                                    <div class="col-md-1">
+                                        <br>
+                                        <button type="button" onclick="tableToExcel('testTable', 'Server Order')" class="btn btn-info pull-right"><i class="ni ni-cloud-download-95"></i></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -87,7 +91,7 @@
                         <h3 class="mb-0">Hóa đơn</h3>
                     </div>
                     <div class="table-responsive">
-                        <table class="table align-items-center table-flush">
+                        <table id="testTable" class="table align-items-center table-flush">
                             <thead class="text-primary">
                                 <th scope="col">ID</th>
                                 <th scope="col">Order code</th>
