@@ -12,11 +12,13 @@
 */
 use App\Http\Controllers\SQL;
 use Illuminate\Support\Facades\Auth;
+
 Route::get('/', function () {
     $sql = new SQL();
     $sql->run();
     return redirect('home');
 });
+
 Route::get('/logout', function () {
     Auth::logout();
     return redirect('home');

@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-
-use App\Currencie;
-use App\Currenciepricing;
+use App\Models\Currencie;
+use App\Models\Currenciepricing;
 use Illuminate\Http\Request;
 
 class CurrencieController extends Controller

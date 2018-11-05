@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Clientgroup;
-use App\Clientgroupprice;
-use App\Config;
-use App\Currencie;
-use App\Currenciepricing;
-use App\Imeiservice;
-use App\Imeiservicecredit;
-use App\Imeiservicegroup;
-use App\Imeiservicepricing;
-use App\Supplier;
+use App\Models\Clientgroup;
+use App\Models\Clientgroupprice;
+use App\Models\Config;
+use App\Models\Currencie;
+use App\Models\Currenciepricing;
+use App\Models\Imeiservice;
+use App\Models\Imeiservicecredit;
+use App\Models\Imeiservicegroup;
+use App\Models\Imeiservicepricing;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 
 class IMEIController extends Controller

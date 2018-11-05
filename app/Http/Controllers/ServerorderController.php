@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\CUtil;
-use App\Serverservice;
-use App\Serverserviceorder;
+use App\Models\Serverservice;
+use App\Models\Serverserviceorder;
 use Illuminate\Http\Request;
 
 class ServerorderController extends Controller

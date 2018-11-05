@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\CUtil;
-use App\Imeiserviceorder;
-use App\Invoice;
-use App\Serverserviceorder;
+use App\Models\Imeiserviceorder;
+use App\Models\Invoice;
+use App\Models\Serverserviceorder;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

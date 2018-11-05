@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\CUtil;
-use App\Imeiserviceorder;
-use App\Imeiservice;
+use App\Models\Imeiserviceorder;
+use App\Models\Imeiservice;
 use Illuminate\Http\Request;
 
 class ImeiorderController extends Controller

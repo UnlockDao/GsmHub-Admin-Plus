@@ -1,23 +1,23 @@
 <?php
 
 
-namespace App;
+namespace App\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
 
 
-class Serviceservicepricing extends Model
+class Imeiservicepricing extends Model
 {
-    protected $table = 'adminplus_service_service';
+    protected $table = 'adminplus_imei_service';
     public $timestamps = false;
     protected $fillable = [
         'id'
     ];
 
-	    public function service()
+	    public function imei()
     {
-        return $this->belongsTo('App\Serverservice','id','id');
+        return $this->belongsTo('App\Imeiservice','id','id');
     }
     public function nhacungcap()
     {

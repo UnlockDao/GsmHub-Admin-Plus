@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Clientgroup;
-use App\Config;
-use App\Currencie;
-use App\Currenciepricing;
-use App\Serverservice;
-use App\Serverserviceclientgroupcredit;
-use App\Serverservicegroup;
-use App\Serverservicequantityrange;
-use App\Serverservicetypewisegroupprice;
-use App\Serverservicetypewiseprice;
-use App\Serverserviceusercredit;
-use App\Serviceservicepricing;
-use App\Supplier;
+use App\Models\Clientgroup;
+use App\Models\Config;
+use App\Models\Currencie;
+use App\Models\Currenciepricing;
+use App\Models\Serverservice;
+use App\Models\Serverserviceclientgroupcredit;
+use App\Models\Serverservicegroup;
+use App\Models\Serverservicequantityrange;
+use App\Models\Serverservicetypewisegroupprice;
+use App\Models\Serverservicetypewiseprice;
+use App\Models\Serverserviceusercredit;
+use App\Models\Serviceservicepricing;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 
 class ServerserviceController extends Controller

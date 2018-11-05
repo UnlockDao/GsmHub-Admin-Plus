@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: NTB
- * Date: 10/9/2018
- * Time: 10:24 AM
- */
 
 namespace App;
-
 
 use DateTime;
 use DateTimeZone;

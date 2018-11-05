@@ -1,15 +1,16 @@
 <?php
 
 
-namespace App;
+namespace App\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
 
 
-class Clientgroup extends Model
+class Config extends Model
 {
-    protected $table = 'client_group';
+    protected $table = 'config_data';
     public $timestamps = false;
+
 }
 

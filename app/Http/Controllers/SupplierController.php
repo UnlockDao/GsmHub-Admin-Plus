@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Imeiservicepricing;
-use App\Serviceservicepricing;
-use App\Supplier;
+use App\Models\Imeiservicepricing;
+use App\Models\Serviceservicepricing;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 
 class SupplierController extends Controller

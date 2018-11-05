@@ -3,19 +3,19 @@
 namespace App\Http\Controllers;
 
 
-use App\Clientgroup;
-use App\Clientgroupprice;
-use App\Config;
-use App\Currencie;
-use App\Currenciepricing;
-use App\Imeiservice;
-use App\Imeiservicepricing;
-use App\Serverservice;
-use App\Serverserviceclientgroupcredit;
-use App\Serverservicetypewisegroupprice;
-use App\Serverservicetypewiseprice;
-use App\Serviceservicepricing;
-use App\Supplier;
+use App\Models\Clientgroup;
+use App\Models\Clientgroupprice;
+use App\Models\Config;
+use App\Models\Currencie;
+use App\Models\Currenciepricing;
+use App\Models\Imeiservice;
+use App\Models\Imeiservicepricing;
+use App\Models\Serverservice;
+use App\Models\Serverserviceclientgroupcredit;
+use App\Models\Serverservicetypewisegroupprice;
+use App\Models\Serverservicetypewiseprice;
+use App\Models\Serviceservicepricing;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 
 class Utility
