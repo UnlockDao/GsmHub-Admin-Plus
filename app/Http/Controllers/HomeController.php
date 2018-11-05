@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CUtil;
 use App\Imeiserviceorder;
+use App\Invoice;
 use App\Serverserviceorder;
 use DateTime;
 use Illuminate\Http\Request;
@@ -88,7 +89,17 @@ class HomeController extends Controller
                 DB::raw('COUNT(*) as value'),
                 DB::raw('sum(if(link_order_id != 0, credit_default_currency, credit_default_currency - purchase_cost)) as profit, sum(if(link_order_id != 0, credit_default_currency, 0 )) as linked_profit')
             ]);
+        $invoicechart = Invoice::whereBetween('date_added', [$tg1, $tg2])
+                        ->where('created_by', '=', 0)
+                        ->where('invoice_status', 'paid')
+                        ->groupBy('date')
+                        ->orderBy('date', 'ASC')
+                        ->get([
+                            DB::raw('date(convert_tz(date_added,"+00:00","+07:00")) as date'),
+                            DB::raw('COUNT(id) as icount'),
+                            DB::raw('sum(invoice_amount) as amt')
+                        ]);
 
-        return view('home', compact('serverchart','imeichart','serveroder','imeioder'));
+        return view('home', compact('serverchart','imeichart','serveroder','imeioder','invoicechart'));
     }
 }

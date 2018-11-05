@@ -78,14 +78,21 @@
             <div class="col-xl-12 col-lg-12">
                 <div class="card card-stats mb-4 mb-xl-0">
                     <div class="card-body">
-                        <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                        <div id="container" style="min-width: 310px; height: 300px; margin: 0 auto"></div>
                     </div>
                 </div>
             </div>
             <div class="col-xl-12 col-lg-12" style="padding-top: 10px">
                 <div class="card card-stats mb-4 mb-xl-0">
                     <div class="card-body">
-                        <div id="pricing" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                        <div id="pricing" style="min-width: 310px; height: 300px; margin: 0 auto"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-12 col-lg-12" style="padding-top: 10px">
+                <div class="card card-stats mb-4 mb-xl-0">
+                    <div class="card-body">
+                        <div id="invoice" style="min-width: 310px; height: 300px; margin: 0 auto"></div>
                     </div>
                 </div>
             </div>
@@ -187,6 +194,47 @@
                 }, {
                     name: 'Server',
                     data: server
+                }]
+            });
+
+            var invoicestring = {!! $invoicechart->pluck('amt') !!};
+            var invoice = invoicestring.map(Number);
+            Highcharts.chart('invoice', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Total invoice'
+                },
+                xAxis: {
+                    categories:  {!! $serverchart->pluck('date') !!}
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: ''
+                    },
+                    stackLabels: {
+                        enabled: true,
+                        style: {
+                            fontWeight: 'bold',
+                            color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                        }
+                    }
+                },
+                colors: [
+                    '#5e72e4',
+                    '#2dce89',
+                ],
+                plotOptions: {
+                    column: {
+                        stacking: 'normal',
+                        colorByPoint: false,
+                    }
+                },
+                series: [{
+                    name: 'Invoice',
+                    data: invoice
                 }]
             });
         </script>
