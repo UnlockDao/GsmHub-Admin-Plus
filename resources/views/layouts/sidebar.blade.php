@@ -104,8 +104,13 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url('supplier') }}">
-                        <i class="ni ni-money-coins text-primary"></i>Suppliers
+                    <a class="nav-link" href="{{ url('imeiorder') }}">
+                        <i class="ni ni-money-coins text-primary"></i>IMEI Orders
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('serverorder') }}">
+                        <i class="ni ni-money-coins text-primary"></i>Server Orders
                     </a>
                 </li>
                 <li class="nav-item">
@@ -114,18 +119,13 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="{{ url('supplier') }}">
+                        <i class="ni ni-money-coins text-primary"></i>Suppliers
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{{ url('currencie') }}">
-                        <i class="ni ni-world-2 text-primary"></i>Currencie
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url('imeiorder') }}">
-                        <i class="ni ni-money-coins text-primary"></i>IMEI Order Report
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url('serverorder') }}">
-                        <i class="ni ni-money-coins text-primary"></i>Server Order Report
+                        <i class="ni ni-world-2 text-primary"></i>Currencies
                     </a>
                 </li>
                 <li class="nav-item">
