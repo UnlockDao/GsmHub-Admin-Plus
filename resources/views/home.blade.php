@@ -112,11 +112,11 @@
             var tofiximei = imeistring.map(Number);
             var serverstring = {!! $serverchart->pluck('profit') !!};
             var tofixserver = serverstring.map(Number);
-            imei = tofiximei.map(function(each_element){
-                return Number(each_element.toFixed(0));
+            imei = tofiximei.map(function (each_element) {
+                return Number(each_element.toFixed(2));
             });
-            server = tofixserver.map(function(each_element){
-                return Number(each_element.toFixed(0));
+            server = tofixserver.map(function (each_element) {
+                return Number(each_element.toFixed(2));
             });
 
             Highcharts.chart('profitchart', {
@@ -153,10 +153,10 @@
                     }
                 },
                 series: [{
-                    name: 'IMEI Service',
+                    name: 'IMEI',
                     data: imei
                 }, {
-                    name: 'Server Service',
+                    name: 'Server',
                     data: server
                 }]
             });
@@ -195,10 +195,10 @@
                     }
                 },
                 series: [{
-                    name: 'IMEI Service',
+                    name: 'IMEI',
                     data: {!! $imeichart->pluck('value') !!}
                 }, {
-                    name: 'Server Service',
+                    name: 'Server',
                     data: {!! $serverchart->pluck('value') !!}
                 }]
             });
