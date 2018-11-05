@@ -17,11 +17,11 @@ class Serviceservicepricing extends Model
 
 	    public function service()
     {
-        return $this->belongsTo('App\Serverservice','id','id');
+        return $this->belongsTo('App\Models\Serverservice','id','id');
     }
     public function nhacungcap()
     {
-        return $this->belongsTo('App\Supplier','id_supplier','id');
+        return $this->belongsTo('App\Models\Supplier','id_supplier','id');
     }
 }
 

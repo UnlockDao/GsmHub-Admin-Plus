@@ -13,7 +13,7 @@ class Imeiservicegroup extends Model
 
     public function imeigroup()
     {
-        return $this->belongsTo('App\Imeiservice','id','imei_service_group_id');
+        return $this->belongsTo('App\Models\Imeiservice','id','imei_service_group_id');
     }
 
 }

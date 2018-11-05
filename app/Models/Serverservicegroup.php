@@ -14,7 +14,7 @@ class Serverservicegroup extends Model
 
     public function servergroup()
     {
-        return $this->belongsTo('App\Serverservice','id','server_service_group_id');
+        return $this->belongsTo('App\Models\Serverservice','id','server_service_group_id');
     }
 }
 

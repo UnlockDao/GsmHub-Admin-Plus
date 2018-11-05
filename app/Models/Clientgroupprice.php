@@ -20,7 +20,7 @@ class Clientgroupprice extends Model
 
     public function chietkhau()
     {
-        return $this->belongsTo('App\Clientgroup', 'group_id', 'id');
+        return $this->belongsTo('App\Models\Clientgroup', 'group_id', 'id');
     }
 }
 

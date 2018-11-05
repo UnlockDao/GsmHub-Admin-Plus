@@ -14,7 +14,7 @@ class Apiserverservicetypeprice extends Model
 
     public function serverservice()
     {
-        return $this->belongsTo('App\Serverservice','api_server_service_id','api_id');
+        return $this->belongsTo('App\Models\Serverservice','api_server_service_id','api_id');
     }
 }
 

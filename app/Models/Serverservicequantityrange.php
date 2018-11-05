@@ -14,16 +14,16 @@ class Serverservicequantityrange extends Model
 
     public function serverserviceclientgroupcredit()
     {
-        return $this->hasMany('App\Serverserviceclientgroupcredit','server_service_range_id','id');
+        return $this->hasMany('App\Models\Serverserviceclientgroupcredit','server_service_range_id','id');
     }
 
     public function serverserviceusercredit()
     {
-        return $this->hasMany('App\Serverserviceusercredit','server_service_range_id','id');
+        return $this->hasMany('App\Models\Serverserviceusercredit','server_service_range_id','id');
     }
     public function serverservicequantityrange()
     {
-        return $this->belongsTo('App\Serverservice','server_service_id','id');
+        return $this->belongsTo('App\Models\Serverservice','server_service_id','id');
     }
 
 

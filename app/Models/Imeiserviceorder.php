@@ -14,7 +14,7 @@ class Imeiserviceorder extends Model
 
     public function imeiservice()
     {
-        return $this->belongsTo('App\Imeiservice','imei_service_id','id');
+        return $this->belongsTo('App\Models\Imeiservice','imei_service_id','id');
     }
 }
 

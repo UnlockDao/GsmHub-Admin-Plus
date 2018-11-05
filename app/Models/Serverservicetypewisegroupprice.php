@@ -20,7 +20,7 @@ class Serverservicetypewisegroupprice extends Model
     ];
     public function clientgroup()
     {
-        return $this->belongsTo('App\Clientgroup','group_id','id');
+        return $this->belongsTo('App\Models\Clientgroup','group_id','id');
     }
 
 

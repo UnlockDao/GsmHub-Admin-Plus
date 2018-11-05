@@ -14,15 +14,15 @@ class Imeiservice extends Model
 	
 	    public function clientgroupprice()
     {
-        return $this->hasMany('App\Clientgroupprice','service_id','id');
+        return $this->hasMany('App\Models\Clientgroupprice','service_id','id');
     }
 	    public function apiserverservices()
     {
-        return $this->belongsTo('App\Apiserverservices','api_id','id');
+        return $this->belongsTo('App\Models\Apiserverservices','api_id','id');
     }
     public function imeipricing()
     {
-        return $this->belongsTo('App\Imeiservicepricing','id','id');
+        return $this->belongsTo('App\Models\Imeiservicepricing','id','id');
     }
 }
 

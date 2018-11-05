@@ -14,7 +14,7 @@ class Currencie extends Model
 
     public function currenciepricing()
     {
-        return $this->belongsTo('App\Currenciepricing','id','currency_id');
+        return $this->belongsTo('App\Models\Currenciepricing','id','currency_id');
     }
 }
 

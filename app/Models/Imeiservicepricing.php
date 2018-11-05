@@ -17,11 +17,11 @@ class Imeiservicepricing extends Model
 
 	    public function imei()
     {
-        return $this->belongsTo('App\Imeiservice','id','id');
+        return $this->belongsTo('App\Models\Imeiservice','id','id');
     }
     public function nhacungcap()
     {
-        return $this->belongsTo('App\Supplier','id_supplier','id');
+        return $this->belongsTo('App\Models\Supplier','id_supplier','id');
     }
 }
 

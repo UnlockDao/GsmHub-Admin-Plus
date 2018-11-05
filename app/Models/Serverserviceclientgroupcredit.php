@@ -19,11 +19,11 @@ class Serverserviceclientgroupcredit extends Model
     ];
     public function serverservicequantityrange()
     {
-        return $this->belongsTo('App\Serverservicequantityrange','server_service_range_id','id');
+        return $this->belongsTo('App\Models\Serverservicequantityrange','server_service_range_id','id');
     }
     public function clientgroup()
     {
-        return $this->belongsTo('App\Clientgroup','client_group_id','id');
+        return $this->belongsTo('App\Models\Clientgroup','client_group_id','id');
     }
 
 

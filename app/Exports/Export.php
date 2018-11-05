@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Serverserviceorder;
+use App\Models\Serverserviceorder;
 use Maatwebsite\Excel\Concerns\FromCollection;
 
 class Export implements FromCollection

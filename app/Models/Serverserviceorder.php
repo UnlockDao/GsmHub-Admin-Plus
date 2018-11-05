@@ -14,7 +14,7 @@ class Serverserviceorder extends Model
 
     public function serverservice()
     {
-        return $this->belongsTo('App\Serverservice','server_service_id','id');
+        return $this->belongsTo('App\Models\Serverservice','server_service_id','id');
     }
 }
 
