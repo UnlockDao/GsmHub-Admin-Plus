@@ -16,7 +16,7 @@
                     type: 'get',
                     data: 'id=' + ida,
                     success: function (result) {
-                        $.notify({icon: "notifications", message: result});
+                        //$.notify({icon: "notifications", message: result});
                     },
                     error: function (result) {
                         alert('error');
@@ -51,7 +51,7 @@
                                     <td>
                                         <div class="togglebutton">
                                             <label id="{{$v->id}}" class="custom-toggle">
-                                                <input class="status" id="check{{$v->id}}" type="checkbox" @if($v->administrator_role_id == '1') disabled checked @endif
+                                                <input class="status" id="check{{$v->id}}" type="checkbox" @if($v->user_id == '1' || $v->user->is_super_admin == '1') disabled checked @endif
                                                 @if($v->role_adminplus == '1' )checked="" @endif>
                                                 <span class="custom-toggle-slider rounded-circle"></span>
                                             </label>

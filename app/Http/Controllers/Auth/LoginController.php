@@ -20,32 +20,10 @@ class LoginController extends Controller
     public function postLogin(Request $request)
     {
         $users = User::where('user_name', $request->email)->where('user_access', 'Admin')->first();
-        if($users ==! null){
-        $admin = Administrator::where('user_id', $users->user_id)->where('administrator_role_id', '1')->first();
-        if ($admin == !null) {
-            if ($users == !null) {
-                $hash = $users->bba_token;
-            } else {
-                $hash = '';
-            }
-            $user = User::where('user_name', $request->email)
-                ->where('password', md5($request->password . $hash))
-                ->first();
-
-            if ($user == !null) {
-                Auth::login($user);
-                return redirect('/');
-            } else {
-                return redirect('/');
-            }
-        } else {
-            $admin = Administrator::where('user_id', $users->user_id)->where('role_adminplus', '1')->first();
+        if ($users == !null) {
+            $admin = Administrator::where('user_id', $users->user_id)->where('administrator_role_id', '!=', '0')->where('role_adminplus', '1')->first();
             if ($admin == !null) {
-                if ($users == !null) {
-                    $hash = $users->bba_token;
-                } else {
-                    $hash = '';
-                }
+                $hash = $users->bba_token;
                 $user = User::where('user_name', $request->email)
                     ->where('password', md5($request->password . $hash))
                     ->first();
@@ -59,8 +37,7 @@ class LoginController extends Controller
             } else {
                 return redirect('/');
             }
-        }
-        }else{
+        } else {
             return redirect('/');
         }
     }
@@ -68,16 +45,23 @@ class LoginController extends Controller
     public function role()
     {
         $administrator = Administrator::get();
-        return view('role',compact('administrator'));
+        foreach ($administrator as $v) {
+            if ($v->user_id == '1' || $v->user->is_super_admin == '1') {
+                $role = Administrator::find($v->id);
+                $role->role_adminplus = 1;
+                $role->save();
+            }
+        }
+        return view('role', compact('administrator'));
     }
 
     public function status($par = NULL, $par2 = NULL)
     {
         if ($par == "status") {
             $id = $_GET['id'];
-            $imei = Administrator::find($id);
-            $imei->role_adminplus = $par2;
-            $imei->save();
+            $role = Administrator::find($id);
+            $role->role_adminplus = $par2;
+            $role->save();
             if ($par2 == '1') {
                 echo 'Active';
             } else {
