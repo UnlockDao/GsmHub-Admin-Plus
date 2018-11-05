@@ -21,7 +21,7 @@ class ServerorderController extends Controller
         $datefilter = $request->datefilter;
         $tg = explode(" - ", $datefilter);
         if ($request->view == null) {
-            $view = 10;
+            $view = 100;
         } else {
             $view = $request->view;
         }

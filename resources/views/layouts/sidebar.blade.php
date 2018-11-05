@@ -95,42 +95,42 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('imei') }}">
-                        <i class="ni ni-atom text-primary"></i> IMEI
+                        <i class="ni ni-atom text-primary"></i>IMEI Services
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('serverservice') }}">
-                        <i class="ni ni-building text-primary"></i> Server
+                        <i class="ni ni-building text-primary"></i>Server Services
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('supplier') }}">
-                        <i class="ni ni-money-coins text-primary"></i> Supplier
+                        <i class="ni ni-money-coins text-primary"></i>Suppliers
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('clientgroup') }}">
-                        <i class="ni ni-circle-08 text-primary"></i> Client Group
+                        <i class="ni ni-circle-08 text-primary"></i>Client Group
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('currencie') }}">
-                        <i class="ni ni-world-2 text-primary"></i> Currencie
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url('role') }}">
-                        <i class="ni ni-key-25 text-primary"></i> Role
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url('serverorder') }}">
-                        <i class="ni ni-money-coins text-primary"></i> Server Oder Report
+                        <i class="ni ni-world-2 text-primary"></i>Currencie
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('imeiorder') }}">
-                        <i class="ni ni-money-coins text-primary"></i> IMEI Oder Report
+                        <i class="ni ni-money-coins text-primary"></i>IMEI Order Report
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('serverorder') }}">
+                        <i class="ni ni-money-coins text-primary"></i>Server Order Report
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('role') }}">
+                        <i class="ni ni-key-25 text-primary"></i>Admin Roles
                     </a>
                 </li>
             </ul>
