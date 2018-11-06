@@ -78,7 +78,7 @@
                             <div class="row">
                                 <div class="col">
                                     <h5 class="card-title text-uppercase text-muted mb-0">Total Income</h5>
-                                    <span class="h2 font-weight-bold mb-0">... USD</span>
+                                    <span class="h2 font-weight-bold mb-0">{{$invoice->where('currency','USD')->first()->amt}} USD</span>
                                 </div>
                                 <div class="col-auto">
                                     <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
@@ -87,7 +87,7 @@
                                 </div>
                             </div>
                             <p class="mt-3 mb-0 text-muted text-sm" style="font-weight: bold;">
-                                <span class="text-success mr-2">...</span>
+                                <span class="text-success mr-2">{{number_format(($invoice->where('currency','USD')->first()->amt)*22000)}}</span>
                                 <span class="text-nowrap">VND</span>
                             </p>
                         </div>
@@ -186,10 +186,10 @@
 
             Highcharts.chart('container', {
                 chart: {
-                    type: 'column'
+                    type: 'line'
                 },
                 title: {
-                    text: 'Completed Orders'
+                    text: 'Orders'
                 },
                 xAxis: {
                     categories: {!! $serverchart->pluck('date') !!}

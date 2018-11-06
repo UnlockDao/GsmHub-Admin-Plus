@@ -56,6 +56,12 @@ class HomeController extends Controller
             ->where('credit_default_currency', '!=', 0)
             ->selectRaw('sum(credit_default_currency - ( purchase_cost * IF( quantity >0, quantity, 1 ) ) ) as profit')
             ->first();
+        $invoice = Invoice::whereBetween('date_added', [$tg1, $tg2])
+            ->where('created_by', '=', 0)
+            ->where('invoice_status', 'paid')
+            ->select(DB::raw('count(id) as icount, sum(invoice_amount) as amt, currency'))
+            ->groupBy('currency')
+            ->get();
         //get day in month
         $date = DateTime::createFromFormat("Y-n", "2018-11");
         $datesArray = array();
@@ -100,6 +106,6 @@ class HomeController extends Controller
                             DB::raw('sum(invoice_amount) as amt')
                         ]);
 
-        return view('home', compact('serverchart','imeichart','serveroder','imeioder','invoicechart'));
+        return view('home', compact('serverchart','imeichart','serveroder','imeioder','invoicechart','invoice'));
     }
 }
