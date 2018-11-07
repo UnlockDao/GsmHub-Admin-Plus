@@ -3,7 +3,9 @@
     <style>
         .table .thead-light th{
             min-width: 100px;
-        }
+        }.highcharts-background {
+             display: none;
+         }
     </style>
     <div class="container-fluid">
         <div class="header-body">
