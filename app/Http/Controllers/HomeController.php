@@ -9,7 +9,6 @@ use App\Models\Serverserviceorder;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use function MongoDB\BSON\toJSON;
 
 class HomeController extends Controller
 {
@@ -107,6 +106,16 @@ class HomeController extends Controller
                 DB::raw('sum(invoice_amount) as amt')
             ]);
 
+
+        $pendingoder = $this->pendingoder();;
+        $ordercount = $this->thismonthordercount();
+        $topservice = $this->topserviceordercount();
+
+        return view('home', compact('serverchart', 'imeichart', 'serveroder', 'imeioder', 'invoicechart', 'invoice', 'pendingoder', 'ordercount', 'topservice'));
+    }
+
+    public function pendingoder()
+    {
         $return_arr = [];
         $arr = [];
         $stat_arr = ['today_new', 'today_accepted'];
@@ -128,9 +137,72 @@ class HomeController extends Controller
 
         $return_arr['ImeiServiceOrder'] = $arri;
         $return_arr['ServerServiceOrder'] = $arrs;
-        $pendingoder = $return_arr;
-
-
-        return view('home', compact('serverchart', 'imeichart', 'serveroder', 'imeioder', 'invoicechart', 'invoice','pendingoder'));
+        return $return_arr;
     }
+
+    public function thismonthordercount()
+    {
+        $date_str = date('Y-m-d');
+        $return_arr = [];
+        $return_arr['imei'] = '';
+        $return_arr['server'] = '';
+        $return_arr['imeiREJECTED'] = '';
+        $return_arr['serverREJECTED'] = '';
+        $year = date('Y');
+        $month = date('m');
+        $imei_recds = ImeiServiceOrder::whereRaw('YEAR(convert_tz(completed_on,"+00:00","+07:00")) = ' . $year)->whereRaw('MONTH(convert_tz(completed_on,"+00:00","+07:00")) = ' . $month)->where('status', '=', 'COMPLETED')->selectRaw('day(convert_tz(completed_on,"+00:00","+07:00")) as day, count(id) as total')->groupby('day')->pluck('total', 'day');
+        $imei_recdsREJECTED = ImeiServiceOrder::whereRaw('YEAR(convert_tz(date_rejected,"+00:00","+07:00")) = ' . $year)->whereRaw('MONTH(convert_tz(date_rejected,"+00:00","+07:00")) = ' . $month)->where('status', '=', 'REJECTED')->selectRaw('day(convert_tz(date_rejected,"+00:00","+07:00")) as day, count(id) as total')->groupby('day')->pluck('total', 'day');
+        $server_recds = ServerServiceOrder::whereRaw('YEAR(convert_tz(completed_on,"+00:00","+07:00")) = ' . $year)->whereRaw('MONTH(convert_tz(completed_on,"+00:00","+07:00")) = ' . $month)->where('status', '=', 'COMPLETED')->selectraw('day(convert_tz(completed_on,"+00:00","+07:00")) as day, count(id) as total')->groupby('day')->pluck('total', 'day');
+        $server_recdsREJECTED = ServerServiceOrder::whereRaw('YEAR(convert_tz(date_rejected,"+00:00","+07:00")) = ' . $year)->whereRaw('MONTH(convert_tz(date_rejected,"+00:00","+07:00")) = ' . $month)->where('status', '=', 'REJECTED')->selectraw('day(convert_tz(date_rejected,"+00:00","+07:00")) as day, count(id) as total')->groupby('day')->pluck('total', 'day');
+        $mont = ['1', '02', '03', '04', '05', '6', '07', '08', '09', '10', '11', '12'];
+        $type = ['imei', 'server'];
+        for ($month = 1; $month <= 31; ++$month) {
+            $imei_cnt = (isset($imei_recds[$month]) ? $imei_recds[$month] : 0);
+            $imei_cntREJECTED = (isset($imei_recdsREJECTED[$month]) ? $imei_recdsREJECTED[$month] : 0);
+
+            $server_cnt = (isset($server_recds[$month]) ? $server_recds[$month] : 0);
+            $server_cntREJECTED = (isset($server_recdsREJECTED[$month]) ? $server_recdsREJECTED[$month] : 0);
+
+            $return_arr['imei'] .= $imei_cnt . ',';
+            $return_arr['imeiREJECTED'] .= $imei_cntREJECTED . ',';
+
+            $return_arr['server'] .= $server_cnt . ',';
+            $return_arr['serverREJECTED'] .= $server_cntREJECTED . ',';
+        }
+        $return_arr['imei'] = rtrim($return_arr['imei'], ',');
+        $return_arr['imeiREJECTED'] = rtrim($return_arr['imeiREJECTED'], ',');
+
+        $return_arr['server'] = rtrim($return_arr['server'], ',');
+        $return_arr['serverREJECTED'] = rtrim($return_arr['serverREJECTED'], ',');
+
+        return $return_arr;
+    }
+
+    public function topserviceordercount()
+    {
+        $return_arr = [];
+        $return_arr['imei'] = '';
+        $return_arr['server'] = '';
+        $return_arr['imei'] = ImeiServiceOrder::leftjoin('imei_service', 'imei_service_id', '=', 'imei_service.id')
+            ->where('imei_service_order.status', 'COMPLETED')
+            ->where('api_submit_status', 'submitted')
+            ->select('imei_service.id', 'imei_service.service_name',
+                DB::raw("count('imei_service_order.id') as cnt"),
+                DB::raw('sum(if(link_order_id != 0, imei_service_order.credit_default_currency, imei_service_order.credit_default_currency - imei_service_order.purchase_cost)) as profit, sum(if(link_order_id != 0, credit_default_currency, 0 )) as linked_profit'))
+            ->groupBy('imei_service_id')
+            ->orderBy('cnt', 'DESC')
+            ->take(10)
+            ->get();
+        $return_arr['server'] = ServerServiceOrder::leftjoin('server_service', 'server_service_id', '=', 'server_service.id')
+            ->where('server_service_order.status', 'COMPLETED')->where('api_submit_status', 'submitted')
+            ->select('server_service.id', 'server_service.service_name',
+                DB::raw("count('server_service_order.id') as cnt"),
+                DB::raw("sum(server_service_order.credit_default_currency - ( server_service_order.purchase_cost * IF( quantity >0, server_service_order.quantity, 1 ) ) ) as profit"))
+            ->groupBy('server_service_id')
+            ->orderBy('cnt', 'DESC')
+            ->take(10)
+            ->get();
+        return $return_arr;
+    }
+
 }

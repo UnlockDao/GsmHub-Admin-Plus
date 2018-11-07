@@ -22,7 +22,11 @@
                             <p class="mt-3 mb-0 text-muted text-sm" style="font-weight: bold;">
                                 <span class="text-success mr-2">{{number_format($imeioder->profit*22000)}} </span>
                                 <span class="text-nowrap">VND</span>
-                                <span class="float-right text-success">New: {{current($pendingoder['ImeiServiceOrder'])}}| Accepted: {{next($pendingoder['ImeiServiceOrder'])}}</span>
+                                <span class="float-right text-success"><a
+                                            href="https://s-unlock.com/admin/order-history/service-wise"
+                                            target="_blank">New: {{current($pendingoder['ImeiServiceOrder'])}}</a> | <a
+                                            href="https://s-unlock.com/admin/order-history/reply-accepted-order?type=quick"
+                                            target="_blank">Accepted: {{next($pendingoder['ImeiServiceOrder'])}}</a></span>
 
                             </p>
                         </div>
@@ -46,7 +50,11 @@
                             <p class="mt-3 mb-0 text-muted text-sm" style="font-weight: bold;">
                                 <span class="text-success mr-2">{{number_format($serveroder->profit*22000)}} </span>
                                 <span class="text-nowrap">VND</span>
-                                <span class="float-right text-success">New: {{current($pendingoder['ServerServiceOrder'])}}| Accepted: {{next($pendingoder['ServerServiceOrder'])}}</span>
+                                <span class="float-right text-success"><a
+                                            href="https://s-unlock.com/admin/server-order-history/service-wise"
+                                            target="_blank">New: {{current($pendingoder['ServerServiceOrder'])}}</a> | <a
+                                            href="https://s-unlock.com/admin/server-order-history/reply-accepted-order?type=quick"
+                                            target="_blank">Accepted: {{next($pendingoder['ServerServiceOrder'])}}</a></span>
                             </p>
                         </div>
                     </div>
@@ -81,7 +89,8 @@
                             <div class="row">
                                 <div class="col">
                                     <h5 class="card-title text-uppercase text-muted mb-0">Total Income</h5>
-                                    <span class="h2 font-weight-bold mb-0">{{$invoice->where('currency','USD')->first()->amt}} USD</span>
+                                    <span class="h2 font-weight-bold mb-0">{{$invoice->where('currency','USD')->first()->amt}}
+                                        USD</span>
                                 </div>
                                 <div class="col-auto">
                                     <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
@@ -125,6 +134,71 @@
                 <div class="card card-stats mb-4 mb-xl-0">
                     <div class="card-body">
                         <div id="invoice" style="min-width: 310px; height: 300px; margin: 0 auto"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-6 col-lg-6" style="padding-top: 10px">
+                <div class="card shadow">
+                    <div class="card-header border-0">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h3 class="mb-0">Top Service IMEI Orders</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <!-- Projects table -->
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Service Name</th>
+                                <th scope="col">Total Orders</th>
+                                <th scope="col">Total Profit</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($topservice['imei'] as $i)
+                                <tr>
+                                    <th scope="row">{{$i->service_name}}</th>
+                                    <td>{{$i->cnt}}</td>
+                                    <td>{{number_format($i->profit,2)}}</td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-6" style="padding-top: 10px">
+                <div class="card shadow">
+                    <div class="card-header border-0">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h3 class="mb-0">Top Service Server Orders</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <!-- Projects table -->
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Service Name</th>
+                                <th scope="col">Total Orders</th>
+                                <th scope="col">Total Profit</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($topservice['server'] as $i)
+                                <tr>
+                                    <th scope="row">{{$i->service_name}}</th>
+                                    <td>{{$i->cnt}}</td>
+                                    <td>{{number_format($i->profit,2)}}</td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -189,13 +263,13 @@
 
             Highcharts.chart('container', {
                 chart: {
-                    type: 'line'
+                    type: 'column'
                 },
                 title: {
                     text: 'Orders'
                 },
                 xAxis: {
-                    categories: {!! $serverchart->pluck('date') !!}
+                    categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
                 },
                 yAxis: {
                     min: 0,
@@ -213,6 +287,8 @@
                 colors: [
                     '#5e72e4',
                     '#2dce89',
+                    'red',
+                    'yellow',
                 ],
                 plotOptions: {
                     column: {
@@ -222,10 +298,16 @@
                 },
                 series: [{
                     name: 'IMEI',
-                    data: {!! $imeichart->pluck('value') !!}
+                    data: [{{$ordercount['imei']}}]
                 }, {
                     name: 'Server',
-                    data: {!! $serverchart->pluck('value') !!}
+                    data: [{{$ordercount['server']}}]
+                }, {
+                    name: 'IMEI REJECTED',
+                    data: [{{$ordercount['imeiREJECTED']}}]
+                }, {
+                    name: 'Server REJECTED',
+                    data: [{{$ordercount['serverREJECTED']}}]
                 }]
             });
 
