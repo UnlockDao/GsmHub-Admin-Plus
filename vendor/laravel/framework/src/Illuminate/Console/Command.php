@@ -123,7 +123,7 @@ class Command extends SymfonyCommand
      */
     protected function configureUsingFluentDefinition()
     {
-        [$name, $arguments, $options] = Parser::parse($this->signature);
+        list($name, $arguments, $options) = Parser::parse($this->signature);
 
         parent::__construct($this->name = $name);
 

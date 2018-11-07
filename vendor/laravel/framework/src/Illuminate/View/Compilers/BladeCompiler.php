@@ -272,7 +272,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
      */
     protected function parseToken($token)
     {
-        [$id, $content] = $token;
+        list($id, $content) = $token;
 
         if ($id == T_INLINE_HTML) {
             foreach ($this->compilers as $type) {

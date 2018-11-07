@@ -167,7 +167,7 @@ class RedisQueue extends Queue implements QueueContract
             return;
         }
 
-        [$job, $reserved] = $nextJob;
+        list($job, $reserved) = $nextJob;
 
         if ($reserved) {
             return new RedisJob(

@@ -9,6 +9,7 @@ use App\Models\Serverserviceorder;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use function MongoDB\BSON\toJSON;
 
 class HomeController extends Controller
 {
@@ -96,16 +97,40 @@ class HomeController extends Controller
                 DB::raw('sum(if(link_order_id != 0, credit_default_currency, credit_default_currency - purchase_cost)) as profit, sum(if(link_order_id != 0, credit_default_currency, 0 )) as linked_profit')
             ]);
         $invoicechart = Invoice::whereBetween('date_added', [$tg1, $tg2])
-                        ->where('created_by', '=', 0)
-                        ->where('invoice_status', 'paid')
-                        ->groupBy('date')
-                        ->orderBy('date', 'ASC')
-                        ->get([
-                            DB::raw('date(convert_tz(date_added,"+00:00","+07:00")) as date'),
-                            DB::raw('COUNT(id) as icount'),
-                            DB::raw('sum(invoice_amount) as amt')
-                        ]);
+            ->where('created_by', '=', 0)
+            ->where('invoice_status', 'paid')
+            ->groupBy('date')
+            ->orderBy('date', 'ASC')
+            ->get([
+                DB::raw('date(convert_tz(date_added,"+00:00","+07:00")) as date'),
+                DB::raw('COUNT(id) as icount'),
+                DB::raw('sum(invoice_amount) as amt')
+            ]);
 
-        return view('home', compact('serverchart','imeichart','serveroder','imeioder','invoicechart','invoice'));
+        $return_arr = [];
+        $arr = [];
+        $stat_arr = ['today_new', 'today_accepted'];
+        foreach ($stat_arr as $fld) {
+            $arr[$fld] = 0;
+        }
+        $stat_qryi = ImeiServiceOrder::SELECTRAW("sum(IF ((status = '' AND ( api_submit_status = 'pending_activation' OR api_submit_status = 'resubmit') ), 1, 0 )) as today_new, " . "sum(IF ((status = 'ACTIVE' AND  api_submit_status = 'submitted'), 1, 0 )) as today_accepted")->first();
+        $stat_qrys = ServerServiceOrder::SELECTRAW("sum(IF ((status = '' AND ( api_submit_status = 'pending_activation' OR api_submit_status = 'resubmit') ), 1, 0 )) as today_new, " . "sum(IF ((status = 'ACTIVE' AND  api_submit_status = 'submitted'), 1, 0 )) as today_accepted")->first();
+        if ($stat_qryi) {
+            foreach ($stat_arr as $fld) {
+                $arri[$fld] = (isset($stat_qryi[$fld]) && $stat_qryi[$fld] ? (int)($stat_qryi[$fld]) : 0);
+            }
+        }
+        if ($stat_qrys) {
+            foreach ($stat_arr as $fld) {
+                $arrs[$fld] = (isset($stat_qrys[$fld]) && $stat_qrys[$fld] ? (int)($stat_qrys[$fld]) : 0);
+            }
+        }
+
+        $return_arr['ImeiServiceOrder'] = $arri;
+        $return_arr['ServerServiceOrder'] = $arrs;
+        $pendingoder = $return_arr;
+
+
+        return view('home', compact('serverchart', 'imeichart', 'serveroder', 'imeioder', 'invoicechart', 'invoice','pendingoder'));
     }
 }

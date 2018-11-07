@@ -6,6 +6,7 @@ use Countable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Contracts\Translation\Loader;
 use Illuminate\Support\NamespacedItemResolver;
@@ -112,7 +113,7 @@ class Translator extends NamespacedItemResolver implements TranslatorContract
      */
     public function get($key, array $replace = [], $locale = null, $fallback = true)
     {
-        [$namespace, $group, $item] = $this->parseKey($key);
+        list($namespace, $group, $item) = $this->parseKey($key);
 
         // Here we will get the locale that should be used for the language line. If one
         // was not passed, we will use the default locales which was given to us when
@@ -264,6 +265,8 @@ class Translator extends NamespacedItemResolver implements TranslatorContract
         $replace = $this->sortReplacements($replace);
 
         foreach ($replace as $key => $value) {
+            // $value = $value instanceof HtmlString ? $value->toHtml() : e($value);
+
             $line = str_replace(
                 [':'.$key, ':'.Str::upper($key), ':'.Str::ucfirst($key)],
                 [$value, Str::upper($value), Str::ucfirst($value)],
@@ -298,7 +301,7 @@ class Translator extends NamespacedItemResolver implements TranslatorContract
     public function addLines(array $lines, $locale, $namespace = '*')
     {
         foreach ($lines as $key => $value) {
-            [$group, $item] = explode('.', $key, 2);
+            list($group, $item) = explode('.', $key, 2);
 
             Arr::set($this->loaded, "$namespace.$group.$locale.$item", $value);
         }

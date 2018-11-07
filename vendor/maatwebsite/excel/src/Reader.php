@@ -4,15 +4,13 @@ namespace Maatwebsite\Excel;
 
 use InvalidArgumentException;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
-use Maatwebsite\Excel\Events\AfterImport;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\BeforeImport;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Contracts\Filesystem\Factory;
+use Illuminate\Filesystem\FilesystemManager;
 use PhpOffice\PhpSpreadsheet\Reader\IReader;
 use Maatwebsite\Excel\Factories\ReaderFactory;
 use Maatwebsite\Excel\Concerns\MapsCsvSettings;
@@ -48,14 +46,14 @@ class Reader
     protected $currentFile;
 
     /**
-     * @var Factory
+     * @var FilesystemManager
      */
     private $filesystem;
 
     /**
-     * @param Factory $filesystem
+     * @param FilesystemManager $filesystem
      */
-    public function __construct(Factory $filesystem)
+    public function __construct(FilesystemManager $filesystem)
     {
         $this->filesystem = $filesystem;
 
@@ -87,15 +85,13 @@ class Reader
 
         $this->beforeReading($import, $reader);
 
-        DB::transaction(function () {
-            foreach ($this->sheetImports as $index => $sheetImport) {
-                $sheet = Sheet::make($this->spreadsheet, $index);
-                $sheet->import($sheetImport, $sheet->getStartRow($sheetImport));
-                $sheet->disconnect();
-            }
-        });
+        foreach ($this->sheetImports as $index => $sheetImport) {
+            $sheet = Sheet::make($this->spreadsheet, $index);
+            $sheet->import($sheetImport, $sheet->getStartRow($sheetImport));
+            $sheet->disconnect();
+        }
 
-        $this->afterReading($import);
+        $this->garbageCollect();
 
         return $this;
     }
@@ -124,7 +120,7 @@ class Reader
             $sheet->disconnect();
         }
 
-        $this->afterReading($import);
+        $this->garbageCollect();
 
         return $sheets;
     }
@@ -153,7 +149,7 @@ class Reader
             $sheet->disconnect();
         }
 
-        $this->afterReading($import);
+        $this->garbageCollect();
 
         return $sheets;
     }
@@ -276,10 +272,6 @@ class Reader
 
         $reader = ReaderFactory::make($this->currentFile, $readerType);
 
-        if (method_exists($reader, 'setReadDataOnly')) {
-            $reader->setReadDataOnly(config('excel.imports.read_only', true));
-        }
-
         if ($reader instanceof Csv) {
             $reader->setDelimiter($this->delimiter);
             $reader->setEnclosure($this->enclosure);
@@ -288,11 +280,13 @@ class Reader
             $reader->setInputEncoding($this->inputEncoding);
         }
 
+        $this->raise(new BeforeImport($this, $import));
+
         return $reader;
     }
 
     /**
-     * @param object  $import
+     * @param object $import
      * @param IReader $reader
      */
     private function beforeReading($import, IReader $reader)
@@ -306,16 +300,5 @@ class Reader
         if (!$import instanceof WithMultipleSheets) {
             $this->sheetImports = array_fill(0, $this->spreadsheet->getSheetCount(), $import);
         }
-
-        $this->raise(new BeforeImport($this, $import));
-    }
-
-    /**
-     * @param object $import
-     */
-    private function afterReading($import)
-    {
-        $this->raise(new AfterImport($this, $import));
-        $this->garbageCollect();
     }
 }

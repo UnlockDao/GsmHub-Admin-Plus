@@ -240,7 +240,7 @@ class Builder
      */
     public function orWhere($column, $operator = null, $value = null)
     {
-        [$value, $operator] = $this->query->prepareValueAndOperator(
+        list($value, $operator) = $this->query->prepareValueAndOperator(
             $value, $operator, func_num_args() === 2
         );
 
@@ -915,7 +915,7 @@ class Builder
             // the parameter list is empty, so we will format the scope name and these
             // parameters here. Then, we'll be ready to call the scope on the model.
             if (is_int($scope)) {
-                [$scope, $parameters] = [$parameters, []];
+                list($scope, $parameters) = [$parameters, []];
             }
 
             // Next we'll pass the scope callback to the callScope method which will take
@@ -1120,7 +1120,7 @@ class Builder
             if (is_numeric($name)) {
                 $name = $constraints;
 
-                [$name, $constraints] = Str::contains($name, ':')
+                list($name, $constraints) = Str::contains($name, ':')
                             ? $this->createSelectWithConstraint($name)
                             : [$name, function () {
                                 //

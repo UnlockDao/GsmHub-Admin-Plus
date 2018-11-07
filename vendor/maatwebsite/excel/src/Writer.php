@@ -16,7 +16,6 @@ use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
 use PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder;
-use Maatwebsite\Excel\Concerns\WithPreCalculateFormulas;
 
 class Writer
 {
@@ -151,13 +150,6 @@ class Writer
             $writer->setIncludeSeparatorLine($this->includeSeparatorLine);
             $writer->setExcelCompatibility($this->excelCompatibility);
         }
-
-        // Calculation settings
-        $writer->setPreCalculateFormulas(
-            $this->exportable instanceof WithPreCalculateFormulas
-                ? true
-                : config('excel.exports.pre_calculate_formulas', false)
-        );
 
         $writer->save($fileName);
 

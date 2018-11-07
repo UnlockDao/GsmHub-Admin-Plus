@@ -194,7 +194,7 @@ class UrlGenerator implements UrlGeneratorContract
         // for passing the array of parameters to this URL as a list of segments.
         $root = $this->formatRoot($this->formatScheme($secure));
 
-        [$path, $query] = $this->extractQueryString($path);
+        list($path, $query) = $this->extractQueryString($path);
 
         return $this->format(
             $root, '/'.trim($path.'/'.$tail, '/')
@@ -317,7 +317,7 @@ class UrlGenerator implements UrlGeneratorContract
         $key = call_user_func($this->keyResolver);
 
         return $this->route($name, $parameters + [
-            'signature' => hash_hmac('sha256', $this->route($name, $parameters, $absolute), $key),
+            'signature' => hash_hmac('sha256', $this->route($name, $parameters), $key),
         ], $absolute);
     }
 
@@ -339,14 +339,11 @@ class UrlGenerator implements UrlGeneratorContract
      * Determine if the given request has a valid signature.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  bool  $absolute
      * @return bool
      */
-    public function hasValidSignature(Request $request, $absolute = true)
+    public function hasValidSignature(Request $request)
     {
-        $url = $absolute ? $request->url() : '/'.$request->path();
-
-        $original = rtrim($url.'?'.Arr::query(
+        $original = rtrim($request->url().'?'.Arr::query(
             Arr::except($request->query(), 'signature')
         ), '?');
 
@@ -354,7 +351,7 @@ class UrlGenerator implements UrlGeneratorContract
 
         $signature = hash_hmac('sha256', $original, call_user_func($this->keyResolver));
 
-        return  hash_equals($signature, (string) $request->query('signature', '')) &&
+        return  hash_equals($signature, $request->query('signature', '')) &&
                ! ($expires && Carbon::now()->getTimestamp() > $expires);
     }
 
@@ -425,7 +422,7 @@ class UrlGenerator implements UrlGeneratorContract
             $action = '\\'.implode('@', $action);
         }
 
-        if ($this->rootNamespace && strpos($action, '\\') !== 0) {
+        if ($this->rootNamespace && ! (strpos($action, '\\') === 0)) {
             return $this->rootNamespace.'\\'.$action;
         } else {
             return trim($action, '\\');

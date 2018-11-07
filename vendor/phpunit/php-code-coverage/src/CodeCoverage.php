@@ -138,12 +138,12 @@ final class CodeCoverage
      */
     public function __construct(Driver $driver = null, Filter $filter = null)
     {
-        if ($filter === null) {
-            $filter = new Filter;
+        if ($driver === null) {
+            $driver = $this->selectDriver();
         }
 
-        if ($driver === null) {
-            $driver = $this->selectDriver($filter);
+        if ($filter === null) {
+            $filter = new Filter;
         }
 
         $this->driver = $driver;
@@ -612,17 +612,6 @@ final class CodeCoverage
             return $this->ignoredLines[$fileName];
         }
 
-        try {
-            return $this->getLinesToBeIgnoredInner($fileName);
-        } catch (\OutOfBoundsException $e) {
-            // This can happen with PHP_Token_Stream if the file is syntactically invalid,
-            // and probably affects a file that wasn't executed.
-            return [];
-        }
-    }
-
-    private function getLinesToBeIgnoredInner(string $fileName): array
-    {
         $this->ignoredLines[$fileName] = [];
 
         $lines = \file($fileName);
@@ -889,7 +878,7 @@ final class CodeCoverage
     /**
      * @throws RuntimeException
      */
-    private function selectDriver(Filter $filter): Driver
+    private function selectDriver(): Driver
     {
         $runtime = new Runtime;
 
@@ -902,7 +891,7 @@ final class CodeCoverage
         }
 
         if ($runtime->hasXdebug()) {
-            return new Xdebug($filter);
+            return new Xdebug;
         }
 
         throw new RuntimeException('No code coverage driver available');

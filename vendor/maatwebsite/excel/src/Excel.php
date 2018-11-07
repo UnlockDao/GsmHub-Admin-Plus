@@ -5,8 +5,9 @@ namespace Maatwebsite\Excel;
 use Illuminate\Support\Collection;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Contracts\Filesystem\Factory;
+use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Foundation\Bus\PendingDispatch;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Maatwebsite\Excel\Exceptions\NoTypeDetectedException;
 
@@ -49,7 +50,12 @@ class Excel implements Exporter, Importer
     protected $queuedWriter;
 
     /**
-     * @var Factory
+     * @var ResponseFactory
+     */
+    protected $response;
+
+    /**
+     * @var FilesystemManager
      */
     protected $filesystem;
 
@@ -62,16 +68,19 @@ class Excel implements Exporter, Importer
      * @param Writer            $writer
      * @param QueuedWriter      $queuedWriter
      * @param Reader            $reader
-     * @param Factory $filesystem
+     * @param ResponseFactory   $response
+     * @param FilesystemManager $filesystem
      */
     public function __construct(
         Writer $writer,
         QueuedWriter $queuedWriter,
         Reader $reader,
-        Factory $filesystem
+        ResponseFactory $response,
+        FilesystemManager $filesystem
     ) {
         $this->writer       = $writer;
         $this->reader       = $reader;
+        $this->response     = $response;
         $this->filesystem   = $filesystem;
         $this->queuedWriter = $queuedWriter;
     }
@@ -83,7 +92,7 @@ class Excel implements Exporter, Importer
     {
         $file = $this->export($export, $fileName, $writerType);
 
-        return response()->download($file, $fileName);
+        return $this->response->download($file, $fileName);
     }
 
     /**

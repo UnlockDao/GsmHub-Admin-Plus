@@ -87,7 +87,7 @@ class FileViewFinder implements ViewFinderInterface
      */
     protected function findNamespacedView($name)
     {
-        [$namespace, $view] = $this->parseNamespaceSegments($name);
+        list($namespace, $view) = $this->parseNamespaceSegments($name);
 
         return $this->findInPaths($view, $this->hints[$namespace]);
     }

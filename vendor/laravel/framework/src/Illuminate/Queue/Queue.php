@@ -25,11 +25,11 @@ abstract class Queue
     protected $connectionName;
 
     /**
-     * The create payload callbacks.
+     * The create payload callback.
      *
-     * @var callable[]
+     * @var callable|null
      */
-    protected static $createPayloadCallbacks = [];
+    protected static $createPayloadCallback;
 
     /**
      * Push a new job onto the queue.
@@ -64,7 +64,7 @@ abstract class Queue
      * @param  array   $jobs
      * @param  mixed   $data
      * @param  string  $queue
-     * @return void
+     * @return mixed
      */
     public function bulk($jobs, $data = '', $queue = null)
     {
@@ -197,11 +197,7 @@ abstract class Queue
      */
     public static function createPayloadUsing($callback)
     {
-        if (is_null($callback)) {
-            static::$createPayloadCallbacks = [];
-        } else {
-            static::$createPayloadCallbacks[] = $callback;
-        }
+        static::$createPayloadCallback = $callback;
     }
 
     /**
@@ -213,12 +209,10 @@ abstract class Queue
      */
     protected function withCreatePayloadHooks($queue, array $payload)
     {
-        if (! empty(static::$createPayloadCallbacks)) {
-            foreach (static::$createPayloadCallbacks as $callback) {
-                $payload = array_merge($payload, call_user_func(
-                    $callback, $this->getConnectionName(), $queue, $payload
-                ));
-            }
+        if (static::$createPayloadCallback) {
+            return array_merge($payload, call_user_func(
+                static::$createPayloadCallback, $this->getConnectionName(), $queue, $payload
+            ));
         }
 
         return $payload;

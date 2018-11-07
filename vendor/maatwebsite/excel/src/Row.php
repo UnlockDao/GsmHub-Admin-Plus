@@ -75,12 +75,4 @@ class Row
 
         return $cells;
     }
-
-    /**
-     * @return int
-     */
-    public function getIndex(): int
-    {
-        return $this->row->getRowIndex();
-    }
 }

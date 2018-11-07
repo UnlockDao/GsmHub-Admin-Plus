@@ -85,7 +85,7 @@ final class NamePrettifier
         }
 
         if ($test->usesDataProvider() && !$annotationWithPlaceholders) {
-            $result .= $test->getDataSetAsString(false);
+            $result .= ' data set "' . $test->dataDescription() . '"';
         }
 
         return $result;

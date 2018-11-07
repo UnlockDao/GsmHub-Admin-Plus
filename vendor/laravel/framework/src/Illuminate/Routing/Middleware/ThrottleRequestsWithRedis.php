@@ -84,7 +84,7 @@ class ThrottleRequestsWithRedis extends ThrottleRequests
         );
 
         return tap(! $limiter->acquire(), function () use ($limiter) {
-            [$this->decaysAt, $this->remaining] = [
+            list($this->decaysAt, $this->remaining) = [
                 $limiter->decaysAt, $limiter->remaining,
             ];
         });

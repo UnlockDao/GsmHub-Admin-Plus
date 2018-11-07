@@ -20,8 +20,10 @@
                                 </div>
                             </div>
                             <p class="mt-3 mb-0 text-muted text-sm" style="font-weight: bold;">
-                                <span class="text-success mr-2">{{number_format($imeioder->profit*22000)}}</span>
+                                <span class="text-success mr-2">{{number_format($imeioder->profit*22000)}} </span>
                                 <span class="text-nowrap">VND</span>
+                                <span class="float-right text-success">New: {{current($pendingoder['ImeiServiceOrder'])}}| Accepted: {{next($pendingoder['ImeiServiceOrder'])}}</span>
+
                             </p>
                         </div>
                     </div>
@@ -44,6 +46,7 @@
                             <p class="mt-3 mb-0 text-muted text-sm" style="font-weight: bold;">
                                 <span class="text-success mr-2">{{number_format($serveroder->profit*22000)}} </span>
                                 <span class="text-nowrap">VND</span>
+                                <span class="float-right text-success">New: {{current($pendingoder['ServerServiceOrder'])}}| Accepted: {{next($pendingoder['ServerServiceOrder'])}}</span>
                             </p>
                         </div>
                     </div>

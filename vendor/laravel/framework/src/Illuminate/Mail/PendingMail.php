@@ -17,7 +17,7 @@ class PendingMail
     /**
      * The locale of the message.
      *
-     * @var string
+     * @var array
      */
     protected $locale;
 

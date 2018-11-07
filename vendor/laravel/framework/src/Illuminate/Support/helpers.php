@@ -463,11 +463,7 @@ if (! function_exists('data_get')) {
                     return value($default);
                 }
 
-                $result = [];
-
-                foreach ($target as $item) {
-                    $result[] = data_get($item, $key);
-                }
+                $result = Arr::pluck($target, $key);
 
                 return in_array('*', $key) ? Arr::collapse($result) : $result;
             }

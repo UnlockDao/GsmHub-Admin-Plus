@@ -126,7 +126,7 @@ class SqlServerGrammar extends Grammar
      */
     protected function compileJsonContains($column, $value)
     {
-        [$field, $path] = $this->wrapJsonFieldAndPath($column);
+        list($field, $path) = $this->wrapJsonFieldAndPath($column);
 
         return $value.' in (select [value] from openjson('.$field.$path.'))';
     }
@@ -152,7 +152,7 @@ class SqlServerGrammar extends Grammar
      */
     protected function compileJsonLength($column, $operator, $value)
     {
-        [$field, $path] = $this->wrapJsonFieldAndPath($column);
+        list($field, $path) = $this->wrapJsonFieldAndPath($column);
 
         return '(select count(*) from openjson('.$field.$path.')) '.$operator.' '.$value;
     }
@@ -349,7 +349,7 @@ class SqlServerGrammar extends Grammar
      */
     public function compileUpdate(Builder $query, $values)
     {
-        [$table, $alias] = $this->parseUpdateTable($query->from);
+        list($table, $alias) = $this->parseUpdateTable($query->from);
 
         // Each one of the columns in the update statements needs to be wrapped in the
         // keyword identifiers, also a place-holder needs to be created for each of

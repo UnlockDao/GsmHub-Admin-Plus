@@ -2,127 +2,91 @@
 
 namespace Maatwebsite\Excel\Imports;
 
-use Throwable;
-use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Maatwebsite\Excel\Concerns\ToModel;
-use Maatwebsite\Excel\Concerns\SkipsOnError;
-use Maatwebsite\Excel\Concerns\WithValidation;
-use Maatwebsite\Excel\Validators\RowValidator;
+use Illuminate\Database\DatabaseManager;
 
 class ModelManager
 {
     /**
-     * @var array
+     * @var Model[][]
      */
     private $models = [];
 
     /**
-     * @var RowValidator
+     * @var DatabaseManager
      */
-    private $validator;
+    private $db;
 
     /**
-     * @param RowValidator $validator
+     * @param DatabaseManager $db
      */
-    public function __construct(RowValidator $validator)
+    public function __construct(DatabaseManager $db)
     {
-        $this->validator = $validator;
+        $this->db = $db;
     }
 
     /**
-     * @param int   $row
-     * @param array $attributes
-     */
-    public function add(int $row, array $attributes)
-    {
-        $this->models[$row] = $attributes;
-    }
-
-    /**
-     * @param ToModel $import
-     * @param bool    $massInsert
-     */
-    public function flush(ToModel $import, bool $massInsert = false)
-    {
-        if ($massInsert) {
-            $this->massFlush($import);
-        } else {
-            $this->singleFlush($import);
-        }
-
-        $this->models = [];
-    }
-
-    /**
-     * @param ToModel $import
-     * @param array   $attributes
+     * @param callable $callback
      *
-     * @return Model[]|Collection
+     * @return mixed
      */
-    public function toModels(ToModel $import, array $attributes): Collection
+    public function transaction(callable $callback)
     {
-        $model = $import->model($attributes);
-
-        if (null !== $model) {
-            return \is_array($model) ? new Collection($model) : new Collection([$model]);
-        }
-
-        return new Collection([]);
+        return $this->db->transaction($callback);
     }
 
     /**
-     * @param ToModel $import
+     * @param Model[] $models
      */
-    private function massFlush(ToModel $import)
+    public function add(Model ...$models)
     {
-        if ($import instanceof WithValidation) {
-            $this->validator->validate($this->models, $import);
-        }
+        foreach ($models as $model) {
+            $name = get_class($model);
 
-        collect($this->models)
-            ->map(function (array $attributes) use ($import) {
-                return $this->toModels($import, $attributes);
-            })
-            ->flatten()
-            ->mapToGroups(function (Model $model) {
-                return [\get_class($model) => $this->prepare($model)->getAttributes()];
-            })->each(function (Collection $models, string $model) use ($import) {
-                try {
-                    /* @var Model $model */
-                    $model::query()->insert($models->toArray());
-                } catch (Throwable $e) {
-                    if ($import instanceof SkipsOnError) {
-                        $import->onError($e);
-                    } else {
-                        throw $e;
-                    }
-                }
-            });
-    }
-
-    /**
-     * @param ToModel $import
-     */
-    private function singleFlush(ToModel $import)
-    {
-        collect($this->models)->each(function (array $attributes, $row) use ($import) {
-            if ($import instanceof WithValidation) {
-                $this->validator->validate([$row => $attributes], $import);
+            if (!isset($this->models[$name])) {
+                $this->models[$name] = [];
             }
 
-            $this->toModels($import, $attributes)->each(function (Model $model) use ($import) {
-                try {
-                    $model->saveOrFail();
-                } catch (Throwable $e) {
-                    if ($import instanceof SkipsOnError) {
-                        $import->onError($e);
-                    } else {
-                        throw $e;
-                    }
-                }
-            });
+            $this->models[$name][] = $this->prepare($model);
+        }
+    }
+
+    /**
+     * @param bool $massInsert
+     *
+     * @throws \Throwable
+     */
+    public function flush(bool $massInsert = false)
+    {
+        $this->transaction(function () use ($massInsert) {
+            if ($massInsert) {
+                $this->massFlush();
+            } else {
+                $this->singleFlush();
+            }
+
+            $this->models = [];
         });
+    }
+
+    /**
+     * Flush with a mass insert.
+     */
+    private function massFlush()
+    {
+        foreach ($this->models as $model => $models) {
+            $model::query()->insert(
+                collect($models)->map->getAttributes()->toArray()
+            );
+        }
+    }
+
+    /**
+     * Flush model per model.
+     */
+    private function singleFlush()
+    {
+        collect($this->models)->flatten()->each->saveOrFail();
     }
 
     /**

@@ -847,14 +847,17 @@ scalar:
     | dereferencable_scalar                                 { $$ = $1; }
     | constant                                              { $$ = $1; }
     | T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC
-          { $$ = $this->parseDocString($1, $2, $3, attributes(), stackAttributes(#3), true); }
+          { $attrs = attributes(); setDocStringAttrs($attrs, $1);
+            $$ = new Scalar\String_(Scalar\String_::parseDocString($1, $2), $attrs); }
     | T_START_HEREDOC T_END_HEREDOC
-          { $$ = $this->parseDocString($1, '', $2, attributes(), stackAttributes(#2), true); }
+          { $attrs = attributes(); setDocStringAttrs($attrs, $1);
+            $$ = new Scalar\String_('', $attrs); }
     | '"' encaps_list '"'
           { $attrs = attributes(); $attrs['kind'] = Scalar\String_::KIND_DOUBLE_QUOTED;
             parseEncapsed($2, '"', true); $$ = new Scalar\Encapsed($2, $attrs); }
     | T_START_HEREDOC encaps_list T_END_HEREDOC
-          { $$ = $this->parseDocString($1, $2, $3, attributes(), stackAttributes(#3), true); }
+          { $attrs = attributes(); setDocStringAttrs($attrs, $1);
+            parseEncapsedDoc($2, true); $$ = new Scalar\Encapsed($2, $attrs); }
 ;
 
 optional_expr:

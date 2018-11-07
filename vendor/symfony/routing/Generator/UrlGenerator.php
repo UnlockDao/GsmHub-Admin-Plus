@@ -254,7 +254,10 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
         });
 
         // extract fragment
-        $fragment = $defaults['_fragment'] ?? '';
+        $fragment = '';
+        if (isset($defaults['_fragment'])) {
+            $fragment = $defaults['_fragment'];
+        }
 
         if (isset($extra['_fragment'])) {
             $fragment = $extra['_fragment'];

@@ -102,8 +102,7 @@ final class Filter
             \strpos($filename, 'runtime-created function') !== false ||
             \strpos($filename, 'runkit created function') !== false ||
             \strpos($filename, 'assert code') !== false ||
-            \strpos($filename, 'regexp code') !== false ||
-            \strpos($filename, 'Standard input code') !== false) {
+            \strpos($filename, 'regexp code') !== false) {
             $isFile = false;
         } else {
             $isFile = \file_exists($filename);

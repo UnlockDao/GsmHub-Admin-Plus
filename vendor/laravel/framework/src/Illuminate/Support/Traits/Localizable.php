@@ -11,7 +11,7 @@ trait Localizable
      *
      * @param  string   $locale
      * @param  \Closure $callback
-     * @return mixed
+     * @return bool
      */
     public function withLocale($locale, $callback)
     {
