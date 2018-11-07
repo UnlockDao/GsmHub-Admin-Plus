@@ -1,5 +1,10 @@
 @extends('layouts.header')
 @section('dashboard')
+    <style>
+        .table .thead-light th{
+            min-width: 100px;
+        }
+    </style>
     <div class="container-fluid">
         <div class="header-body">
             <!-- Card stats -->
