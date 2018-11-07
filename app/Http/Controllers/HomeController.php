@@ -6,6 +6,8 @@ use App\CUtil;
 use App\Models\Imeiserviceorder;
 use App\Models\Invoice;
 use App\Models\Serverserviceorder;
+use DateInterval;
+use DatePeriod;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -30,10 +32,9 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $datefilter = $request->datefilter;
-        $datefilters = $request->datefilter;
         $tg = explode(" - ", $datefilter);
         if ($datefilter == null) {
-            $datefilter = date("Y/m/01 0:00:00") . ' - ' . date("Y/m/31 23:59:59");
+            $datefilter = date("Y/m/01 0:00:00") . ' - ' . date("Y/m/30 23:59:59");
             $tg = explode(" - ", $datefilter);
             $tg1 = CUtil::convertDateS($tg[0]);
             $tg2 = CUtil::convertDateS($tg[1]);
@@ -69,7 +70,7 @@ class HomeController extends Controller
         for ($i = 1; $i <= $date->format("t"); $i++) {
             $datesArray[] = DateTime::createFromFormat("Y-n-d", "2018-11-$i")->format('d-n-Y');
         }
-        //server
+        //old version
         $serverchart = Serverserviceorder::where('ignore_profit', 0)
             ->orderBy('completed_on')
             ->where('credit_default_currency', '!=', 0)
@@ -107,36 +108,13 @@ class HomeController extends Controller
                 DB::raw('sum(invoice_amount) as amt')
             ]);
 
-
         $pendingoder = $this->pendingoder();;
-        $ordercount = $this->thismonthordercount();
         $topservice = $this->topserviceordercount();
-        $chartprofit = $this->thismonthorderprofit();
-        $chartincome = $this->income();
+        $profitchart = $this->profitchart($datefilter);
+        $ordercountchart = $this->ordercountchart($datefilter);
+        $incomechart = $this->incomechart($datefilter);
 
-        return view('home', compact('serverchart', 'imeichart', 'serveroder', 'imeioder', 'invoicechart', 'invoice', 'pendingoder', 'ordercount', 'topservice','chartprofit','chartincome','datefilters'));
-    }
-
-    public function income(){
-        $return_arr = [];
-        $return_arr['income'] = '';
-        $year = date('Y');
-        $month = date('m');
-        $income_recds = Invoice::whereRaw('YEAR(convert_tz(date_added,"+00:00","+07:00")) = ' . $year)
-            ->whereRaw('MONTH(convert_tz(date_added,"+00:00","+07:00")) = ' . $month)
-            ->where('created_by', '=', 0)
-            ->where('invoice_status', 'paid')
-            ->selectRaw('day(convert_tz(date_added,"+00:00","+07:00")) as day, sum(invoice_amount) as total')
-            ->groupby('day')
-            ->pluck('total', 'day');
-        for ($month = 1; $month <= 31; ++$month) {
-            $income_cnt = (isset($income_recds[$month]) ? $income_recds[$month] : 0);
-            $return_arr['income'] .= $income_cnt. ',';
-        }
-        $return_arr['income'] = rtrim($return_arr['income'], ',');
-        $return_arr['date'] = '1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31';
-
-        return $return_arr;
+        return view('home', compact( 'serveroder', 'imeioder', 'invoice', 'pendingoder', 'topservice','profitchart','ordercountchart','incomechart'));
     }
 
     public function pendingoder()
@@ -165,43 +143,58 @@ class HomeController extends Controller
         return $return_arr;
     }
 
-    public function thismonthordercount()
-    {
+    public function income(){
         $return_arr = [];
-        $return_arr['imei'] = '';
-        $return_arr['server'] = '';
-        $return_arr['imeiREJECTED'] = '';
-        $return_arr['serverREJECTED'] = '';
+        $return_arr['income'] = '';
         $year = date('Y');
         $month = date('m');
-        $imei_recds = ImeiServiceOrder::whereRaw('YEAR(convert_tz(completed_on,"+00:00","+07:00")) = ' . $year)->whereRaw('MONTH(convert_tz(completed_on,"+00:00","+07:00")) = ' . $month)->where('status', '=', 'COMPLETED')->selectRaw('day(convert_tz(completed_on,"+00:00","+07:00")) as day, count(id) as total')->groupby('day')->pluck('total', 'day');
-        $imei_recdsREJECTED = ImeiServiceOrder::whereRaw('YEAR(convert_tz(date_rejected,"+00:00","+07:00")) = ' . $year)->whereRaw('MONTH(convert_tz(date_rejected,"+00:00","+07:00")) = ' . $month)->where('status', '=', 'REJECTED')->selectRaw('day(convert_tz(date_rejected,"+00:00","+07:00")) as day, count(id) as total')->groupby('day')->pluck('total', 'day');
-        $server_recds = ServerServiceOrder::whereRaw('YEAR(convert_tz(completed_on,"+00:00","+07:00")) = ' . $year)->whereRaw('MONTH(convert_tz(completed_on,"+00:00","+07:00")) = ' . $month)->where('status', '=', 'COMPLETED')->selectraw('day(convert_tz(completed_on,"+00:00","+07:00")) as day, count(id) as total')->groupby('day')->pluck('total', 'day');
-        $server_recdsREJECTED = ServerServiceOrder::whereRaw('YEAR(convert_tz(date_rejected,"+00:00","+07:00")) = ' . $year)->whereRaw('MONTH(convert_tz(date_rejected,"+00:00","+07:00")) = ' . $month)->where('status', '=', 'REJECTED')->selectraw('day(convert_tz(date_rejected,"+00:00","+07:00")) as day, count(id) as total')->groupby('day')->pluck('total', 'day');
-        $mont = ['1', '02', '03', '04', '05', '6', '07', '08', '09', '10', '11', '12'];
-        $type = ['imei', 'server'];
+        $income_recds = Invoice::whereRaw('YEAR(convert_tz(date_added,"+00:00","+07:00")) = ' . $year)
+            ->whereRaw('MONTH(convert_tz(date_added,"+00:00","+07:00")) = ' . $month)
+            ->where('created_by', '=', 0)
+            ->where('invoice_status', 'paid')
+            ->selectRaw('day(convert_tz(date_added,"+00:00","+07:00")) as day, sum(invoice_amount) as total')
+            ->groupby('day')
+            ->pluck('total', 'day');
         for ($month = 1; $month <= 31; ++$month) {
-            $imei_cnt = (isset($imei_recds[$month]) ? $imei_recds[$month] : 0);
-            $imei_cntREJECTED = (isset($imei_recdsREJECTED[$month]) ? $imei_recdsREJECTED[$month] : 0);
-
-            $server_cnt = (isset($server_recds[$month]) ? $server_recds[$month] : 0);
-            $server_cntREJECTED = (isset($server_recdsREJECTED[$month]) ? $server_recdsREJECTED[$month] : 0);
-
-            $return_arr['imei'] .= $imei_cnt . ',';
-            $return_arr['imeiREJECTED'] .= $imei_cntREJECTED . ',';
-
-            $return_arr['server'] .= $server_cnt . ',';
-            $return_arr['serverREJECTED'] .= $server_cntREJECTED . ',';
+            $income_cnt = (isset($income_recds[$month]) ? $income_recds[$month] : 0);
+            $return_arr['income'] .= $income_cnt. ',';
         }
-        $return_arr['imei'] = rtrim($return_arr['imei'], ',');
-        $return_arr['imeiREJECTED'] = rtrim($return_arr['imeiREJECTED'], ',');
-
-        $return_arr['server'] = rtrim($return_arr['server'], ',');
-        $return_arr['serverREJECTED'] = rtrim($return_arr['serverREJECTED'], ',');
+        $return_arr['income'] = rtrim($return_arr['income'], ',');
         $return_arr['date'] = '1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31';
 
         return $return_arr;
     }
+    public function incomechart($datefilter){
+        $tg = explode(" - ", $datefilter);
+        $tg1 = CUtil::convertDateS($tg[0]);
+        $tg2 = CUtil::convertDateS($tg[1]);
+
+        $begin = new DateTime( $tg[0]);
+        $end = new DateTime( $tg[1] );
+
+        $return_arr['income'] = '';
+        $return_arr['date']='';
+        $income_recds = Invoice::whereBetween('date_added', [$tg1, $tg2])
+            ->where('created_by', '=', 0)
+            ->where('invoice_status', 'paid')
+            ->selectRaw('date(convert_tz(date_added,"+00:00","+07:00")) as day, sum(invoice_amount) as total')
+            ->groupby('day')
+            ->pluck('total', 'day');
+
+        $interval = new DateInterval('P1D');
+        $daterange = new DatePeriod($begin, $interval ,$end);
+        foreach($daterange as $date){
+            $month= $date->format("Y-m-d");
+            $income_cnt = (isset($income_recds[$month]) ? $income_recds[$month] : 0);
+            $return_arr['income'] .= $income_cnt. ',';
+            $return_arr['date'] .='"'.($month) . '",';
+        }
+        $return_arr['income'] = '['.rtrim($return_arr['income'],  ',').']';
+        $return_arr['date'] = '['.rtrim($return_arr['date'], ',').']';
+
+        return $return_arr;
+    }
+
 
     public function thismonthorderprofit()
     {
@@ -263,6 +256,170 @@ class HomeController extends Controller
             ->orderBy('cnt', 'DESC')
             ->take(10)
             ->get();
+        return $return_arr;
+    }
+
+    public function profitchart($datefilter){
+        $tg = explode(" - ", $datefilter);
+        $tg1 = CUtil::convertDateS($tg[0]);
+        $tg2 = CUtil::convertDateS($tg[1]);
+
+        $begin = new DateTime( $tg[0]);
+        $end = new DateTime( $tg[1] );
+
+        $return_arr = [];
+        $return_arr['imei'] = '';
+        $return_arr['server'] = '';
+        $return_arr['date']='';
+
+        $imei_recds = ImeiServiceOrder::whereBetween('completed_on', [$tg1, $tg2])
+            ->where('status', '=', 'COMPLETED')
+            ->selectRaw('date(convert_tz(completed_on,"+00:00","+07:00")) as day, sum(if(link_order_id != 0, credit_default_currency, credit_default_currency - purchase_cost)) as total')
+            ->groupby('day')
+            ->pluck('total', 'day');
+        $server_recds = ServerServiceOrder::whereBetween('completed_on', [$tg1, $tg2])
+            ->where('status', '=', 'COMPLETED')
+            ->selectraw('date(convert_tz(completed_on,"+00:00","+07:00")) as day, sum(credit_default_currency - ( purchase_cost * IF( quantity >0, quantity, 1 ) ) ) as total')
+            ->groupby('day')
+            ->pluck('total', 'day');
+
+        $interval = new DateInterval('P1D');
+        $daterange = new DatePeriod($begin, $interval ,$end);
+
+        foreach($daterange as $date){
+            $month= $date->format("Y-m-d");
+            $imei_cnt = (isset($imei_recds[$month]) ? $imei_recds[$month] : 0);
+            $server_cnt = (isset($server_recds[$month]) ? $server_recds[$month] : 0);
+
+            $return_arr['imei'] .= round($imei_cnt,2) . ',';
+            $return_arr['server'] .= round($server_cnt,2) . ',';
+            $return_arr['date'] .='"'.($month) . '",';
+
+        }
+        $return_arr['imei'] = '['.rtrim($return_arr['imei'], ',').']';
+        $return_arr['server'] = '['.rtrim($return_arr['server'], ',').']';
+        $return_arr['date'] = '['.rtrim($return_arr['date'], ',').']';
+        return $return_arr;
+    }
+
+    public function ordercountchart($datefilter){
+        $tg = explode(" - ", $datefilter);
+        $tg1 = CUtil::convertDateS($tg[0]);
+        $tg2 = CUtil::convertDateS($tg[1]);
+
+        $begin = new DateTime( $tg[0]);
+        $end = new DateTime( $tg[1] );
+
+        $return_arr = [];
+        $return_arr['imei'] = '';
+        $return_arr['server'] = '';
+        $return_arr['imeiREJECTED'] = '';
+        $return_arr['serverREJECTED'] = '';
+        $return_arr['date']='';
+
+        //
+        $imei_recds = ImeiServiceOrder::whereBetween('completed_on', [$tg1, $tg2])
+            ->where('status', '=', 'COMPLETED')
+            ->selectRaw('date(convert_tz(completed_on,"+00:00","+07:00")) as day, count(id) as total')
+            ->groupby('day')
+            ->pluck('total', 'day');
+        $imei_recdsREJECTED = ImeiServiceOrder::whereBetween('date_rejected', [$tg1, $tg2])
+            ->where('status', '=', 'REJECTED')
+            ->selectRaw('date(convert_tz(date_rejected,"+00:00","+07:00")) as day, count(id) as total')
+            ->groupby('day')
+            ->pluck('total', 'day');
+        $server_recds = ServerServiceOrder::whereBetween('completed_on', [$tg1, $tg2])
+            ->where('status', '=', 'COMPLETED')
+            ->selectraw('date(convert_tz(completed_on,"+00:00","+07:00")) as day, count(id) as total')
+            ->groupby('day')->pluck('total', 'day');
+        $server_recdsREJECTED = ServerServiceOrder::whereBetween('date_rejected', [$tg1, $tg2])
+            ->where('status', '=', 'REJECTED')
+            ->selectraw('date(convert_tz(date_rejected,"+00:00","+07:00")) as day, count(id) as total')
+            ->groupby('day')->pluck('total', 'day');
+        //
+
+
+        $interval = new DateInterval('P1D');
+        $daterange = new DatePeriod($begin, $interval ,$end);
+
+        foreach($daterange as $date){
+            $month= $date->format("Y-m-d");
+            $imei_cnt = (isset($imei_recds[$month]) ? $imei_recds[$month] : 0);
+            $imei_cntREJECTED = (isset($imei_recdsREJECTED[$month]) ? $imei_recdsREJECTED[$month] : 0);
+
+            $server_cnt = (isset($server_recds[$month]) ? $server_recds[$month] : 0);
+            $server_cntREJECTED = (isset($server_recdsREJECTED[$month]) ? $server_recdsREJECTED[$month] : 0);
+
+            $return_arr['imei'] .= $imei_cnt . ',';
+            $return_arr['imeiREJECTED'] .= $imei_cntREJECTED . ',';
+
+            $return_arr['server'] .= $server_cnt . ',';
+            $return_arr['serverREJECTED'] .= $server_cntREJECTED . ',';
+            $return_arr['date'] .='"'.($month) . '",';
+
+        }
+        $return_arr['imei'] = '['.rtrim($return_arr['imei'], ',').']';
+        $return_arr['imeiREJECTED'] = '['.rtrim($return_arr['imeiREJECTED'], ',').']';
+
+        $return_arr['server'] = '['.rtrim($return_arr['server'], ',').']';
+        $return_arr['serverREJECTED'] = '['.rtrim($return_arr['serverREJECTED'], ',').']';
+
+        $return_arr['date'] = '['.rtrim($return_arr['date'], ',').']';
+
+        return $return_arr;
+    }
+
+    public function thismonthordercount()
+    {
+        $return_arr = [];
+        $return_arr['imei'] = '';
+        $return_arr['server'] = '';
+        $return_arr['imeiREJECTED'] = '';
+        $return_arr['serverREJECTED'] = '';
+        $year = date('Y');
+        $month = date('m');
+        $imei_recds = ImeiServiceOrder::whereRaw('YEAR(convert_tz(completed_on,"+00:00","+07:00")) = ' . $year)
+            ->whereRaw('MONTH(convert_tz(completed_on,"+00:00","+07:00")) = ' . $month)
+            ->where('status', '=', 'COMPLETED')
+            ->selectRaw('day(convert_tz(completed_on,"+00:00","+07:00")) as day, count(id) as total')
+            ->groupby('day')
+            ->pluck('total', 'day');
+        $imei_recdsREJECTED = ImeiServiceOrder::whereRaw('YEAR(convert_tz(date_rejected,"+00:00","+07:00")) = ' . $year)
+            ->whereRaw('MONTH(convert_tz(date_rejected,"+00:00","+07:00")) = ' . $month)
+            ->where('status', '=', 'REJECTED')
+            ->selectRaw('day(convert_tz(date_rejected,"+00:00","+07:00")) as day, count(id) as total')
+            ->groupby('day')
+            ->pluck('total', 'day');
+        $server_recds = ServerServiceOrder::whereRaw('YEAR(convert_tz(completed_on,"+00:00","+07:00")) = ' . $year)
+            ->whereRaw('MONTH(convert_tz(completed_on,"+00:00","+07:00")) = ' . $month)
+            ->where('status', '=', 'COMPLETED')
+            ->selectraw('day(convert_tz(completed_on,"+00:00","+07:00")) as day, count(id) as total')
+            ->groupby('day')->pluck('total', 'day');
+        $server_recdsREJECTED = ServerServiceOrder::whereRaw('YEAR(convert_tz(date_rejected,"+00:00","+07:00")) = ' . $year)
+            ->whereRaw('MONTH(convert_tz(date_rejected,"+00:00","+07:00")) = ' . $month)
+            ->where('status', '=', 'REJECTED')
+            ->selectraw('day(convert_tz(date_rejected,"+00:00","+07:00")) as day, count(id) as total')
+            ->groupby('day')->pluck('total', 'day');
+        for ($month = 1; $month <= 31; ++$month) {
+            $imei_cnt = (isset($imei_recds[$month]) ? $imei_recds[$month] : 0);
+            $imei_cntREJECTED = (isset($imei_recdsREJECTED[$month]) ? $imei_recdsREJECTED[$month] : 0);
+
+            $server_cnt = (isset($server_recds[$month]) ? $server_recds[$month] : 0);
+            $server_cntREJECTED = (isset($server_recdsREJECTED[$month]) ? $server_recdsREJECTED[$month] : 0);
+
+            $return_arr['imei'] .= $imei_cnt . ',';
+            $return_arr['imeiREJECTED'] .= $imei_cntREJECTED . ',';
+
+            $return_arr['server'] .= $server_cnt . ',';
+            $return_arr['serverREJECTED'] .= $server_cntREJECTED . ',';
+        }
+        $return_arr['imei'] = rtrim($return_arr['imei'], ',');
+        $return_arr['imeiREJECTED'] = rtrim($return_arr['imeiREJECTED'], ',');
+
+        $return_arr['server'] = rtrim($return_arr['server'], ',');
+        $return_arr['serverREJECTED'] = rtrim($return_arr['serverREJECTED'], ',');
+        $return_arr['date'] = '1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31';
+
         return $return_arr;
     }
 

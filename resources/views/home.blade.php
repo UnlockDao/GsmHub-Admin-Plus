@@ -208,17 +208,6 @@
 
         <script src="{{ asset('js/highcharts.js') }}"></script>
         <script>
-            var imeistring = {!! $imeichart->pluck('profit') !!};
-            var tofiximei = imeistring.map(Number);
-            var serverstring = {!! $serverchart->pluck('profit') !!};
-            var tofixserver = serverstring.map(Number);
-            imei = tofiximei.map(function (each_element) {
-                return Number(each_element.toFixed(2));
-            });
-            server = tofixserver.map(function (each_element) {
-                return Number(each_element.toFixed(2));
-            });
-            var date = {!! $serverchart->pluck('date') !!}
             Highcharts.chart('profitchart', {
                 chart: {
                     type: 'column'
@@ -227,7 +216,7 @@
                     text: 'Profit'
                 },
                 xAxis: {
-                    categories:  {{ isset($datefilters) ? 'date' : $chartprofit['date'] }}
+                    categories:  {!! $profitchart['date'] !!}
                 },
                 yAxis: {
                     min: 0,
@@ -254,10 +243,10 @@
                 },
                 series: [{
                     name: 'IMEI',
-                    data:  {{ isset($datefilters) ? 'imei' : '['.$chartprofit['imei'] .']'}}
+                    data:  {{$profitchart['imei']}}
                 }, {
                     name: 'Server',
-                    data: {{ isset($datefilters) ? 'server' : '['.$chartprofit['server'].']' }}
+                    data: {{$profitchart['server']}}
                 }]
             });
 
@@ -269,7 +258,7 @@
                     text: 'Orders'
                 },
                 xAxis: {
-                    categories: [{{$ordercount['date']}}]
+                    categories: {!! $ordercountchart['date'] !!}
                 },
                 yAxis: {
                     min: 0,
@@ -298,21 +287,18 @@
                 },
                 series: [{
                     name: 'IMEI',
-                    data: [{{$ordercount['imei']}}]
+                    data: {{$ordercountchart['imei']}}
                 }, {
                     name: 'Server',
-                    data: [{{$ordercount['server']}}]
+                    data: {{$ordercountchart['server']}}
                 }, {
                     name: 'IMEI REJECTED',
-                    data: [{{$ordercount['imeiREJECTED']}}]
+                    data: {{$ordercountchart['imeiREJECTED']}}
                 }, {
                     name: 'Server REJECTED',
-                    data: [{{$ordercount['serverREJECTED']}}]
+                    data: {{$ordercountchart['serverREJECTED']}}
                 }]
             });
-
-            var invoicestring = {!! $invoicechart->pluck('amt') !!};
-            var invoice = invoicestring.map(Number);
             Highcharts.chart('invoice', {
                 chart: {
                     type: 'column'
@@ -321,7 +307,7 @@
                     text: 'Income'
                 },
                 xAxis: {
-                    categories:  [{{$chartincome['date']}}]
+                    categories:  {!! $incomechart['date'] !!}
                 },
                 yAxis: {
                     min: 0,
@@ -348,7 +334,7 @@
                 },
                 series: [{
                     name: 'Income',
-                    data: [{{$chartincome['income']}}]
+                    data: {{$incomechart['income']}}
                 }]
             });
         </script>
