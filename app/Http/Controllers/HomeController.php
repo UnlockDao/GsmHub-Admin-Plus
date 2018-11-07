@@ -176,6 +176,7 @@ class HomeController extends Controller
         $return_arr['date']='';
         $income_recds = Invoice::whereBetween('date_added', [$tg1, $tg2])
             ->where('created_by', '=', 0)
+            ->where('currency','USD')
             ->where('invoice_status', 'paid')
             ->selectRaw('date(convert_tz(date_added,"+00:00","+07:00")) as day, sum(invoice_amount) as total')
             ->groupby('day')
