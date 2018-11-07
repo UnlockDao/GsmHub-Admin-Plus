@@ -14,10 +14,16 @@ class MemberController extends Controller
 
     public function index(Request $request)
     {
-        $member = User::paginate(30);
+        $cache = $request;
+        $member = User::where('user_name', 'LIKE', $request->username)
+            ->where('user_status', 'LIKE', $request->userstatus)
+            ->where('user_code', 'LIKE', $request->usercode)
+            ->where('email', 'LIKE', $request->useremail)
+            ->where('user_access', 'LIKE', $request->usertype)
+            ->paginate(30);
 
         $chart = $this->chartstatus();
-        return view('member', compact('member','chart'));
+        return view('member', compact('member','chart','cache'));
     }
 
     public function chartstatus(){
