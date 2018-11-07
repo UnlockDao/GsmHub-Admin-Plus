@@ -185,7 +185,7 @@ class HomeController extends Controller
         $daterange = new DatePeriod($begin, $interval ,$end);
         foreach($daterange as $date){
             $month= $date->format("Y-m-d");
-            $income_cnt = (isset($income_recds[$month]) ? $income_recds[$month] : 0);
+            $income_cnt = (isset($income_recds[$month]) ? $income_recds[$month] : 'null');
             $return_arr['income'] .= $income_cnt. ',';
             $return_arr['date'] .='"'.($month) . '",';
         }
@@ -216,9 +216,9 @@ class HomeController extends Controller
             ->groupby('day')
             ->pluck('total', 'day');
        for ($month = 1; $month <= 31; ++$month) {
-            $imei_cnt = (isset($imei_recds[$month]) ? $imei_recds[$month] : 0);
+            $imei_cnt = (isset($imei_recds[$month]) ? $imei_recds[$month] : 'null');
 
-            $server_cnt = (isset($server_recds[$month]) ? $server_recds[$month] : 0);
+            $server_cnt = (isset($server_recds[$month]) ? $server_recds[$month] : 'null');
 
             $return_arr['imei'] .= round($imei_cnt,2) . ',';
 
@@ -288,11 +288,11 @@ class HomeController extends Controller
 
         foreach($daterange as $date){
             $month= $date->format("Y-m-d");
-            $imei_cnt = (isset($imei_recds[$month]) ? $imei_recds[$month] : 0);
-            $server_cnt = (isset($server_recds[$month]) ? $server_recds[$month] : 0);
+            $imei_cnt = (isset($imei_recds[$month]) ? $imei_recds[$month] : 'null');
+            $server_cnt = (isset($server_recds[$month]) ? $server_recds[$month] : 'null');
 
-            $return_arr['imei'] .= round($imei_cnt,2) . ',';
-            $return_arr['server'] .= round($server_cnt,2) . ',';
+            $return_arr['imei'] .= $imei_cnt. ',';
+            $return_arr['server'] .= $server_cnt . ',';
             $return_arr['date'] .='"'.($month) . '",';
 
         }
@@ -344,11 +344,11 @@ class HomeController extends Controller
 
         foreach($daterange as $date){
             $month= $date->format("Y-m-d");
-            $imei_cnt = (isset($imei_recds[$month]) ? $imei_recds[$month] : 0);
-            $imei_cntREJECTED = (isset($imei_recdsREJECTED[$month]) ? $imei_recdsREJECTED[$month] : 0);
+            $imei_cnt = (isset($imei_recds[$month]) ? $imei_recds[$month] : 'null');
+            $imei_cntREJECTED = (isset($imei_recdsREJECTED[$month]) ? $imei_recdsREJECTED[$month] : 'null');
 
-            $server_cnt = (isset($server_recds[$month]) ? $server_recds[$month] : 0);
-            $server_cntREJECTED = (isset($server_recdsREJECTED[$month]) ? $server_recdsREJECTED[$month] : 0);
+            $server_cnt = (isset($server_recds[$month]) ? $server_recds[$month] : 'null');
+            $server_cntREJECTED = (isset($server_recdsREJECTED[$month]) ? $server_recdsREJECTED[$month] : 'null');
 
             $return_arr['imei'] .= $imei_cnt . ',';
             $return_arr['imeiREJECTED'] .= $imei_cntREJECTED . ',';
@@ -401,11 +401,11 @@ class HomeController extends Controller
             ->selectraw('day(convert_tz(date_rejected,"+00:00","+07:00")) as day, count(id) as total')
             ->groupby('day')->pluck('total', 'day');
         for ($month = 1; $month <= 31; ++$month) {
-            $imei_cnt = (isset($imei_recds[$month]) ? $imei_recds[$month] : 0);
-            $imei_cntREJECTED = (isset($imei_recdsREJECTED[$month]) ? $imei_recdsREJECTED[$month] : 0);
+            $imei_cnt = (isset($imei_recds[$month]) ? $imei_recds[$month] : 'null');
+            $imei_cntREJECTED = (isset($imei_recdsREJECTED[$month]) ? $imei_recdsREJECTED[$month] : 'null');
 
-            $server_cnt = (isset($server_recds[$month]) ? $server_recds[$month] : 0);
-            $server_cntREJECTED = (isset($server_recdsREJECTED[$month]) ? $server_recdsREJECTED[$month] : 0);
+            $server_cnt = (isset($server_recds[$month]) ? $server_recds[$month] : 'null');
+            $server_cntREJECTED = (isset($server_recdsREJECTED[$month]) ? $server_recdsREJECTED[$month] : 'null');
 
             $return_arr['imei'] .= $imei_cnt . ',';
             $return_arr['imeiREJECTED'] .= $imei_cntREJECTED . ',';
