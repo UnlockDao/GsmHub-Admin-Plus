@@ -61,7 +61,7 @@ class Utility
 
                             $giabanle = $i->credit + $imeiprice->discount;
                             $chietkhau = ($giabanle - ((($giabanle - $i->purchase_cost) / 100) * $clg->chietkhau));
-                            $y = $chietkhau - $i->credit;
+                            $y = round($chietkhau,15) - $i->credit;
                             foreach ($currencies as $c) {
                                 $updatepriceuse = Clientgroupprice::where('group_id', $clg->id)
                                     ->where('service_type', 'imei')
@@ -148,7 +148,7 @@ class Utility
 
                             $giabanle = $i->credit + $imeiprice->discount;
                             $chietkhau = ($giabanle - ((($giabanle - $i->purchase_cost) / 100) * $clg->chietkhau));
-                            $y = $chietkhau - $i->credit;
+                            $y = round($chietkhau,15) - $i->credit;
                             foreach ($currencies as $c) {
                                 Clientgroupprice::where('group_id', $clg->id)
                                     ->where('service_type', 'imei')

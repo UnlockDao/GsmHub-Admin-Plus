@@ -30,6 +30,7 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $datefilter = $request->datefilter;
+        $datefilters = $request->datefilter;
         $tg = explode(" - ", $datefilter);
         if ($datefilter == null) {
             $datefilter = date("Y/m/01 0:00:00") . ' - ' . date("Y/m/31 23:59:59");
@@ -110,8 +111,32 @@ class HomeController extends Controller
         $pendingoder = $this->pendingoder();;
         $ordercount = $this->thismonthordercount();
         $topservice = $this->topserviceordercount();
+        $chartprofit = $this->thismonthorderprofit();
+        $chartincome = $this->income();
 
-        return view('home', compact('serverchart', 'imeichart', 'serveroder', 'imeioder', 'invoicechart', 'invoice', 'pendingoder', 'ordercount', 'topservice'));
+        return view('home', compact('serverchart', 'imeichart', 'serveroder', 'imeioder', 'invoicechart', 'invoice', 'pendingoder', 'ordercount', 'topservice','chartprofit','chartincome','datefilters'));
+    }
+
+    public function income(){
+        $return_arr = [];
+        $return_arr['income'] = '';
+        $year = date('Y');
+        $month = date('m');
+        $income_recds = Invoice::whereRaw('YEAR(convert_tz(date_added,"+00:00","+07:00")) = ' . $year)
+            ->whereRaw('MONTH(convert_tz(date_added,"+00:00","+07:00")) = ' . $month)
+            ->where('created_by', '=', 0)
+            ->where('invoice_status', 'paid')
+            ->selectRaw('day(convert_tz(date_added,"+00:00","+07:00")) as day, sum(invoice_amount) as total')
+            ->groupby('day')
+            ->pluck('total', 'day');
+        for ($month = 1; $month <= 31; ++$month) {
+            $income_cnt = (isset($income_recds[$month]) ? $income_recds[$month] : 0);
+            $return_arr['income'] .= $income_cnt. ',';
+        }
+        $return_arr['income'] = rtrim($return_arr['income'], ',');
+        $return_arr['date'] = '1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31';
+
+        return $return_arr;
     }
 
     public function pendingoder()
@@ -142,7 +167,6 @@ class HomeController extends Controller
 
     public function thismonthordercount()
     {
-        $date_str = date('Y-m-d');
         $return_arr = [];
         $return_arr['imei'] = '';
         $return_arr['server'] = '';
@@ -174,6 +198,43 @@ class HomeController extends Controller
 
         $return_arr['server'] = rtrim($return_arr['server'], ',');
         $return_arr['serverREJECTED'] = rtrim($return_arr['serverREJECTED'], ',');
+        $return_arr['date'] = '1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31';
+
+        return $return_arr;
+    }
+
+    public function thismonthorderprofit()
+    {
+        $return_arr = [];
+        $return_arr['imei'] = '';
+        $return_arr['server'] = '';
+        $year = date('Y');
+        $month = date('m');
+        $imei_recds = ImeiServiceOrder::whereRaw('YEAR(convert_tz(completed_on,"+00:00","+07:00")) = ' . $year)
+            ->whereRaw('MONTH(convert_tz(completed_on,"+00:00","+07:00")) = ' . $month)
+            ->where('status', '=', 'COMPLETED')
+            ->selectRaw('day(convert_tz(completed_on,"+00:00","+07:00")) as day, sum(if(link_order_id != 0, credit_default_currency, credit_default_currency - purchase_cost)) as total')
+            ->groupby('day')
+            ->pluck('total', 'day');
+        $server_recds = ServerServiceOrder::whereRaw('YEAR(convert_tz(completed_on,"+00:00","+07:00")) = ' . $year)
+            ->whereRaw('MONTH(convert_tz(completed_on,"+00:00","+07:00")) = ' . $month)
+            ->where('status', '=', 'COMPLETED')
+            ->selectraw('day(convert_tz(completed_on,"+00:00","+07:00")) as day, sum(credit_default_currency - ( purchase_cost * IF( quantity >0, quantity, 1 ) ) ) as total')
+            ->groupby('day')
+            ->pluck('total', 'day');
+       for ($month = 1; $month <= 31; ++$month) {
+            $imei_cnt = (isset($imei_recds[$month]) ? $imei_recds[$month] : 0);
+
+            $server_cnt = (isset($server_recds[$month]) ? $server_recds[$month] : 0);
+
+            $return_arr['imei'] .= round($imei_cnt,2) . ',';
+
+            $return_arr['server'] .= round($server_cnt,2) . ',';
+        }
+        $return_arr['imei'] = rtrim($return_arr['imei'], ',');
+
+        $return_arr['server'] = rtrim($return_arr['server'], ',');
+        $return_arr['date'] = '[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]';
 
         return $return_arr;
     }

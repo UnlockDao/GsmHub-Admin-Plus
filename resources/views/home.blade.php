@@ -162,7 +162,7 @@
                                 <tr>
                                     <th scope="row">{{$i->service_name}}</th>
                                     <td>{{$i->cnt}}</td>
-                                    <td>{{number_format($i->profit,2)}}</td>
+                                    <td>${{$i->profit}}</td>
                                 </tr>
                             @endforeach
                             </tbody>
@@ -194,7 +194,7 @@
                                 <tr>
                                     <th scope="row">{{$i->service_name}}</th>
                                     <td>{{$i->cnt}}</td>
-                                    <td>{{number_format($i->profit,2)}}</td>
+                                    <td>${{$i->profit}}</td>
                                 </tr>
                             @endforeach
                             </tbody>
@@ -218,7 +218,7 @@
             server = tofixserver.map(function (each_element) {
                 return Number(each_element.toFixed(2));
             });
-
+            var date = {!! $serverchart->pluck('date') !!}
             Highcharts.chart('profitchart', {
                 chart: {
                     type: 'column'
@@ -227,7 +227,7 @@
                     text: 'Profit'
                 },
                 xAxis: {
-                    categories:  {!! $serverchart->pluck('date') !!}
+                    categories:  {{ isset($datefilters) ? 'date' : $chartprofit['date'] }}
                 },
                 yAxis: {
                     min: 0,
@@ -254,10 +254,10 @@
                 },
                 series: [{
                     name: 'IMEI',
-                    data: imei
+                    data:  {{ isset($datefilters) ? 'imei' : '['.$chartprofit['imei'] .']'}}
                 }, {
                     name: 'Server',
-                    data: server
+                    data: {{ isset($datefilters) ? 'server' : '['.$chartprofit['server'].']' }}
                 }]
             });
 
@@ -269,7 +269,7 @@
                     text: 'Orders'
                 },
                 xAxis: {
-                    categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+                    categories: [{{$ordercount['date']}}]
                 },
                 yAxis: {
                     min: 0,
@@ -287,8 +287,8 @@
                 colors: [
                     '#5e72e4',
                     '#2dce89',
-                    'red',
-                    'yellow',
+                    '#f5365c',
+                    '#fb6340',
                 ],
                 plotOptions: {
                     column: {
@@ -321,7 +321,7 @@
                     text: 'Income'
                 },
                 xAxis: {
-                    categories:  {!! $serverchart->pluck('date') !!}
+                    categories:  [{{$chartincome['date']}}]
                 },
                 yAxis: {
                     min: 0,
@@ -348,7 +348,7 @@
                 },
                 series: [{
                     name: 'Income',
-                    data: invoice
+                    data: [{{$chartincome['income']}}]
                 }]
             });
         </script>
