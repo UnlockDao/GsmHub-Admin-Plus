@@ -114,6 +114,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="{{ url('members') }}">
+                        <i class="ni ni-money-coins text-primary"></i>Members
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{{ url('clientgroup') }}">
                         <i class="ni ni-circle-08 text-primary"></i>Client Group
                     </a>

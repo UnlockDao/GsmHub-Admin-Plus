@@ -88,3 +88,5 @@ Route::get('reprice', 'Utility@Request');
 Route::get('serverorder', 'ServerorderController@index');
 Route::get('imeiorder', 'ImeiorderController@index');
 
+Route::get('members', 'MemberController@index');
+
