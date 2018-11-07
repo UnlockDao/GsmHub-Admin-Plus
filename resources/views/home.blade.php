@@ -205,12 +205,17 @@
 
         </div>
 
-
+        <link rel="stylesheet" type="text/css" href="{{ asset('js/highcharts_date_range_grouping.css') }}">
         <script src="{{ asset('js/highcharts.js') }}"></script>
+        <script src="{{ asset('js/highcharts_date_range_grouping.min.js') }}"></script>
         <script>
             Highcharts.chart('profitchart', {
                 chart: {
                     type: 'column'
+                },dateRangeGrouping: {
+                    dayFormat: { month: 'numeric', day: 'numeric', year: 'numeric' },
+                    weekFormat: { month: 'numeric', day: 'numeric', year: 'numeric' },
+                    monthFormat: { month: 'numeric', year: 'numeric'  }
                 },
                 title: {
                     text: 'Profit'
@@ -253,6 +258,10 @@
             Highcharts.chart('container', {
                 chart: {
                     type: 'column'
+                },dateRangeGrouping: {
+                    dayFormat: { month: 'numeric', day: 'numeric', year: 'numeric' },
+                    weekFormat: { month: 'numeric', day: 'numeric', year: 'numeric' },
+                    monthFormat: { month: 'numeric', year: 'numeric'  }
                 },
                 title: {
                     text: 'Orders'
@@ -302,6 +311,10 @@
             Highcharts.chart('invoice', {
                 chart: {
                     type: 'column'
+                },dateRangeGrouping: {
+                    dayFormat: { month: 'numeric', day: 'numeric', year: 'numeric' },
+                    weekFormat: { month: 'numeric', day: 'numeric', year: 'numeric' },
+                    monthFormat: { month: 'numeric', year: 'numeric'  }
                 },
                 title: {
                     text: 'Income'
