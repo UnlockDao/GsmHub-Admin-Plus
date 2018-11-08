@@ -90,3 +90,5 @@ Route::get('imeiorder', 'ImeiorderController@index');
 
 Route::get('members', 'MemberController@index');
 
+Route::get('mail', 'MailController@index');
+
