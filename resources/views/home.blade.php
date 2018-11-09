@@ -6,6 +6,13 @@
         }.highcharts-background {
              display: none;
          }
+        #table-scroll {
+            height:500px;
+            overflow:auto;
+        }
+        ::-webkit-scrollbar {
+            width: 0px;
+        }
     </style>
     <div class="container-fluid">
         <div class="header-body">
@@ -156,6 +163,7 @@
                     </div>
                     <div class="table-responsive">
                         <!-- Projects table -->
+                        <div id="table-scroll">
                         <table class="table align-items-center table-flush">
                             <thead class="thead-light">
                             <tr>
@@ -174,6 +182,7 @@
                             @endforeach
                             </tbody>
                         </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -188,6 +197,7 @@
                     </div>
                     <div class="table-responsive">
                         <!-- Projects table -->
+                        <div id="table-scroll">
                         <table class="table align-items-center table-flush">
                             <thead class="thead-light">
                             <tr>
@@ -206,6 +216,7 @@
                             @endforeach
                             </tbody>
                         </table>
+                        </div>
                     </div>
                 </div>
             </div>

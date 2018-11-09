@@ -246,7 +246,7 @@ class HomeController extends Controller
                 DB::raw('sum(if(link_order_id != 0, imei_service_order.credit_default_currency, imei_service_order.credit_default_currency - imei_service_order.purchase_cost)) as profit, sum(if(link_order_id != 0, credit_default_currency, 0 )) as linked_profit'))
             ->groupBy('imei_service_id')
             ->orderBy('cnt', 'DESC')
-            ->take(10)
+            ->take(20)
             ->get();
         $return_arr['server'] = ServerServiceOrder::leftjoin('server_service', 'server_service_id', '=', 'server_service.id')
             ->where('server_service_order.status', 'COMPLETED')->where('api_submit_status', 'submitted')
@@ -255,7 +255,7 @@ class HomeController extends Controller
                 DB::raw("sum(server_service_order.credit_default_currency - ( server_service_order.purchase_cost * IF( quantity >0, server_service_order.quantity, 1 ) ) ) as profit"))
             ->groupBy('server_service_id')
             ->orderBy('cnt', 'DESC')
-            ->take(10)
+            ->take(20)
             ->get();
         return $return_arr;
     }
