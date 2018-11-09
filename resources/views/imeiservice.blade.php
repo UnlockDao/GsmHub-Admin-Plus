@@ -141,12 +141,12 @@
                                             @foreach($usergroup as $u)
                                                 <td>  @foreach($v->clientgroupprice as $cl)
                                                         @if($cl->currency == $currenciessite->config_value && $cl->service_type == 'imei' && $cl->group_id == $u->id )
-                                                            @if($v->purchase_cost == $v->credit + $cl->discount)
-                                                                <span class="badge badge-pill badge-warning"><?php echo number_format($v->credit + $cl->discount, 2); ?><span>
-                                                            @elseif($v->purchase_cost > $v->credit + $cl->discount)
-                                                                            <span class="badge badge-pill badge-danger"><?php echo number_format($v->credit + $cl->discount, 2); ?><span>
+                                                            @if($v->purchase_cost == round($v->credit + $cl->discount,10))
+                                                                <span class="badge badge-pill badge-warning"><a data-toggle="tooltip" data-placement="top" data-original-title="{{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ" >{{round($v->credit + $cl->discount,2)}}</a><span>
+                                                            @elseif($v->purchase_cost > round($v->credit + $cl->discount,10))
+                                                                            <span class="badge badge-pill badge-danger"><a data-toggle="tooltip" data-placement="top" data-original-title="{{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ" >{{round($v->credit + $cl->discount,2)}}</a><span>
                                                                     @else
-                                                                            <a data-toggle="tooltip" data-placement="top" data-original-title="{{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->credit + $cl->discount, 2); ?></a>
+                                                                            <a data-toggle="tooltip" data-placement="top" data-original-title="{{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ" >{{round($v->credit + $cl->discount,2)}}</a>
                                                             @endif
                                                         @endif
                                                     @endforeach</td>

@@ -177,9 +177,14 @@
                                                     @foreach($clientgroup as $cg)
                                                         <td width="5%">@foreach($a->serverservicetypewisegroupprice as $serverservicetypewisegroupprice)
                                                                 @if($serverservicetypewisegroupprice->service_type_id == $a->id &&$serverservicetypewisegroupprice->group_id == $cg->id)
-                                                                    @if($a->purchase_cost > $serverservicetypewisegroupprice->amount)
-                                                                        <span class="badge badge-pill badge-danger">{{ number_format( $serverservicetypewisegroupprice->amount , 2) }}
-                                                                            <span>
+                                                                    @if($a->purchase_cost == $serverservicetypewisegroupprice->amount)
+                                                                        <span class="badge badge-pill badge-warning"><a data-toggle="tooltip"
+                                                                                                                        data-placement="top"
+                                                                                                                        data-original-title="{{number_format($serverservicetypewisegroupprice->amount*$exchangerate->exchange_rate_static)}} đ">{{ number_format( $serverservicetypewisegroupprice->amount , 2) }}</a></span>
+                                                                    @elseif($a->purchase_cost > $serverservicetypewisegroupprice->amount)
+                                                                        <span class="badge badge-pill badge-danger"><a data-toggle="tooltip"
+                                                                                                                       data-placement="top"
+                                                                                                                       data-original-title="{{number_format($serverservicetypewisegroupprice->amount*$exchangerate->exchange_rate_static)}} đ">{{ number_format( $serverservicetypewisegroupprice->amount , 2) }}</a></span>
                                                                            @else
                                                                                     <a data-toggle="tooltip"
                                                                                        data-placement="top"
@@ -222,8 +227,7 @@
                                                     <td>@foreach($serverservicequantityrange->serverserviceusercredit as $serverserviceusercredit)
                                                             @if($serverserviceusercredit->currency == $currenciessite->config_value)
                                                                 @if($v->purchase_cost > $serverserviceusercredit->credit)
-                                                                    <span class="badge badge-pill badge-danger">{{number_format($serverserviceusercredit->credit,2)}}
-                                                                        <span>
+                                                                    <span class="badge badge-pill badge-danger">{{number_format($serverserviceusercredit->credit,2)}}</span>
                                                                 @else
                                                                                 <a data-toggle="tooltip"
                                                                                    data-placement="top"
@@ -234,9 +238,16 @@
                                                     @foreach($clientgroup as $cg)
                                                         <td>@foreach($serverservicequantityrange->serverserviceclientgroupcredit as $serverserviceclientgroupcredit)
                                                                 @if($serverserviceclientgroupcredit->currency== $currenciessite->config_value && $serverserviceclientgroupcredit->client_group_id==$cg->id )
-                                                                    @if($v->purchase_cost > $serverserviceclientgroupcredit->credit)
-                                                                        <span class="badge badge-pill badge-danger">{{number_format($serverserviceclientgroupcredit->credit,2)}}
-                                                                            <span>
+                                                                @if($v->purchase_cost == $serverserviceclientgroupcredit->credit)
+                                                                        <span class="badge badge-pill badge-warning"><a data-toggle="tooltip"
+                                                                                                                        data-placement="top"
+                                                                                                                        data-original-title="{{number_format($serverserviceclientgroupcredit->credit*$exchangerate->exchange_rate_static)}} đ">{{number_format($serverserviceclientgroupcredit->credit,2)}}</a>
+                                                                            </span>
+                                                                    @elseif($v->purchase_cost > $serverserviceclientgroupcredit->credit)
+                                                                        <span class="badge badge-pill badge-danger"><a data-toggle="tooltip"
+                                                                                                                       data-placement="top"
+                                                                                                                       data-original-title="{{number_format($serverserviceclientgroupcredit->credit*$exchangerate->exchange_rate_static)}} đ">{{number_format($serverserviceclientgroupcredit->credit,2)}}</a>
+                                                                            </span>
                                                                             @else
                                                                                     <a data-toggle="tooltip"
                                                                                        data-placement="top"
