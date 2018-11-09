@@ -92,3 +92,5 @@ Route::get('members', 'MemberController@index');
 
 Route::get('mail', 'MailController@index');
 
+Route::get('cron', 'ProfitCronController@updateDailyProfit');
+
