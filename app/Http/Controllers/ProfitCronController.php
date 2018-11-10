@@ -8,10 +8,9 @@ use Illuminate\Support\Facades\DB;
 
 class ProfitCronController extends Controller
 {
-
-
     public function runcron()
     {
+        date_default_timezone_set("asia/ho_chi_minh");
         $yesterday = date('Y-m-d', strtotime('-1 days'));
         $cron_type_arr = ['imei', 'server', 'imei_service', 'file_service', 'server_service', 'balance_summary'];
         foreach ($cron_type_arr as $cron_type) {
@@ -76,6 +75,18 @@ class ProfitCronController extends Controller
                 $obj->addNew($data_arr);
             }
 
+        }
+    }
+
+    public function runcrontoday()
+    {
+        date_default_timezone_set("asia/ho_chi_minh");
+        $yesterday = date('Y-m-d');
+        $cron_type_arr = ['imei', 'server', 'imei_service', 'file_service', 'server_service', 'balance_summary'];
+        foreach ($cron_type_arr as $cron_type) {
+            if ('imei' === $cron_type || 'file' === $cron_type || 'server' === $cron_type) {
+                $this->updateDailyProfit($yesterday, $cron_type);
+            }
         }
     }
 }
