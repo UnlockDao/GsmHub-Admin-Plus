@@ -77,9 +77,6 @@ class HomeController extends Controller
         $ordercountchart = $this->ordercountchart($datefilter);
         $incomechart = $this->incomechart($datefilter);
 
-        $cron = new \App\Http\Controllers\ProfitCronController();
-        $cron->runcrontoday();
-
         return view('home', compact('serveroder', 'imeioder', 'invoice', 'pendingoder', 'topservice', 'profitchart', 'ordercountchart', 'incomechart'));
     }
 

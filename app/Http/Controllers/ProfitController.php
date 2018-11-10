@@ -15,6 +15,9 @@ class ProfitController extends Controller
 
     public function index(Request $request)
     {
+        $cron = new ProfitCronController();
+        $cron->runcrontoday();
+
         $profit = AdminPlus_SiteProfitDetails::orderBy('id', 'desc')->paginate(10);
         return view('profitreport', compact('profit'));
     }
