@@ -17,7 +17,7 @@ class ProfitController extends Controller
 
     public function index(Request $request)
     {
-        $profit = AdminPlus_SiteProfitDetails::paginate(10);
+        $profit = AdminPlus_SiteProfitDetails::orderBy('id','desc')->paginate(10);
         return view('profitreport',compact('profit'));
     }
 
