@@ -114,6 +114,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="{{ url('profitreport') }}">
+                        <i class="ni ni-money-coins text-primary"></i>Profit Report
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{{ url('members') }}">
                         <i class="ni ni-money-coins text-primary"></i>Members
                     </a>

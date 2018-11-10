@@ -17,6 +17,7 @@ class SQL extends Migration
         $this->currencyPricing();
         $this->addServerservicepurchasecostnotvip();
         $this->roleAdminplus();
+        $this->createSiteProfitDetails();
 
     }
 
@@ -119,6 +120,23 @@ class SQL extends Migration
         {
             Schema::table('administrator', function (Blueprint $table) {
                 $table->integer('role_adminplus')->default(1);
+            });
+        }
+    }
+
+    public function createSiteProfitDetails()
+    {
+        if (!Schema::hasTable('adminplus_site_profit_details')) {
+            Schema::create('adminplus_site_profit_details', function (Blueprint $table) {
+                $table->increments('id');
+                $table->date('date_profit');
+                $table->dateTime('date_added');
+                $table->dateTime('date_updated');
+                $table->double('imei_profit_amount');
+                $table->double('reversed_amount');
+                $table->double('imei_linked_profit');
+                $table->double('file_profit_amount');
+                $table->double('server_profit_amount');
             });
         }
     }
