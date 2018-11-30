@@ -19,5 +19,9 @@ class Invoice extends Model
     {
         return $this->belongsTo('App\User','user_id','user_id');
     }
+    public function payment()
+    {
+        return $this->belongsTo('App\Models\Payment','payment_gateway','gateway_key');
+    }
 }
 

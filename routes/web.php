@@ -82,9 +82,11 @@ Route::get('serverdelete/{id}', 'ServerserviceController@delete');
 
 Route::get('role', 'Auth\LoginController@role');
 Route::get('role/{squirrel}/{any}', 'Auth\LoginController@status');
+//Invoice Report
+Route::get('invoicereport', 'InvoiceReportController@index');
 //Utility
 Route::get('reprice', 'Utility@Request');
-
+//Service Report
 Route::get('serverorder', 'ServerorderController@index');
 Route::get('imeiorder', 'ImeiorderController@index');
 
