@@ -41,6 +41,14 @@
                                                     @if($cachesearch->status == 'pending_approval')selected @endif>
                                                 Pending Approval
                                             </option>
+                                            <option value="pending_payment"
+                                                    @if($cachesearch->status == 'pending_payment')selected @endif>
+                                                Pending Payment
+                                            </option>
+                                            <option value="partially_paid"
+                                                    @if($cachesearch->status == 'partially_paid')selected @endif>
+                                                Partially Paid
+                                            </option>
                                         </select>
                                     </div>
                                     <div class="col-md-2">
