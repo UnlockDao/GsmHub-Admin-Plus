@@ -164,18 +164,19 @@ class ServerserviceController extends Controller
                         $giatransactionfee = ($tipurchasecost * $purchasecost) / $exchangerategoc + (($purchasecost / 100) * $transactionfeegd);
                         Serverservice::where('id', $sr->id)->update(['purchase_cost' => $giatransactionfee]);
                     }
-                    if (!$serverservice->serverservicetypewiseprice->isEmpty())
-                        if ($serverservice->api_id == !null) {
-                            foreach ($serverservice->serverservicetypewiseprice as $a) {
-                                foreach ($a->apiservicetypewisepriceid as $apiserverservicetypeprice) {
-                                    if ($apiserverservicetypeprice->id == $a->api_service_type_wise_price_id) {
-                                        $purchasecost = $apiserverservicetypeprice->api_price;
-                                    }
+                }
+                if (!$serverservice->serverservicetypewiseprice->isEmpty()){
+                    if ($serverservice->api_id == !null) {
+                        foreach ($serverservice->serverservicetypewiseprice as $a) {
+                            foreach ($a->apiservicetypewisepriceid as $apiserverservicetypeprice) {
+                                if ($apiserverservicetypeprice->id == $a->api_service_type_wise_price_id) {
+                                    $purchasecost = $apiserverservicetypeprice->api_price;
                                 }
-                                $giatransactionfee = ($tipurchasecost * $purchasecost) / $exchangerategoc + (($purchasecost / 100) * $transactionfeegd);
-                                Serverservicetypewiseprice::where('id', $a->id)->update(['purchase_cost' => $giatransactionfee]);
                             }
+                            $giatransactionfee = ($tipurchasecost * $purchasecost) / $exchangerategoc + (($purchasecost / 100) * $transactionfeegd);
+                            Serverservicetypewiseprice::where('id', $a->id)->update(['purchase_cost' => $giatransactionfee]);
                         }
+                    }
                 }
             }
         }
