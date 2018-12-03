@@ -96,3 +96,4 @@ Route::get('mail', 'MailController@index');
 
 Route::get('profitreport', 'ProfitController@index');
 Route::get('cronjobprofit', 'ProfitCronController@runcron');
+Route::get('runcronrange', 'ProfitCronController@runcronrange');

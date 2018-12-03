@@ -5,6 +5,25 @@
         <div class="row">
             <div class="col">
                 <div class="card shadow">
+                    <form action="{{ url('runcronrange') }}" method="GET">
+                        <label class="form-control-label"></label>
+                        <div class="row">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label class="form-control-label">Time</label>
+                                        <input class="form-control form-control-alternative" type="text"
+                                               name="datefilter" value="{{$cachesearch->datefilter}}"
+                                               autocomplete="off"/>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <label class="form-control-label">Reload</label>
+                                        <input type="submit" value="Reload" class="form-control btn-primary">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                     <div class="card-header border-0">
                         <h3 class="mb-0">Profit Report</h3>
                     </div>
@@ -16,6 +35,7 @@
                                 <th scope="col">IMEI Profit</th>
                                 <th scope="col">Server Profit</th>
                                 <th scope="col">Profit Amount</th>
+                                <th scope="col"></th>
                             </thead>
                             <tbody>
                             @foreach($profit as $v)
@@ -25,6 +45,12 @@
                                     <td scope="row">{{$v->imei_profit_amount}}</td>
                                     <td scope="row">{{$v->server_profit_amount}}</td>
                                     <td scope="row"><strong>{{$v->server_profit_amount+$v->imei_profit_amount}}</strong></td>
+                                    <td scope="row">
+                                        <form action="" method="GET">
+                                            <input name="date" value="{{$v->date_profit}}" hidden>
+                                            <input type="submit" value="Reload" class="btn btn-sm btn-primary">
+                                        </form>
+                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>

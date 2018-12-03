@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\AdminPlus_SiteProfitDetails;
+use DateInterval;
+use DatePeriod;
 use DateTime;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ProfitCronController extends Controller
@@ -88,5 +91,29 @@ class ProfitCronController extends Controller
                 $this->updateDailyProfit($yesterday, $cron_type);
             }
         }
+    }
+
+    public function runcronrange(Request $request)
+    {
+        if ($request->datefilter == !null) {
+            $tg = explode(" - ", $request->datefilter);
+            date_default_timezone_set("asia/ho_chi_minh");
+            $begin = new DateTime($tg[0]);
+            $end = new DateTime($tg[1]);
+            $interval = new DateInterval('P1D');
+            $daterange = new DatePeriod($begin, $interval, $end);
+
+            foreach ($daterange as $date) {
+
+                $yesterday = $date->format("Y-m-d");
+                $cron_type_arr = ['imei', 'server', 'imei_service', 'file_service', 'server_service', 'balance_summary'];
+                foreach ($cron_type_arr as $cron_type) {
+                    if ('imei' === $cron_type || 'file' === $cron_type || 'server' === $cron_type) {
+                        $this->updateDailyProfit($yesterday, $cron_type);
+                    }
+                }
+            }
+        }
+        return back();
     }
 }
