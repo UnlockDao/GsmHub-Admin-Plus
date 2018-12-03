@@ -93,6 +93,18 @@ class ProfitCronController extends Controller
         }
     }
 
+    public function reloadprofit(Request $request)
+    {
+        $yesterday = $request->date;
+        $cron_type_arr = ['imei', 'server', 'imei_service', 'file_service', 'server_service', 'balance_summary'];
+        foreach ($cron_type_arr as $cron_type) {
+            if ('imei' === $cron_type || 'file' === $cron_type || 'server' === $cron_type) {
+                $this->updateDailyProfit($yesterday, $cron_type);
+            }
+        }
+        return back();
+    }
+
     public function runcronrange(Request $request)
     {
         if ($request->datefilter == !null) {

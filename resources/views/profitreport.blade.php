@@ -46,7 +46,8 @@
                                     <td scope="row">{{$v->server_profit_amount}}</td>
                                     <td scope="row"><strong>{{$v->server_profit_amount+$v->imei_profit_amount}}</strong></td>
                                     <td scope="row">
-                                        <form action="" method="GET">
+                                        <form action="{{ url('reloadprofit') }}" method="POST">
+                                            {{ csrf_field() }}
                                             <input name="date" value="{{$v->date_profit}}" hidden>
                                             <input type="submit" value="Reload" class="btn btn-sm btn-primary">
                                         </form>
