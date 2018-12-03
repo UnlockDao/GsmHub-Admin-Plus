@@ -49,21 +49,20 @@ class HomeController extends Controller
             ->where('credit_default_currency', '!=', 0)
             ->where('status', '=', 'Completed')
             ->where('amount_debitted', '=', 1)
-            ->selectRaw('sum(if(link_order_id != 0, credit_default_currency, credit_default_currency - purchase_cost)) as profit, sum(if(link_order_id != 0, credit_default_currency, 0 )) as linked_profit')
+            ->selectRaw('sum(if(link_order_id != 0, credit_default_currency, credit_default_currency - purchase_cost)) as profit,sum(if(link_order_id != 0, credit_default_currency, credit_default_currency)) as revenue, sum(if(link_order_id != 0, credit_default_currency, 0 )) as linked_profit')
             ->first();
         $serveroder = Serverserviceorder::whereBetween('completed_on', [$tg1, $tg2])
             ->where('ignore_profit', 0)
             //->where('purchase_cost', '>', 0) // wrong condition
             ->where('status', '=', 'Completed')
             ->where('credit_default_currency', '!=', 0)
-            ->selectRaw('sum(credit_default_currency - ( purchase_cost * IF( quantity >0, quantity, 1 ) ) ) as profit')
+            ->selectRaw('sum(credit_default_currency - ( purchase_cost * IF( quantity >0, quantity, 1 ) ) ) as profit,sum(credit_default_currency) as revenue')
             ->first();
         $invoice = Invoice::whereBetween('date_added', [$tg1, $tg2])
             ->where('created_by', '=', 0)
             ->where('invoice_status', 'paid')
             ->select(DB::raw('count(id) as icount, sum(invoice_amount) as amt, currency'))
-            ->groupBy('currency')
-            ->get();
+            ->where('currency','USD')->first();
         //get day in month
         $date = DateTime::createFromFormat("Y-n", "2018-11");
         $datesArray = array();
@@ -76,8 +75,9 @@ class HomeController extends Controller
         $profitchart = $this->profitchart($datefilter);
         $ordercountchart = $this->ordercountchart($datefilter);
         $incomechart = $this->incomechart($datefilter);
+        $revenuechart = $this->revenuechart($datefilter);
 
-        return view('home', compact('serveroder', 'imeioder', 'invoice', 'pendingoder', 'topservice', 'profitchart', 'ordercountchart', 'incomechart'));
+        return view('home', compact('serveroder', 'imeioder', 'invoice', 'pendingoder', 'topservice', 'profitchart', 'ordercountchart', 'incomechart','revenuechart'));
     }
 
     public function pendingoder()
@@ -155,6 +155,50 @@ class HomeController extends Controller
         $server_recds = ServerServiceOrder::whereBetween('completed_on', [$tg1, $tg2])
             ->where('status', '=', 'COMPLETED')
             ->selectraw('date(convert_tz(completed_on,"+00:00","+07:00")) as day, sum(credit_default_currency - ( purchase_cost * IF( quantity >0, quantity, 1 ) ) ) as total')
+            ->groupby('day')
+            ->pluck('total', 'day');
+
+        $interval = new DateInterval('P1D');
+        $daterange = new DatePeriod($begin, $interval, $end);
+
+        foreach ($daterange as $date) {
+            $month = $date->format("Y-m-d");
+            $imei_cnt = (isset($imei_recds[$month]) ? $imei_recds[$month] : 'null');
+            $server_cnt = (isset($server_recds[$month]) ? $server_recds[$month] : 'null');
+
+            $return_arr['imei'] .= $imei_cnt . ',';
+            $return_arr['server'] .= $server_cnt . ',';
+            $return_arr['date'] .= '"' . ($month) . '",';
+
+        }
+        $return_arr['imei'] = '[' . rtrim($return_arr['imei'], ',') . ']';
+        $return_arr['server'] = '[' . rtrim($return_arr['server'], ',') . ']';
+        $return_arr['date'] = '[' . rtrim($return_arr['date'], ',') . ']';
+        return $return_arr;
+    }
+
+    public function revenuechart($datefilter)
+    {
+        $tg = explode(" - ", $datefilter);
+        $tg1 = CUtil::convertDateS($tg[0]);
+        $tg2 = CUtil::convertDateS($tg[1]);
+
+        $begin = new DateTime($tg[0]);
+        $end = new DateTime($tg[1]);
+
+        $return_arr = [];
+        $return_arr['imei'] = '';
+        $return_arr['server'] = '';
+        $return_arr['date'] = '';
+
+        $imei_recds = ImeiServiceOrder::whereBetween('completed_on', [$tg1, $tg2])
+            ->where('status', '=', 'COMPLETED')
+            ->selectRaw('date(convert_tz(completed_on,"+00:00","+07:00")) as day, sum(if(link_order_id != 0, credit_default_currency, credit_default_currency)) as total')
+            ->groupby('day')
+            ->pluck('total', 'day');
+        $server_recds = ServerServiceOrder::whereBetween('completed_on', [$tg1, $tg2])
+            ->where('status', '=', 'COMPLETED')
+            ->selectraw('date(convert_tz(completed_on,"+00:00","+07:00")) as day, sum(credit_default_currency) as total')
             ->groupby('day')
             ->pluck('total', 'day');
 
