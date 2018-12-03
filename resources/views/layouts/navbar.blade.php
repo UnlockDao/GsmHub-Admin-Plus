@@ -5,7 +5,7 @@
             <div class="form-group mb-0">
                 <div class="input-group input-group-alternative">
                     <div class="input-group-prepend">
-                        <span class="input-group-text" onclick="form.submit();"><i class="fas fa-search"></i></span>
+                        <input type="submit" value="Send" class="icon icon-shape bg-primary text-white text-sm rounded-circle shadow">
                     </div>
                     <input class="form-control" type="text" name="datefilter" value="" style="width:300px" autocomplete="off"/>
                 </div>
