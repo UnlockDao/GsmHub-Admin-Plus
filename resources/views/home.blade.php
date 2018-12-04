@@ -20,25 +20,6 @@
     </style>
     <div class="container-fluid">
         <div class="header-body">
-            <!-- Card stats -->
-            <div class="row" style="padding-bottom: 10px; margin-top: -50px">
-                <div class="col-xl-3 col-lg-6">
-                    <ul class="nav nav-pills nav-pills-circle" id="tabs_2" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link rounded-circle bg-gradient-green active" id="home-tab" data-toggle="tab" href="#profit"
-                               role="tab" aria-controls="home" aria-selected="true">
-                                <span class="nav-link-icon d-block"><i class="ni ni-money-coins"></i></span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link bg-gradient-green" id="profile-tab" data-toggle="tab" href="#order" role="tab"
-                               aria-controls="profile" aria-selected="false">
-                                <span class="nav-link-icon d-block"><i class="ni ni-chart-bar-32"></i></span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
             <div class="row">
                 <div class="col-xl-3 col-lg-6">
                     <div class="card card-stats mb-4 mb-xl-0">
@@ -142,6 +123,28 @@
                 </div>
 
             </div>
+
+
+            <!-- Card stats -->
+            <div class="row" style="margin-bottom: -25px; margin-top: 10px">
+                <div class="col-xl-3 col-lg-6">
+                    <ul class="nav nav-pills nav-pills-circle" id="tabs_2" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link rounded-circle bg-gradient-green active" id="home-tab" data-toggle="tab" href="#profit"
+                               role="tab" aria-controls="home" aria-selected="true">
+                                <span class="nav-link-icon d-block"><i class="ni ni-money-coins"></i></span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link bg-gradient-green" id="profile-tab" data-toggle="tab" href="#order" role="tab"
+                               aria-controls="profile" aria-selected="false">
+                                <span class="nav-link-icon d-block"><i class="ni ni-chart-bar-32"></i></span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
             {{--<br>--}}
             {{--<div class="row">--}}
                 {{--<div class="col-xl-3 col-lg-6">--}}
@@ -244,7 +247,7 @@
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="profit" role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
                 <div class="row">
-                    <div class="col-xl-12 col-lg-12" style="padding-top: 10px">
+                    <div class="col-xl-12 col-lg-12">
                         <div class="card card-stats mb-4 mb-xl-0">
                             <div class="card-body">
                                 <div id="profitchart" style="min-width: 310px; height: 300px; margin: 0 auto"></div>
