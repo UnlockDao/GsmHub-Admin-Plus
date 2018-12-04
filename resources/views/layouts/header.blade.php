@@ -27,8 +27,10 @@
     ::-webkit-scrollbar-thumb {
         -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
     }
+    #parent {
+        height: 700px;
+    }
 </style>
-
 <body>
 <!-- Sidenav -->
 @include('layouts.sidebar')
@@ -71,6 +73,7 @@
 <!-- Argon Scripts -->
 <!-- Core -->
 <script src="{{ asset('assets/vendor/jquery/dist/jquery.min.js') }}"></script>
+<script src="{{ asset('js/tableHeadFixer.js') }}"></script>
 <script src="{{ asset('assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
 <!-- Optional JS -->
 <script src="{{ asset('assets/vendor/chart.js/dist/Chart.min.js') }}"></script>
@@ -118,6 +121,11 @@
 <script type="text/javascript">
     $('.defaultcurrency').on('change', function () {
         $('.defaultcurrency').not(this).prop('checked', false);
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $("#fixTable").tableHeadFixer();
     });
 </script>
 </body>

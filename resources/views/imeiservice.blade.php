@@ -77,8 +77,8 @@
                             </div>
                         </form>
                     </div>
-                    <div class="table-responsive">
-                        <table class="table align-items-center table-flush">
+                    <div id="parent" class="table-responsive">
+                        <table id="fixTable" class="table align-items-center table-flush">
                             <thead class="text-primary" id="myHeader">
                             <th></th>
                             <th>Service Name</th>
