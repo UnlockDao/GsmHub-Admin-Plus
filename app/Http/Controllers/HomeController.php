@@ -163,8 +163,8 @@ class HomeController extends Controller
 
         foreach ($daterange as $date) {
             $month = $date->format("Y-m-d");
-            $imei_cnt = (isset($imei_recds[$month]) ? $imei_recds[$month] : 'null');
-            $server_cnt = (isset($server_recds[$month]) ? $server_recds[$month] : 'null');
+            $imei_cnt = (isset($imei_recds[$month]) ? round($imei_recds[$month]) : 'null');
+            $server_cnt = (isset($server_recds[$month]) ? round($server_recds[$month]) : 'null');
 
             $return_arr['imei'] .= $imei_cnt . ',';
             $return_arr['server'] .= $server_cnt . ',';
@@ -207,8 +207,8 @@ class HomeController extends Controller
 
         foreach ($daterange as $date) {
             $month = $date->format("Y-m-d");
-            $imei_cnt = (isset($imei_recds[$month]) ? $imei_recds[$month] : 'null');
-            $server_cnt = (isset($server_recds[$month]) ? $server_recds[$month] : 'null');
+            $imei_cnt = (isset($imei_recds[$month]) ? round($imei_recds[$month]) : 'null');
+            $server_cnt = (isset($server_recds[$month]) ? round($server_recds[$month]) : 'null');
 
             $return_arr['imei'] .= $imei_cnt . ',';
             $return_arr['server'] .= $server_cnt . ',';
