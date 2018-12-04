@@ -30,6 +30,10 @@
     #parent {
         height: 700px;
     }
+    .table th{
+        border-top: 0px;
+        z-index: 999;
+    }
 </style>
 <body>
 <!-- Sidenav -->
