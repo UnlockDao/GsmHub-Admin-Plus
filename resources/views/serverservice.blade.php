@@ -37,13 +37,12 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <strong>Service Group</strong>
-                                    <select class="form-control form-control-alternative" name="group_name">
-                                        <option value="">...</option>
+                                    <input list="brow" name="group_name" autocomplete="off" class="form-control form-control-alternative" value="{{$cachesearch->group_name}}">
+                                    <datalist id="brow">
                                         @foreach($groupsearch as $g )
-                                            <option value="{{$g->id}}"
-                                                    @if($cachesearch->group_name == $g->id) selected @endif>{{$g->group_name}}</option>
+                                            <option value="{{$g->id}}">{{$g->group_name}}</option>
                                         @endforeach
-                                    </select>
+                                    </datalist>
                                 </div>
                                 <div class="col-md-2">
                                     <strong>Service Type</strong>
