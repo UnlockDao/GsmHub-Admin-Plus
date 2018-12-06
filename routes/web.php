@@ -88,6 +88,8 @@ Route::get('invoicereport', 'InvoiceReportController@index');
 Route::get('reprice', 'Utility@Request');
 //Service Report
 Route::get('serverorder', 'ServerorderController@index');
+Route::get('serverorder/{id}', 'ServerorderController@show');
+Route::post('serverorder/{id}', 'ServerorderController@edit');
 Route::get('imeiorder', 'ImeiorderController@index');
 
 Route::get('members', 'MemberController@index');
