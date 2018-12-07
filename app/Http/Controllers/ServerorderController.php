@@ -7,6 +7,7 @@ use App\Models\Serverservice;
 use App\Models\Serverserviceorder;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class ServerorderController extends Controller
@@ -78,6 +79,8 @@ class ServerorderController extends Controller
     {
         $serverorder = Serverserviceorder::find($id);
         $serverorder->status = $request->status;
+        $serverorder->updated_by =  'Admin('.Auth::user()->user_name.')';
+        $serverorder->accepted_by = Auth::id();
         $serverorder->completed_on = new DateTime();
         $serverorder->save();
         return back();
