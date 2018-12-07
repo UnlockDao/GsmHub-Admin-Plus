@@ -47,6 +47,10 @@ Route::get('imei/{squirrel}/{any}', 'IMEIController@status');
 //xuất giá
 Route::get('imeiexport', 'Export@exportimei');
 Route::get('serverexport', 'Export@exportserver');
+//sales
+Route::get('imeisales', 'Sales@exportimei');
+Route::post('imeisales', 'Sales@updateimei');
+Route::get('serversales', 'Sales@exportserver');
 
 //chiết khấu phần trăm từng user
 Route::get('clientgroup', 'ClientController@index');

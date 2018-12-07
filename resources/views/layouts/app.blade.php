@@ -39,8 +39,12 @@
     </div>
 </body>
 <script src="{{ asset('assets/vendor/jquery/dist/jquery.min.js') }}"></script>
+<script src="{{ asset('js/jquery.tableCheckbox.js') }}"></script>
 <script src="{{ asset('assets/js/popper.min.js') }}"></script>
 <script src="{{ asset('assets/js/bootstrap-material-design.min.js') }}"></script>
 <script src="{{ asset('assets/js/perfect-scrollbar.jquery.min.js') }}"></script>
 <script src="{{ asset('assets/js/material-dashboard.js?v=2.0.1') }}"></script>
+<script>
+    $('table').tableCheckbox({ /* options */ });
+</script>
 </html>
