@@ -10,6 +10,7 @@ use App\Models\Currencie;
 use App\Models\Currenciepricing;
 use App\Models\Imeiservice;
 use App\Models\Imeiservicegroup;
+use App\Models\Imeiservicepricing;
 use App\Models\Serverservice;
 use App\Models\Serverservicegroup;
 use App\Models\Supplier;
@@ -72,23 +73,84 @@ class Sales
         $chk = $request->chk;
         $sales = $request->sales;
         $cliendefault = Clientgroup::where('status', 'active')->where('chietkhau', '0')->first();
-        $currenciessite = Config::where('config_var','site_default_currency')->first();
-
-        if ($cliendefault == !null && $chk ==! null) {
+        $currenciessite = Config::where('config_var', 'site_default_currency')->first();
+        $cliengroup = Clientgroup::get();
+        $currencies = Currencie::where('display_currency', 'Yes')->get();
+        if ($cliendefault == !null && $chk == !null) {
             foreach ($chk as $c) {
                 $imei = Imeiservice::find($c);
+                $i = Imeiservice::find($c);
+                $saveimeipricing = Imeiservicepricing::find($c);
                 $imeiprice = Clientgroupprice::where('service_id', $c)->where('group_id', $cliendefault->id)->where('currency', $currenciessite->config_value)->first();
-                echo $giabanle = $imei->credit + $imeiprice->discount;
-                echo '<br>';
-                echo 'purchase_cost:'.$imei->purchase_cost;
-                echo '<br>';
-                echo 'profit:'.($giabanle-$imei->purchase_cost);
-                echo '<br>';
-                echo 'sales:'.($giabanle-$imei->purchase_cost)*((100-$sales)/100);
-                echo '<hr>';
 
+                if ($request->sales == 0) {
+                    if ($saveimeipricing->sale == 0) {
+                        $saveimeipricing->pricing_sale = $i->credit + $imeiprice->discount;
+                        $saveimeipricing->save();
+                    }
+                    $saveimeipricing->sale = $request->sales;
+                    $saveimeipricing->save();
+
+                    if ($cliendefault == !null) {
+                        foreach ($currencies as $cs) {
+                            Clientgroupprice::where('group_id', $cliendefault->id)
+                                ->where('service_type', 'imei')
+                                ->where('currency', $cs->currency_code)
+                                ->where('service_id', $i->id)
+                                ->update(['discount' => ($saveimeipricing->pricing_sale - $i->credit) * $cs->exchange_rate_static]);
+                        }
+                        foreach ($cliengroup as $clg) {
+                            $imeiprice = Clientgroupprice::where('service_id', $i->id)->where('group_id', $cliendefault->id)->where('currency', $currenciessite->config_value)->first();
+                            if ($imeiprice == !null) {
+                                $giabanle = $i->credit + $imeiprice->discount;
+                                $chietkhau = ($giabanle - ((($giabanle - $i->purchase_cost) / 100) * $clg->chietkhau));
+                                $y = $chietkhau - $i->credit;
+                                foreach ($currencies as $c) {
+                                    $updatepriceuse = Clientgroupprice::where('group_id', $clg->id)
+                                        ->where('service_type', 'imei')
+                                        ->where('currency', $c->currency_code)
+                                        ->where('service_id', $i->id)
+                                        ->update(['discount' => $y * $c->exchange_rate_static]);
+                                }
+                            }
+                        }
+                    }
+
+                } else {
+                    if ($saveimeipricing->sale == 0) {
+                        $saveimeipricing->pricing_sale = $i->credit + $imeiprice->discount;
+                        $saveimeipricing->save();
+                    }
+                    $saveimeipricing->sale = $request->sales;
+                    $saveimeipricing->save();
+                    if ($cliendefault == !null) {
+                        foreach ($currencies as $cs) {
+                            Clientgroupprice::where('group_id', $cliendefault->id)
+                                ->where('service_type', 'imei')
+                                ->where('currency', $cs->currency_code)
+                                ->where('service_id', $i->id)
+                                ->update(['discount' => (($saveimeipricing->pricing_sale * ((100 - $sales) / 100)) - $i->credit) * $cs->exchange_rate_static]);
+                        }
+                        foreach ($cliengroup as $clg) {
+                            $imeiprice = Clientgroupprice::where('service_id', $i->id)->where('group_id', $cliendefault->id)->where('currency', $currenciessite->config_value)->first();
+                            if ($imeiprice == !null) {
+                                $giabanle = $i->credit + $imeiprice->discount;
+                                $chietkhau = ($giabanle - ((($giabanle - $i->purchase_cost) / 100) * $clg->chietkhau));
+                                $y = $chietkhau - $i->credit;
+                                foreach ($currencies as $c) {
+                                    $updatepriceuse = Clientgroupprice::where('group_id', $clg->id)
+                                        ->where('service_type', 'imei')
+                                        ->where('currency', $c->currency_code)
+                                        ->where('service_id', $i->id)
+                                        ->update(['discount' => $y * $c->exchange_rate_static]);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
+        return back();
 
     }
 
