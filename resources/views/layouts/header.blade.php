@@ -95,7 +95,7 @@
     $(document).ready(function () {
         $(".fancybox").fancybox({
             type: 'iframe',
-            'width':1300,
+            width: "100%",
             afterClose: function () { // USE THIS IT IS YOUR ANSWER THE KEY WORD IS "afterClose"
                 parent.location.reload(true);
                 $.notify({icon: "notifications", message: 'Change value'});
