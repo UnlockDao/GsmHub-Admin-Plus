@@ -20,20 +20,19 @@
             <div class="col">
                 <div class="card shadow">
                     <form action="" method="GET">
-                        <label class="form-control-label">{{$nameserver}}</label>
                         <div class="row">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-2">
                                         <label class="form-control-label">Service Name</label>
-                                        <input list="brow" name="service_name"
-                                               class="form-control form-control-alternative"
-                                               value="{{$cachesearch->service_name}}">
-                                        <datalist id="brow">
+                                        <select class="form-control form-control-alternative selectpicker"
+                                                data-live-search="true" name="service_name">
+                                            <option value="">...</option>
                                             @foreach($groupsearch as $g )
-                                                <option value="{{$g->id}}">{{$g->service_name}}</option>
+                                                <option value="{{$g->id}}"
+                                                        @if($cachesearch->service_name == $g->id) selected @endif>{{$g->service_name}}</option>
                                             @endforeach
-                                        </datalist>
+                                        </select>
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-control-label">Time</label>

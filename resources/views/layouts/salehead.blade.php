@@ -54,4 +54,7 @@
 <link rel="stylesheet" href="{{ asset('css/bootstrap-select.min.css') }}">
 <!-- Latest compiled and minified JavaScript -->
 <script src="{{ asset('js/bootstrap-select.min.js') }}"></script>
+<script>
+    $('select').selectpicker();
+</script>
 </html>
