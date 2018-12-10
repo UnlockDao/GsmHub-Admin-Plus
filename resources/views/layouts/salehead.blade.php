@@ -19,17 +19,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <style>
-    /* for custom scrollbar for webkit browser*/
 
-    ::-webkit-scrollbar {
-        width: 3px;
-    }
-    ::-webkit-scrollbar-track {
-        -webkit-box-shadow: inset 0 0 6px rgba(0, 75, 180, 0.3);
-    }
-    ::-webkit-scrollbar-thumb {
-        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-    }
     .badge1 {
         position:relative;
     }
@@ -60,4 +50,8 @@
 <script>
     $('table').tableCheckbox({ /* options */ });
 </script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="{{ asset('css/bootstrap-select.min.css') }}">
+<!-- Latest compiled and minified JavaScript -->
+<script src="{{ asset('js/bootstrap-select.min.js') }}"></script>
 </html>

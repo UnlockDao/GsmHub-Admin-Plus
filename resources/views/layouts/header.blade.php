@@ -132,6 +132,10 @@
         $("#fixTable").tableHeadFixer();
     });
 </script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="{{ asset('css/bootstrap-select.min.css') }}">
+<!-- Latest compiled and minified JavaScript -->
+<script src="{{ asset('js/bootstrap-select.min.js') }}"></script>
 </body>
 
 </html>

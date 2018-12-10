@@ -7,7 +7,7 @@
                     <div class="row">
                         <div class="col-md-3">
                             <strong>Service Group</strong>
-                            <select class="form-control form-control-alternative" name="group_name">
+                            <select class="form-control selectpicker" data-live-search="true" name="group_name">
                                 <option value="">...</option>
                                 @foreach($groupsearch as $g )
                                     <option value="{{$g->id}}"
@@ -17,7 +17,7 @@
                         </div>
                         <div class="col-md-2">
                             <strong>Service Type</strong>
-                            <select class="form-control form-control-alternative" name="type">
+                            <select class="form-control selectpicker" data-live-search="true" name="type">
                                 <option value="">...</option>
                                 <option value="api" @if($cachesearch->type == 'api')selected @endif>API</option>
                                 <option value="manual" @if($cachesearch->type == 'manual')selected @endif>MANUAL
@@ -26,7 +26,7 @@
                         </div>
                         <div class="col-md-2">
                             <strong>Status</strong>
-                            <select class="form-control form-control-alternative" name="status">
+                            <select class="form-control selectpicker" data-live-search="true" name="status">
                                 <option value="">...</option>
                                 <option value="active" @if($cachesearch->status == 'active')selected @endif>Active
                                 </option>
@@ -37,7 +37,7 @@
                         </div>
                         <div class="col-md-2">
                             <strong>Supplier</strong>
-                            <select class="form-control form-control-alternative" name="supplier">
+                            <select class="form-control selectpicker" data-live-search="true" name="supplier">
                                 <option value="">...</option>
                                 @foreach($supplier as $s)
                                     <option value="{{$s->id}}"
@@ -47,7 +47,7 @@
                         </div>
                         <div class="col-md-2">
                             <strong>Currency</strong>
-                            <select class="form-control form-control-alternative" name="currency">
+                            <select class="form-control selectpicker" data-live-search="true" name="currency">
                                 <option value="">...</option>
                                 @foreach($currencies as $c)
                                     <option value="{{$c->id}}"
@@ -56,8 +56,8 @@
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <br>
-                            <button class="btn btn-info" type="submit"><i class="fas fa-search"></i></button>
+                            <strong>Search</strong><br>
+                            <input value="Search" type="submit" class="btn btn-primary">
                         </div>
                     </div>
                 </form>
@@ -80,7 +80,7 @@
                             @foreach($group->where('imeigroup','<>','') as $g)
                                 <tr class="table-warning">
                                     <td><i class="ni ni-ungroup"></i></td>
-                                    <td colspan="4"><strong style="font-weight:700;">{{$g->group_name}}</strong></td>
+                                    <td colspan="5"><strong style="font-weight:700;">{{$g->group_name}}</strong></td>
                                     @foreach($usergroup as $u)
                                         <td></td>
                                     @endforeach
@@ -133,11 +133,6 @@
             </div>
         </div>
     </div>
-
-
-
-
-
 
 @endsection
 

@@ -7,8 +7,7 @@
                 var url = '';
                 if ($(this).prop('checked') == true) {
                     url = 'imei/status/active';
-                }
-                else if ($(this).prop('checked') == false) {
+                } else if ($(this).prop('checked') == false) {
                     url = 'imei/status/inactive';
                 }
                 $.ajax({
@@ -18,7 +17,7 @@
                     success: function (result) {
                         // $.notify({icon: "notifications", message: result});
                     },
-                    error: function(result) {
+                    error: function (result) {
                         alert('error');
                     }
                 });
@@ -27,24 +26,26 @@
     </script>
     <style>
         .badge1 {
-            position:relative;
+            position: relative;
         }
+
         .badge1[data-badge]:after {
-            content:attr(data-badge);
-            position:absolute;
-            top:-10px;
-            right:-10px;
-            font-size:.7em;
-            background:green;
-            color:white;
-            width:18px;height:18px;
-            text-align:center;
-            line-height:18px;
-            border-radius:50%;
-            box-shadow:0 0 1px #333;
+            content: attr(data-badge);
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: .7em;
+            background: green;
+            color: white;
+            width: 18px;
+            height: 18px;
+            text-align: center;
+            line-height: 18px;
+            border-radius: 50%;
+            box-shadow: 0 0 1px #333;
         }
     </style>
-   
+
     <!-- Page content -->
     <div class="container-fluid mt--7">
         <!-- Table -->
@@ -57,27 +58,35 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <strong>Service Group</strong>
-                                    <input list="brow" name="group_name" autocomplete="off" class="form-control form-control-alternative" value="{{$cachesearch->group_name}}">
-                                    <datalist id="brow">
+                                    <select class="form-control form-control-alternative selectpicker"
+                                            data-live-search="true" name="group_name">
+                                        <option value="">...</option>
                                         @foreach($groupsearch as $g )
-                                            <option value="{{$g->id}}">{{$g->group_name}}</option>
+                                            <option value="{{$g->id}}"
+                                                    @if($cachesearch->group_name == $g->id) selected @endif>{{$g->group_name}}</option>
                                         @endforeach
-                                    </datalist>
+                                    </select>
                                 </div>
                                 <div class="col-md-2">
                                     <strong>Service Type</strong>
                                     <select class="form-control form-control-alternative" name="type">
                                         <option value="">...</option>
                                         <option value="api" @if($cachesearch->type == 'api')selected @endif>API</option>
-                                        <option value="manual" @if($cachesearch->type == 'manual')selected @endif>MANUAL</option>
+                                        <option value="manual" @if($cachesearch->type == 'manual')selected @endif>
+                                            MANUAL
+                                        </option>
                                     </select>
                                 </div>
                                 <div class="col-md-2">
                                     <strong>Status</strong>
                                     <select class="form-control form-control-alternative" name="status">
                                         <option value="">...</option>
-                                        <option value="active" @if($cachesearch->status == 'active')selected @endif>Active</option>
-                                        <option value="inactive" @if($cachesearch->status == 'inactive')selected @endif>Inactive</option>
+                                        <option value="active" @if($cachesearch->status == 'active')selected @endif>
+                                            Active
+                                        </option>
+                                        <option value="inactive" @if($cachesearch->status == 'inactive')selected @endif>
+                                            Inactive
+                                        </option>
                                     </select>
                                 </div>
                                 <div class="col-md-2">
@@ -85,7 +94,8 @@
                                     <select class="form-control form-control-alternative" name="supplier">
                                         <option value="">...</option>
                                         @foreach($supplier as $s)
-                                            <option value="{{$s->id}}" @if($cachesearch->supplier == $s->id)selected @endif>{{$s->name}}</option>
+                                            <option value="{{$s->id}}"
+                                                    @if($cachesearch->supplier == $s->id)selected @endif>{{$s->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -125,8 +135,14 @@
                                 @foreach($imei_service as $v)
                                     @if($v->imei_service_group_id == $g->id )
                                         <tr>
-                                            <td >{{$v->id}}</td>
-                                            <td @if($v->status == 'soft_deleted' )style="text-decoration: line-through;"@endif><a href="https://s-unlock.com/admin/imei-service/edit/{{$v->id}}" class="max-lines @if($v->imeipricing->sale >0) badge1 @endif" data-toggle="tooltip" data-placement="top"  data-original-title="{{$v->service_name}}" @if($v->imeipricing->sale >0) data-badge="{{$v->imeipricing->sale}}" @endif target="_blank">{{$v->service_name}}</a> </td>
+                                            <td>{{$v->id}}</td>
+                                            <td @if($v->status == 'soft_deleted' )style="text-decoration: line-through;"@endif>
+                                                <a href="https://s-unlock.com/admin/imei-service/edit/{{$v->id}}"
+                                                   class="max-lines @if($v->imeipricing->sale >0) badge1 @endif"
+                                                   data-toggle="tooltip" data-placement="top"
+                                                   data-original-title="{{$v->service_name}}"
+                                                   @if($v->imeipricing->sale >0) data-badge="{{$v->imeipricing->sale}}"
+                                                   @endif target="_blank">{{$v->service_name}}</a></td>
                                             <td>@if($v->api_id ==! null)<span
                                                         class="badge badge-pill badge-success">API<span>  @else<span
                                                                 class="badge badge-pill badge-info">Manual<span>  @endif
@@ -134,38 +150,56 @@
                                             <td>
                                                 <div class="togglebutton">
                                                     <label id="{{$v->id}}" class="custom-toggle">
-                                                        <input onfocus="window.location.reload()" class="status" id="check{{$v->id}}" type="checkbox" @if($v->status == 'active' )checked="" @endif>
+                                                        <input onfocus="window.location.reload()" class="status"
+                                                               id="check{{$v->id}}" type="checkbox"
+                                                               @if($v->status == 'active' )checked="" @endif>
                                                         <span class="custom-toggle-slider rounded-circle"></span>
                                                     </label>
                                                 </div>
                                             </td>
                                             <td>@if($v->imeipricing->nhacungcap ==! null){{$v->imeipricing->nhacungcap->name}}@endif</td>
                                             @if($v->api_id ==! null)
-                                                <td>@if($v->apiserverservices ==! null)<a data-toggle="tooltip" data-placement="top"  data-original-title="{{number_format($v->apiserverservices->credits*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->apiserverservices->credits, 2); ?></a>@endif</td>
+                                                <td>@if($v->apiserverservices ==! null)<a data-toggle="tooltip"
+                                                                                          data-placement="top"
+                                                                                          data-original-title="{{number_format($v->apiserverservices->credits*$exchangerate->exchange_rate_static)}} đ"><?php echo number_format($v->apiserverservices->credits, 2); ?></a>@endif
+                                                </td>
                                             @else
-                                                <td><a data-toggle="tooltip" data-placement="top"  data-original-title="{{number_format($v->imeipricing->purchasecost*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->imeipricing->purchasecost, 2); ?></a></td>
+                                                <td><a data-toggle="tooltip" data-placement="top"
+                                                       data-original-title="{{number_format($v->imeipricing->purchasecost*$exchangerate->exchange_rate_static)}} đ"><?php echo number_format($v->imeipricing->purchasecost, 2); ?></a>
+                                                </td>
                                             @endif
 
 
-                                            <td><a data-toggle="tooltip" data-placement="top"  data-original-title="{{number_format($v->purchase_cost*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->purchase_cost, 2); ?></a></td>
+                                            <td><a data-toggle="tooltip" data-placement="top"
+                                                   data-original-title="{{number_format($v->purchase_cost*$exchangerate->exchange_rate_static)}} đ"><?php echo number_format($v->purchase_cost, 2); ?></a>
+                                            </td>
                                             <td>
                                                 @if($v->purchase_cost == $v->credit)
                                                     <span class="badge badge-pill badge-warning">{{number_format($v->credit, 2)}}<span>
                                                 @elseif($v->purchase_cost > $v->credit)
                                                                 <span class="badge badge-pill badge-danger">{{number_format($v->credit, 2)}}<span>
                                                    @else
-                                                                <a data-toggle="tooltip" data-placement="top" data-original-title="{{number_format($v->credit*$exchangerate->exchange_rate_static)}} đ" ><?php echo number_format($v->credit, 2); ?></a>
+                                                                            <a data-toggle="tooltip"
+                                                                               data-placement="top"
+                                                                               data-original-title="{{number_format($v->credit*$exchangerate->exchange_rate_static)}} đ"><?php echo number_format($v->credit, 2); ?></a>
                                                 @endif
                                             </td>
                                             @foreach($usergroup as $u)
                                                 <td>  @foreach($v->clientgroupprice as $cl)
                                                         @if($cl->currency == $currenciessite->config_value && $cl->service_type == 'imei' && $cl->group_id == $u->id )
                                                             @if($v->purchase_cost == round($v->credit + $cl->discount,10))
-                                                                <span class="badge badge-pill badge-warning"><a data-toggle="tooltip" data-placement="top" data-original-title="{{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ" >{{round($v->credit + $cl->discount,2)}}</a><span>
+                                                                <span class="badge badge-pill badge-warning"><a
+                                                                            data-toggle="tooltip" data-placement="top"
+                                                                            data-original-title="{{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ">{{round($v->credit + $cl->discount,2)}}</a><span>
                                                             @elseif($v->purchase_cost > round($v->credit + $cl->discount,10))
-                                                                            <span class="badge badge-pill badge-danger"><a data-toggle="tooltip" data-placement="top" data-original-title="{{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ" >{{round($v->credit + $cl->discount,2)}}</a><span>
+                                                                            <span class="badge badge-pill badge-danger"><a
+                                                                                        data-toggle="tooltip"
+                                                                                        data-placement="top"
+                                                                                        data-original-title="{{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ">{{round($v->credit + $cl->discount,2)}}</a><span>
                                                                     @else
-                                                                            <a data-toggle="tooltip" data-placement="top" data-original-title="{{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ" >{{round($v->credit + $cl->discount,2)}}</a>
+                                                                                        <a data-toggle="tooltip"
+                                                                                           data-placement="top"
+                                                                                           data-original-title="{{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ">{{round($v->credit + $cl->discount,2)}}</a>
                                                             @endif
                                                         @endif
                                                     @endforeach</td>
@@ -173,8 +207,11 @@
 
                                             <td>@if($v->status == 'active')<a
                                                         class="material-icons fancybox fancybox.iframe"
-                                                        href="{{ asset('') }}imei/{{$v->id}}"><i class="ni ni-zoom-split-in"></i></a>@endif</td>
-                                            <td><a href="{{ asset('') }}imeidelete/{{$v->id}}" onclick="return confirm('OK to delete!');"><i class="ni ni-fat-remove"></i></a></td>
+                                                        href="{{ asset('') }}imei/{{$v->id}}"><i
+                                                            class="ni ni-zoom-split-in"></i></a>@endif</td>
+                                            <td><a href="{{ asset('') }}imeidelete/{{$v->id}}"
+                                                   onclick="return confirm('OK to delete!');"><i
+                                                            class="ni ni-fat-remove"></i></a></td>
                                         </tr>
                                     @endif
                                 @endforeach
