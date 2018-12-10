@@ -123,6 +123,25 @@
     });
 </script>
 <script type="text/javascript">
+    $(function() {
+        $('input[name="datefilterh"]').daterangepicker({
+            autoUpdateInput: false,
+            locale: {
+                format: 'Y/MM/DD H:mm:s',
+                cancelLabel: 'Clear'
+            }
+        });
+        $('input[name="datefilterh"]').on('apply.daterangepicker', function(ev, picker) {
+            $(this).val(picker.startDate.format('Y/MM/DD H:mm:s') + ' - ' + picker.endDate.format('Y/MM/DD H:mm:s'));
+            $('#formId').submit(); // <-- SUBMIT
+        });
+
+        $('input[name="datefilterh"]').on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
+        });
+    });
+</script>
+<script type="text/javascript">
     $('.defaultcurrency').on('change', function () {
         $('.defaultcurrency').not(this).prop('checked', false);
     });

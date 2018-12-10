@@ -31,7 +31,7 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        $datefilter = $request->datefilter;
+        $datefilter = $request->datefilterh;
         $tg = explode(" - ", $datefilter);
         if ($datefilter == null) {
             $datefilter = date("Y/m/01 0:00:00") . ' - ' . date("Y/m/30 23:59:59");

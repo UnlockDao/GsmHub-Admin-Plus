@@ -1,13 +1,13 @@
 <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
     <div class="container-fluid">
         <!-- Form -->
-        <form class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ">
+        <form class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex " id="formId">
             <div class="form-group mb-0">
                 <div class="input-group input-group-alternative">
                     <div class="input-group-prepend">
-                        <input type="submit" value="Send" class="icon icon-shape bg-primary text-white text-sm rounded-circle shadow">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
                     </div>
-                    <input class="form-control" type="text" name="datefilter" value="" style="width:300px" autocomplete="off"/>
+                    <input class="form-control" type="text" name="datefilterh" value="" style="width:300px" autocomplete="off"/>
                 </div>
             </div>
         </form>
