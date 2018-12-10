@@ -79,8 +79,13 @@
                                     </select>
                                 </div>
                                 <div class="col-md-1">
-                                    <br>
-                                    <button class="btn btn-info" type="submit"><i class="fas fa-search"></i></button>
+                                    <strong></strong><br>
+                                    <input class="btn btn-info form-control" type="submit" value="Search">
+                                </div>
+                                <div class="col-md-1">
+                                    <strong></strong><br>
+                                    <a class="fancybox fancybox.iframe btn btn-info form-control"
+                                       href="{{ asset('serversales') }}">Sales</a>
                                 </div>
                             </div>
                         </form>
