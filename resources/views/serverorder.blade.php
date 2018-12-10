@@ -13,15 +13,6 @@
             -webkit-box-orient: vertical
         }
     </style>
-    <script>
-        $(document).ready(function () {
-            $("input").click(function () {
-                $(this).next().show();
-                $(this).next().hide();
-            });
-
-        });
-    </script>
     <!-- Page content -->
     <div class="container-fluid mt--7">
         <!-- Table -->
