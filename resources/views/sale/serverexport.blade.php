@@ -7,7 +7,7 @@
                     <div class="row">
                         <div class="col-md-3">
                             <strong>Service Group</strong>
-                            <select class="form-control form-control-alternative" name="group_name">
+                            <select class="form-control form-control-alternative" data-live-search="true" name="group_name">
                                 <option value="">...</option>
                                 @foreach($groupsearch as $g )
                                     <option value="{{$g->id}}"
@@ -74,7 +74,7 @@
                             @foreach($server_service_group->where('servergroup','<>','') as $g)
                                 <tr class="table-warning">
                                     <td><i class="ni ni-ungroup"></td>
-                                    <td colspan="6"><strong style="font-weight:700;">{{$g->group_name}}</strong></td>
+                                    <td colspan="7"><strong style="font-weight:700;">{{$g->group_name}}</strong></td>
                                     @foreach($clientgroup as $cg)
                                         <td></td>
                                     @endforeach
