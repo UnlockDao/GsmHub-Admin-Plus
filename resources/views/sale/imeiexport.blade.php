@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.salehead')
 @section('content')
     <div class="container-fluid">
         <div class="row">
@@ -91,7 +91,7 @@
                                             <td><input type="checkbox" name="chk[]" value="{{$v->id}}"></td>
                                             <td>{{$v->id}}</td>
                                             <td @if($v->status == 'soft_deleted' )style="text-decoration: line-through;"@endif>
-                                                {{$v->service_name}}</td>
+                                                <a class="@if($v->imeipricing->sale >0) badge1 @endif" @if($v->imeipricing->sale >0) data-badge="{{$v->imeipricing->sale}}" @endif > {{$v->service_name}}</a></td>
                                             <td>@if($v->api_id ==! null)<span
                                                         class="badge badge-pill badge-success">API<span>  @else<span
                                                                 class="badge badge-pill badge-info">Manual<span>  @endif
@@ -120,8 +120,12 @@
 
                             </tbody>
                         </table>
-                        <input name="sales" type="number" value="" min="0" max="100" required placeholder="Phần trăm giảm giá">
-                        <input  class="btn-success float-left form-control" type="submit" value="Submit">
+
+                        <div class="form-group">
+                            <label for="sales">Sales %</label>
+                            <input name="sales" type="number" value="" min="0" max="100" required placeholder="Phần trăm giảm giá" class="form-control" id="sales">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
 

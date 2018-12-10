@@ -25,6 +25,25 @@
             });
         }, false);
     </script>
+    <style>
+        .badge1 {
+            position:relative;
+        }
+        .badge1[data-badge]:after {
+            content:attr(data-badge);
+            position:absolute;
+            top:-10px;
+            right:-10px;
+            font-size:.7em;
+            background:green;
+            color:white;
+            width:18px;height:18px;
+            text-align:center;
+            line-height:18px;
+            border-radius:50%;
+            box-shadow:0 0 1px #333;
+        }
+    </style>
    
     <!-- Page content -->
     <div class="container-fluid mt--7">
@@ -107,7 +126,7 @@
                                     @if($v->imei_service_group_id == $g->id )
                                         <tr>
                                             <td >{{$v->id}}</td>
-                                            <td @if($v->status == 'soft_deleted' )style="text-decoration: line-through;"@endif><a href="https://s-unlock.com/admin/imei-service/edit/{{$v->id}}" class="max-lines" data-toggle="tooltip" data-placement="top"  data-original-title="{{$v->service_name}}" target="_blank">{{$v->service_name}}</a> </td>
+                                            <td @if($v->status == 'soft_deleted' )style="text-decoration: line-through;"@endif><a href="https://s-unlock.com/admin/imei-service/edit/{{$v->id}}" class="max-lines @if($v->imeipricing->sale >0) badge1 @endif" data-toggle="tooltip" data-placement="top"  data-original-title="{{$v->service_name}}" @if($v->imeipricing->sale >0) data-badge="{{$v->imeipricing->sale}}" @endif target="_blank">{{$v->service_name}}</a> </td>
                                             <td>@if($v->api_id ==! null)<span
                                                         class="badge badge-pill badge-success">API<span>  @else<span
                                                                 class="badge badge-pill badge-info">Manual<span>  @endif
