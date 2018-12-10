@@ -51,6 +51,7 @@ Route::get('serverexport', 'Export@exportserver');
 Route::get('imeisales', 'Sales@exportimei');
 Route::post('imeisales', 'Sales@updateimei');
 Route::get('serversales', 'Sales@exportserver');
+Route::post('serversales', 'Sales@updateserver');
 
 //chiết khấu phần trăm từng user
 Route::get('clientgroup', 'ClientController@index');

@@ -13,6 +13,8 @@ use App\Models\Imeiservicegroup;
 use App\Models\Imeiservicepricing;
 use App\Models\Serverservice;
 use App\Models\Serverservicegroup;
+use App\Models\Serverservicetypewisegroupprice;
+use App\Models\Serverservicetypewiseprice;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 
@@ -199,5 +201,50 @@ class Sales
                 ->get();
         }
         return view('sale.serverexport', compact('serverservice', 'server_service_group', 'clientgroup', 'exchangerate', 'supplier', 'groupsearch', 'cachesearch', 'currencies', 'currenciessite'));
+    }
+
+    public function updateserver(Request $request)
+    {
+        $chkrange = $request->chkrange;
+        $chkwise = $request->chkwise;
+        $sales = $request->sales;
+        $cliendefault = Clientgroup::where('status', 'active')->where('chietkhau', '0')->first();
+        $currenciessite = Config::where('config_var', 'site_default_currency')->first();
+        $cliengroup = Clientgroup::get();
+        $currencies = Currencie::where('display_currency', 'Yes')->get();
+        if ($cliendefault == !null && $chkrange == !null) {
+            foreach ($chkrange as $cr) {
+                echo $cr . '<br>';
+            }
+        }
+
+        //
+        if ($cliendefault == !null && $chkwise == !null) {
+            foreach ($chkwise as $ce) {
+                if ($request->sales == 0) {
+                    $wi = Serverservicetypewiseprice::find($ce);
+                    $giabanle = $wi->servicetypegroupprice->where('group_id', $cliendefault->id)->first()->amount;
+                    if ($wi->sale == 0) {
+                        $wi->pricing_sale = $giabanle;
+                        $wi->save();
+                    }
+                    $wi->sale = $request->sales;
+                    $wi->save();
+                    $run = Serverservicetypewisegroupprice::where('service_type_id', $ce)->where('group_id', $cliendefault->id)->update(['amount' => $wi->pricing_sale]);
+
+                } else {
+                    $wi = Serverservicetypewiseprice::find($ce);
+                    $giabanle = $wi->servicetypegroupprice->where('group_id', $cliendefault->id)->first()->amount;
+                    if ($wi->sale == 0) {
+                        $wi->pricing_sale = $giabanle;
+                        $wi->save();
+                    }
+                    $wi->sale = $request->sales;
+                    $wi->save();
+                    $run = Serverservicetypewisegroupprice::where('service_type_id', $ce)->where('group_id', $cliendefault->id)->update(['amount' => $wi->pricing_sale * ((100 - $sales) / 100)]);
+                }
+            }
+        }
+        return back();
     }
 }

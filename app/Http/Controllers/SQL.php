@@ -132,6 +132,18 @@ class SQL extends Migration
                 $table->double('purchase_cost_not_net');
             });
         }
+        if (!Schema::hasColumn('server_service_type_wise_price', 'sale'))
+        {
+            Schema::table('server_service_type_wise_price', function (Blueprint $table) {
+                $table->integer('sale');
+            });
+        }
+        if (!Schema::hasColumn('server_service_type_wise_price', 'pricing_sale'))
+        {
+            Schema::table('server_service_type_wise_price', function (Blueprint $table) {
+                $table->double('pricing_sale');
+            });
+        }
 
     }
     public function roleAdminplus(){
