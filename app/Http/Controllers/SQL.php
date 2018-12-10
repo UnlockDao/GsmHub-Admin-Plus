@@ -18,7 +18,7 @@ class SQL extends Migration
         $this->addServerservicepurchasecostnotvip();
         $this->roleAdminplus();
         $this->createSiteProfitDetails();
-
+        $this->sales();
     }
 
     public function createSupplier()
@@ -35,6 +35,8 @@ class SQL extends Migration
 
     public function imeiPricing()
     {
+
+
         if (!Schema::hasTable('adminplus_imei_service')) {
             Schema::create('adminplus_imei_service', function (Blueprint $table) {
                 $table->increments('id');
@@ -64,6 +66,23 @@ class SQL extends Migration
         {
             Schema::table('client_group', function (Blueprint $table) {
                 $table->integer('chietkhau');
+            });
+        }
+    }
+
+    public function sales()
+    {
+
+        if (!Schema::hasColumn('adminplus_imei_service', 'sale'))
+        {
+            Schema::table('adminplus_imei_service', function (Blueprint $table) {
+                $table->integer('sale')->nullable();
+            });
+        }
+        if (!Schema::hasColumn('adminplus_imei_service', 'pricing_sale'))
+        {
+            Schema::table('adminplus_imei_service', function (Blueprint $table) {
+                $table->double('pricing_sale')->nullable();
             });
         }
     }
