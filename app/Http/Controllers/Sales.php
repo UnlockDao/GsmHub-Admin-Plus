@@ -20,7 +20,7 @@ use Illuminate\Http\Request;
 
 class Sales
 {
-    public function exportimei(Request $request)
+    public function salesimei(Request $request)
     {
         $currenciessite = Config::where('config_var', 'site_default_currency')->first();
         //
@@ -156,7 +156,7 @@ class Sales
 
     }
 
-    public function exportserver(Request $request)
+    public function salesserver(Request $request)
     {
         $currenciessite = Config::where('config_var', 'site_default_currency')->first();
         $currencies = Currencie::where('display_currency', 'Yes')->get();
@@ -231,6 +231,7 @@ class Sales
                     $wi->sale = $request->sales;
                     $wi->save();
                     $run = Serverservicetypewisegroupprice::where('service_type_id', $ce)->where('group_id', $cliendefault->id)->update(['amount' => $wi->pricing_sale]);
+                    $this->updatewiseserver($ce);
 
                 } else {
                     $wi = Serverservicetypewiseprice::find($ce);
@@ -242,9 +243,28 @@ class Sales
                     $wi->sale = $request->sales;
                     $wi->save();
                     $run = Serverservicetypewisegroupprice::where('service_type_id', $ce)->where('group_id', $cliendefault->id)->update(['amount' => $wi->pricing_sale * ((100 - $sales) / 100)]);
+                    $this->updatewiseserver($ce);
                 }
             }
         }
         return back();
+    }
+
+    public function updatewiseserver($ce)
+    {
+        $cliendefault = Clientgroup::where('status', 'active')->where('chietkhau', '0')->first();
+        $wi = Serverservicetypewiseprice::find($ce);
+        if ($wi->adminplus_service == !null) {
+            $giabanle = $wi->servicetypegroupprice->where('group_id', $cliendefault->id)->first()->amount;
+            echo '<br>';
+            foreach ($wi->servicetypegroupprice as $groupprice) {
+                if ($groupprice->clientgroup == !null) {
+                    $chietkhau = ($giabanle - ((($giabanle - $wi->purchase_cost) / 100) * $groupprice->clientgroup->chietkhau));
+                    echo '|' . $groupprice->clientgroup->group_name . '|' . $groupprice->id;
+                    Serverservicetypewisegroupprice::where('id', $groupprice->id)
+                        ->update(['amount' => $chietkhau]);
+                }
+            }
+        }
     }
 }
