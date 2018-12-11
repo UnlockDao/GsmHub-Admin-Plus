@@ -12,7 +12,9 @@ use App\Models\Imeiservice;
 use App\Models\Imeiservicegroup;
 use App\Models\Imeiservicepricing;
 use App\Models\Serverservice;
+use App\Models\Serverserviceclientgroupcredit;
 use App\Models\Serverservicegroup;
+use App\Models\Serverservicequantityrange;
 use App\Models\Serverservicetypewisegroupprice;
 use App\Models\Serverservicetypewiseprice;
 use App\Models\Supplier;
@@ -210,11 +212,41 @@ class Sales
         $sales = $request->sales;
         $cliendefault = Clientgroup::where('status', 'active')->where('chietkhau', '0')->first();
         $currenciessite = Config::where('config_var', 'site_default_currency')->first();
-        $cliengroup = Clientgroup::get();
         $currencies = Currencie::where('display_currency', 'Yes')->get();
         if ($cliendefault == !null && $chkrange == !null) {
             foreach ($chkrange as $cr) {
-                echo $cr . '<br>';
+                $creditdefault = Serverserviceclientgroupcredit::where('server_service_range_id', $cr)->where('client_group_id', $cliendefault->id)->where('currency', $currenciessite->config_value)->first();
+                $ra = Serverservicequantityrange::find($cr);
+                if ($request->sales == 0) {
+                    if ($ra->sale == 0) {
+                        $ra->pricing_sale = $creditdefault->credit;
+                        $ra->save();
+                    }
+                    $ra->sale = $request->sales;
+                    $ra->save();
+                    foreach ($currencies as $c) {
+                        $run = Serverserviceclientgroupcredit::where('server_service_range_id', $cr)
+                            ->where('client_group_id', $cliendefault->id)
+                            ->where('currency', $c->currency_code)
+                            ->update(['credit' => $ra->pricing_sale * $c->exchange_rate_static]);
+                    }
+                    //$this->updatrangeserver($cr);
+
+                } else {
+                    if ($ra->sale == 0) {
+                        $ra->pricing_sale = $creditdefault->credit;
+                        $ra->save();
+                    }
+                    $ra->sale = $request->sales;
+                    $ra->save();
+                    foreach ($currencies as $c) {
+                        $run = Serverserviceclientgroupcredit::where('server_service_range_id', $cr)
+                            ->where('client_group_id', $cliendefault->id)
+                            ->where('currency', $c->currency_code)
+                            ->update(['credit' => ($ra->pricing_sale * ((100 - $sales) / 100)) * $c->exchange_rate_static]);
+                    }
+                    //$this->updatrangeserver($cr);
+                }
             }
         }
 
@@ -250,17 +282,40 @@ class Sales
         return back();
     }
 
+    public function updatrangeserver($cr)
+    {
+        $cliengroup = Clientgroup::get();
+        $cliendefault = Clientgroup::where('status', 'active')->where('chietkhau', '0')->first();
+        $currenciessite = Config::where('config_var', 'site_default_currency')->first();
+        $currencies = Currencie::where('display_currency', 'Yes')->get();
+        foreach ($cliengroup as $clg) {
+            $i = Serverserviceclientgroupcredit::where('client_group_id', $cliendefault->id)
+                ->where('currency', $currenciessite->config_value)
+                ->where('server_service_range_id', $cr)
+                ->first();
+            $giabanle = $i->credit;
+            $ra = Serverserviceclientgroupcredit::find($cr);
+            if ($ra->serverservicequantityrange->serverservicequantityrange == !null) {
+                $chietkhau = ($giabanle - ((($giabanle - $ra->serverservicequantityrange->serverservicequantityrange->purchase_cost) / 100) * $clg->chietkhau));
+                foreach ($currencies as $cu) {
+                    $update = Serverserviceclientgroupcredit::where('server_service_range_id', $ra->server_service_range_id)
+                        ->where('client_group_id', $clg->id)
+                        ->where('currency', $cu->currency_code)
+                        ->update(['credit' => $chietkhau * $cu->exchange_rate_static]);
+                }
+            }
+        }
+    }
+
     public function updatewiseserver($ce)
     {
         $cliendefault = Clientgroup::where('status', 'active')->where('chietkhau', '0')->first();
         $wi = Serverservicetypewiseprice::find($ce);
         if ($wi->adminplus_service == !null) {
             $giabanle = $wi->servicetypegroupprice->where('group_id', $cliendefault->id)->first()->amount;
-            echo '<br>';
             foreach ($wi->servicetypegroupprice as $groupprice) {
                 if ($groupprice->clientgroup == !null) {
                     $chietkhau = ($giabanle - ((($giabanle - $wi->purchase_cost) / 100) * $groupprice->clientgroup->chietkhau));
-                    echo '|' . $groupprice->clientgroup->group_name . '|' . $groupprice->id;
                     Serverservicetypewisegroupprice::where('id', $groupprice->id)
                         ->update(['amount' => $chietkhau]);
                 }

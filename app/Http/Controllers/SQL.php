@@ -85,6 +85,18 @@ class SQL extends Migration
                 $table->double('pricing_sale')->nullable();
             });
         }
+        if (!Schema::hasColumn('server_service_quantity_range', 'sale'))
+        {
+            Schema::table('server_service_quantity_range', function (Blueprint $table) {
+                $table->integer('sale')->nullable();
+            });
+        }
+        if (!Schema::hasColumn('server_service_quantity_range', 'pricing_sale'))
+        {
+            Schema::table('server_service_quantity_range', function (Blueprint $table) {
+                $table->double('pricing_sale')->nullable();
+            });
+        }
     }
 
     public function Admin()

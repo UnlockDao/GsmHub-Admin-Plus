@@ -24,28 +24,6 @@
             });
         }, false);
     </script>
-    <style>
-        .badge1 {
-            position: relative;
-        }
-
-        .badge1[data-badge]:after {
-            content: attr(data-badge);
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            font-size: .7em;
-            background: green;
-            color: white;
-            width: 18px;
-            height: 18px;
-            text-align: center;
-            line-height: 18px;
-            border-radius: 50%;
-            box-shadow: 0 0 1px #333;
-        }
-    </style>
-
     <!-- Page content -->
     <div class="container-fluid mt--7">
         <!-- Table -->

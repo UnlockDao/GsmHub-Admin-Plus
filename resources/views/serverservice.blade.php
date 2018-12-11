@@ -155,7 +155,8 @@
                                             @foreach($v->serverservicetypewiseprice as $a)
                                                 <tr>
                                                     <td>*</td>
-                                                    <td colspan="4"><a>{{$a->service_type}}</a></td>
+                                                    <td colspan="4"><a class="@if($a->sale >0) badge1 @endif"
+                                                                       @if($a->sale >0) data-badge="{{$a->sale}}" @endif>{{$a->service_type}}</a></td>
                                                     <td>@if($v->api_id ==! null)
                                                             @foreach($a->apiservicetypewisepriceid as $apiserverservicetypeprice)
                                                                 @if($apiserverservicetypeprice->id == $a->api_service_type_wise_price_id)
@@ -210,8 +211,9 @@
                                                     <td></td>
 
                                                     <td>Range</td>
-                                                    <td>{{$serverservicequantityrange->from_range}}
-                                                        - {{$serverservicequantityrange->to_range}}</td>
+                                                    <td><a class="@if($serverservicequantityrange->sale >0) badge1 @endif"
+                                                           @if($serverservicequantityrange->sale >0) data-badge="{{$serverservicequantityrange->sale}}" @endif>{{$serverservicequantityrange->from_range}}
+                                                            - {{$serverservicequantityrange->to_range}}</a></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td>@if($v->api_id ==! null)
