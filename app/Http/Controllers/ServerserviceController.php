@@ -27,7 +27,7 @@ class ServerserviceController extends Controller
     public function checkNullUser(){
 
         $clientgroup = Clientgroup::where('status','active')->orderBy('chietkhau')->get();
-
+        $currenciessite = Config::where('config_var','site_default_currency')->first();
         $serverservices = Serverservice::get();
         foreach ($serverservices as $serverservice){
             //add price user null wise
