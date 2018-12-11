@@ -80,6 +80,7 @@ class Sales
         $currenciessite = Config::where('config_var', 'site_default_currency')->first();
         $cliengroup = Clientgroup::get();
         $currencies = Currencie::where('display_currency', 'Yes')->get();
+        $type = $request->type;
         if ($cliendefault == !null && $chk == !null) {
             foreach ($chk as $c) {
                 $imei = Imeiservice::find($c);
@@ -128,12 +129,24 @@ class Sales
                     $saveimeipricing->sale = $request->sales;
                     $saveimeipricing->save();
                     if ($cliendefault == !null) {
-                        foreach ($currencies as $cs) {
-                            Clientgroupprice::where('group_id', $cliendefault->id)
-                                ->where('service_type', 'imei')
-                                ->where('currency', $cs->currency_code)
-                                ->where('service_id', $i->id)
-                                ->update(['discount' => (($saveimeipricing->pricing_sale * ((100 - $sales) / 100)) - $i->credit) * $cs->exchange_rate_static]);
+                        if ($type = 1) {
+                            foreach ($currencies as $cs) {
+                                Clientgroupprice::where('group_id', $cliendefault->id)
+                                    ->where('service_type', 'imei')
+                                    ->where('currency', $cs->currency_code)
+                                    ->where('service_id', $i->id)
+                                    ->update(['discount' => (($saveimeipricing->pricing_sale * ((100 - $sales) / 100)) - $i->credit) * $cs->exchange_rate_static]);
+                            }
+                        }
+                        if ($type = 2) {
+                            foreach ($currencies as $cs) {
+                                $xx = ($saveimeipricing->pricing_sale - ((($saveimeipricing->pricing_sale - $i->purchase_cost) / 100) * $sales));
+                                Clientgroupprice::where('group_id', $cliendefault->id)
+                                    ->where('service_type', 'imei')
+                                    ->where('currency', $cs->currency_code)
+                                    ->where('service_id', $i->id)
+                                    ->update(['discount' => (($xx - $i->credit) * $cs->exchange_rate_static)]);
+                            }
                         }
                         foreach ($cliengroup as $clg) {
                             $imeiprice = Clientgroupprice::where('service_id', $i->id)->where('group_id', $cliendefault->id)->where('currency', $currenciessite->config_value)->first();
@@ -155,7 +168,6 @@ class Sales
             }
         }
         return back();
-
     }
 
     public function salesserver(Request $request)
