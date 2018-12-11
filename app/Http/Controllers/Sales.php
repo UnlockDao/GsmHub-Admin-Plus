@@ -129,7 +129,7 @@ class Sales
                     $saveimeipricing->sale = $request->sales;
                     $saveimeipricing->save();
                     if ($cliendefault == !null) {
-                        if ($type = 1) {
+                        if ($type == 1) {
                             foreach ($currencies as $cs) {
                                 Clientgroupprice::where('group_id', $cliendefault->id)
                                     ->where('service_type', 'imei')
@@ -138,7 +138,7 @@ class Sales
                                     ->update(['discount' => (($saveimeipricing->pricing_sale * ((100 - $sales) / 100)) - $i->credit) * $cs->exchange_rate_static]);
                             }
                         }
-                        if ($type = 2) {
+                        if ($type == 2) {
                             foreach ($currencies as $cs) {
                                 $xx = ($saveimeipricing->pricing_sale - ((($saveimeipricing->pricing_sale - $i->purchase_cost) / 100) * $sales));
                                 Clientgroupprice::where('group_id', $cliendefault->id)
@@ -222,6 +222,7 @@ class Sales
         $chkrange = $request->chkrange;
         $chkwise = $request->chkwise;
         $sales = $request->sales;
+        $type = $request->type;
         $cliendefault = Clientgroup::where('status', 'active')->where('chietkhau', '0')->first();
         $currenciessite = Config::where('config_var', 'site_default_currency')->first();
         $currencies = Currencie::where('display_currency', 'Yes')->get();
@@ -252,7 +253,7 @@ class Sales
                     $ra->sale = $request->sales;
                     $ra->save();
 
-                    if ($type = 1) {
+                    if ($type == 1) {
                         foreach ($currencies as $c) {
                             $run = Serverserviceclientgroupcredit::where('server_service_range_id', $cr)
                                 ->where('client_group_id', $cliendefault->id)
@@ -260,7 +261,7 @@ class Sales
                                 ->update(['credit' => ($ra->pricing_sale * ((100 - $sales) / 100)) * $c->exchange_rate_static]);
                         }
                     }
-                    if ($type = 2) {
+                    if ($type == 2) {
                         foreach ($currencies as $c) {
                             $xx = ($ra->pricing_sale - ((($ra->pricing_sale - $ra->serverservicequantityrange->purchase_cost) / 100) * $sales));
                             $run = Serverserviceclientgroupcredit::where('server_service_range_id', $cr)
@@ -299,10 +300,10 @@ class Sales
                     }
                     $wi->sale = $request->sales;
                     $wi->save();
-                    if ($type = 1) {
+                    if ($type == 1) {
                         $run = Serverservicetypewisegroupprice::where('service_type_id', $ce)->where('group_id', $cliendefault->id)->update(['amount' => $wi->pricing_sale * ((100 - $sales) / 100)]);
                     }
-                    if ($type = 2) {
+                    if ($type == 2) {
                         $xx = ($wi->pricing_sale - ((($wi->pricing_sale - $wi->purchase_cost) / 100) * $sales));
                         $run = Serverservicetypewisegroupprice::where('service_type_id', $ce)->where('group_id', $cliendefault->id)->update(['amount' => $xx]);
                     }
