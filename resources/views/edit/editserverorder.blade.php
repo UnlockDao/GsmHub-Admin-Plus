@@ -105,12 +105,12 @@
                             <div class="col-md-5 col-md-offset-3">
                                 @if($serverorder->status == 'COMPLETED')
                                     <input name="status" value="REJECTED" hidden>
-                                    <button type="submit" name="" class="btn btn-danger"><i
+                                    <button type="submit" disabled name="" class="btn btn-danger"><i
                                                 class="fa fa-times-circle"></i> Mark as rejected
                                     </button>
                                 @else
                                     <input name="status" value="COMPLETED" hidden>
-                                    <button type="submit" name="" class="btn btn-success"><i
+                                    <button type="submit" disabled name="" class="btn btn-success"><i
                                                 class="fa fa-times-circle"></i> Mark as completed
                                     </button>
                                 @endif
