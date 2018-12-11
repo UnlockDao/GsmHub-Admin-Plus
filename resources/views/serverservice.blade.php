@@ -85,7 +85,7 @@
                                 <div class="col-md-1">
                                     <strong></strong><br>
                                     <a class="fancybox fancybox.iframe btn btn-info form-control"
-                                       href="{{ asset('serversales') }}">Sales</a>
+                                       href="{{ asset('serversales') }}?group_name={{$cachesearch->group_name}}">Sales</a>
                                 </div>
                             </div>
                         </form>
