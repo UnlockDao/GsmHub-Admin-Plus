@@ -171,6 +171,13 @@
                             <input name="sales" type="number" value="" min="0" max="100" required
                                    placeholder="Phần trăm giảm giá" class="form-control" id="sales">
                         </div>
+                        <div class="form-group">
+                            <label for="type">Type</label>
+                            <select class="form-control" name="type">
+                                <option value="1">Giảm theo % giá</option>
+                                <option value="2">Giảm theo % lợi nhuận</option>
+                            </select>
+                        </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
