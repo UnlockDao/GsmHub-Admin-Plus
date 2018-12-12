@@ -307,10 +307,12 @@ class Sales
                     $giabanle = $wi->servicetypegroupprice->where('group_id', $cliendefault->id)->first()->amount;
                     if ($wi->sale == 0) {
                         $wi->pricing_sale = $giabanle;
+                        $wi->pricingdefault_sale = $wi->amount;
                         $wi->save();
                     }
                     $wi->sale = $request->sales;
                     $wi->save();
+                    $runpricingdefault = Serverservicetypewiseprice::where('id', $ce)->update(['amount' => $wi->pricingdefault_sale]);
                     $run = Serverservicetypewisegroupprice::where('service_type_id', $ce)->where('group_id', $cliendefault->id)->update(['amount' => $wi->pricing_sale]);
                     $this->updatewiseserver($ce);
 
@@ -319,14 +321,17 @@ class Sales
                     $giabanle = $wi->servicetypegroupprice->where('group_id', $cliendefault->id)->first()->amount;
                     if ($wi->sale == 0) {
                         $wi->pricing_sale = $giabanle;
+                        $wi->pricingdefault_sale = $wi->amount;
                         $wi->save();
                     }
                     $wi->sale = $request->sales;
                     $wi->save();
                     if ($type == 1) {
+                        $runpricingdefault = Serverservicetypewiseprice::where('id', $ce)->update(['amount' => $wi->pricingdefault_sale* ((100 - $sales) / 100)]);
                         $run = Serverservicetypewisegroupprice::where('service_type_id', $ce)->where('group_id', $cliendefault->id)->update(['amount' => $wi->pricing_sale * ((100 - $sales) / 100)]);
                     }
                     if ($type == 2) {
+                        $runpricingdefault = Serverservicetypewiseprice::where('id', $ce)->update(['amount' => $wi->pricingdefault_sale - ((($wi->pricingdefault_sale - $wi->purchase_cost) / 100) * $sales)]);
                         $xx = ($wi->pricing_sale - ((($wi->pricing_sale - $wi->purchase_cost) / 100) * $sales));
                         $run = Serverservicetypewisegroupprice::where('service_type_id', $ce)->where('group_id', $cliendefault->id)->update(['amount' => $xx]);
                     }

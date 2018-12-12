@@ -103,6 +103,24 @@ class SQL extends Migration
                 $table->double('pricing_sale')->nullable();
             });
         }
+        if (!Schema::hasColumn('server_service_type_wise_price', 'sale'))
+        {
+            Schema::table('server_service_type_wise_price', function (Blueprint $table) {
+                $table->integer('sale');
+            });
+        }
+        if (!Schema::hasColumn('server_service_type_wise_price', 'pricing_sale'))
+        {
+            Schema::table('server_service_type_wise_price', function (Blueprint $table) {
+                $table->double('pricing_sale');
+            });
+        }
+        if (!Schema::hasColumn('server_service_type_wise_price', 'pricingdefault_sale'))
+        {
+            Schema::table('server_service_type_wise_price', function (Blueprint $table) {
+                $table->double('pricingdefault_sale');
+            });
+        }
     }
 
     public function Admin()
@@ -148,18 +166,6 @@ class SQL extends Migration
         {
             Schema::table('server_service_type_wise_price', function (Blueprint $table) {
                 $table->double('purchase_cost_not_net');
-            });
-        }
-        if (!Schema::hasColumn('server_service_type_wise_price', 'sale'))
-        {
-            Schema::table('server_service_type_wise_price', function (Blueprint $table) {
-                $table->integer('sale');
-            });
-        }
-        if (!Schema::hasColumn('server_service_type_wise_price', 'pricing_sale'))
-        {
-            Schema::table('server_service_type_wise_price', function (Blueprint $table) {
-                $table->double('pricing_sale');
             });
         }
 
