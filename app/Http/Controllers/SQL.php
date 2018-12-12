@@ -121,6 +121,12 @@ class SQL extends Migration
                 $table->double('pricingdefault_sale');
             });
         }
+        if (!Schema::hasColumn('server_service_user_credit', 'pricingdefault_sale'))
+        {
+            Schema::table('server_service_user_credit', function (Blueprint $table) {
+                $table->double('pricingdefault_sale');
+            });
+        }
     }
 
     public function Admin()

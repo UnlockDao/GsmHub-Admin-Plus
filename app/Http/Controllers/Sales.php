@@ -18,6 +18,7 @@ use App\Models\Serverservicegroup;
 use App\Models\Serverservicequantityrange;
 use App\Models\Serverservicetypewisegroupprice;
 use App\Models\Serverservicetypewiseprice;
+use App\Models\Serverserviceusercredit;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 
@@ -253,28 +254,43 @@ class Sales
             foreach ($chkrange as $crm) {
                 $serverservicequantityrange = Serverservicequantityrange::where('server_service_id', $crm)->get();
                 foreach ($serverservicequantityrange as $crs) {
-                    $cr =$crs->id;
+                    $cr = $crs->id;
                     $creditdefault = Serverserviceclientgroupcredit::where('server_service_range_id', $cr)->where('client_group_id', $cliendefault->id)->where('currency', $currenciessite->config_value)->first();
                     $ra = Serverservicequantityrange::find($cr);
+                    $racredit = Serverserviceusercredit::where('server_service_range_id', $cr)->where('currency', 'USD')->first();
                     if ($request->sales == 0) {
                         if ($ra->sale == 0) {
                             $ra->pricing_sale = $creditdefault->credit;
                             $ra->save();
+                            foreach ($currencies as $c) {
+                                $run = Serverserviceusercredit::where('server_service_range_id', $cr)
+                                    ->where('currency', $c->currency_code)
+                                    ->update(['pricingdefault_sale' => $racredit->credit * $c->exchange_rate_static]);
+                            }
                         }
                         $ra->sale = $request->sales;
                         $ra->save();
                         foreach ($currencies as $c) {
-                            $run = Serverserviceclientgroupcredit::where('server_service_range_id', $cr)
+                            $run2 = Serverserviceclientgroupcredit::where('server_service_range_id', $cr)
                                 ->where('client_group_id', $cliendefault->id)
                                 ->where('currency', $c->currency_code)
                                 ->update(['credit' => $ra->pricing_sale * $c->exchange_rate_static]);
+                            $run3 = Serverserviceusercredit::where('server_service_range_id', $cr)
+                                ->where('currency', $c->currency_code)
+                                ->update(['credit' => $racredit->pricingdefault_sale * $c->exchange_rate_static]);
                         }
+
                         $this->updatrangeserver($cr);
 
                     } else {
                         if ($ra->sale == 0) {
                             $ra->pricing_sale = $creditdefault->credit;
                             $ra->save();
+                            foreach ($currencies as $c) {
+                                $run = Serverserviceusercredit::where('server_service_range_id', $cr)
+                                    ->where('currency', $c->currency_code)
+                                    ->update(['pricingdefault_sale' => $racredit->credit * $c->exchange_rate_static]);
+                            }
                         }
                         $ra->sale = $request->sales;
                         $ra->save();
@@ -285,7 +301,11 @@ class Sales
                                     ->where('client_group_id', $cliendefault->id)
                                     ->where('currency', $c->currency_code)
                                     ->update(['credit' => ($ra->pricing_sale * ((100 - $sales) / 100)) * $c->exchange_rate_static]);
+                                $run2 = Serverserviceusercredit::where('server_service_range_id', $cr)
+                                    ->where('currency', $c->currency_code)
+                                    ->update(['credit' => ($racredit->pricingdefault_sale * ((100 - $sales) / 100)) * $c->exchange_rate_static]);
                             }
+
                         }
                         if ($type == 2) {
                             foreach ($currencies as $c) {
@@ -294,7 +314,12 @@ class Sales
                                     ->where('client_group_id', $cliendefault->id)
                                     ->where('currency', $c->currency_code)
                                     ->update(['credit' => $xx * $c->exchange_rate_static]);
+                                $run2 = Serverserviceusercredit::where('server_service_range_id', $cr)
+                                    ->where('currency', $c->currency_code)
+                                    ->update(['credit' => ($racredit->pricingdefault_sale - ((($racredit->pricingdefault_sale - $ra->serverservicequantityrange->purchase_cost) / 100) * $sales)) * $c->exchange_rate_static]);
+
                             }
+
                         }
 
                         $this->updatrangeserver($cr);
@@ -309,7 +334,7 @@ class Sales
 
                 $serverservicetypewiseprice = Serverservicetypewiseprice::where('server_service_id', $cem)->get();
                 foreach ($serverservicetypewiseprice as $ces) {
-                    $ce= $ces->id;
+                    $ce = $ces->id;
                     if ($request->sales == 0) {
                         $wi = Serverservicetypewiseprice::find($ce);
                         $giabanle = $wi->servicetypegroupprice->where('group_id', $cliendefault->id)->first()->amount;
