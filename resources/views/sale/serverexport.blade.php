@@ -83,7 +83,13 @@
                                 @foreach($serverservice as $v)
                                     @if($v->server_service_group_id == $g->id )
                                         <tr class="table-info">
-                                            <td></td>
+                                            @if(!$v->serverservicetypewiseprice->isEmpty())
+                                                <td><input type="checkbox" name="chkwise[]"
+                                                       value="{{$v->id}}"></td>
+                                            @else
+                                                <td><input type="checkbox" name="chkrange[]"
+                                                           value="{{$v->id}}"></td>
+                                            @endif
                                             <td>{{$v->id}}</td>
                                             <td>{{$v->service_name}}</td>
                                             <td>@if($v->api_id ==! null)<span
@@ -102,7 +108,7 @@
                                         @if(!$v->serverservicetypewiseprice->isEmpty())
                                             @foreach($v->serverservicetypewiseprice as $a)
                                                 <tr>
-                                                    <td><input type="checkbox" name="chkwise[]" value="{{$a->id}}"></td>
+                                                    <td></td>
                                                     <td>*</td>
                                                     <td colspan="3"><a class="@if($a->sale >0) badge1 @endif"
                                                                        @if($a->sale >0) data-badge="{{$a->sale}}" @endif>{{$a->service_type}}</a>
@@ -128,8 +134,7 @@
                                         @else
                                             @foreach($v->serverservicequantityrange as $serverservicequantityrange )
                                                 <tr>
-                                                    <td><input type="checkbox" name="chkrange[]"
-                                                               value="{{$serverservicequantityrange->id}}"></td>
+                                                    <td></td>
                                                     <td></td>
                                                     <td>
                                                         <a class="@if($serverservicequantityrange->sale >0) badge1 @endif"
