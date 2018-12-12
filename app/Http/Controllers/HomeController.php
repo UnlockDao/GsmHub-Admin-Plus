@@ -34,7 +34,7 @@ class HomeController extends Controller
         $datefilter = $request->datefilterh;
         $tg = explode(" - ", $datefilter);
         if ($datefilter == null) {
-            $datefilter = date("Y/m/01 0:00:00") . ' - ' . date("Y/m/30 23:59:59");
+            $datefilter = date("Y/m/01 0:00:00") . ' - ' . date("Y/m/t 23:59:59");
             $tg = explode(" - ", $datefilter);
             $tg1 = CUtil::convertDateS($tg[0]);
             $tg2 = CUtil::convertDateS($tg[1]);
