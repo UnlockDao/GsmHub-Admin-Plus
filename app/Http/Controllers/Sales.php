@@ -9,6 +9,7 @@ use App\Models\Config;
 use App\Models\Currencie;
 use App\Models\Currenciepricing;
 use App\Models\Imeiservice;
+use App\Models\Imeiservicecredit;
 use App\Models\Imeiservicegroup;
 use App\Models\Imeiservicepricing;
 use App\Models\Serverservice;
@@ -91,11 +92,18 @@ class Sales
                 if ($request->sales == 0) {
                     if ($saveimeipricing->sale == 0) {
                         $saveimeipricing->pricing_sale = $i->credit + $imeiprice->discount;
+                        $saveimeipricing->pricingdefault_sale = $i->credit;
                         $saveimeipricing->save();
                     }
                     $saveimeipricing->sale = $request->sales;
                     $saveimeipricing->save();
-
+                    $i->credit =$saveimeipricing->pricingdefault_sale;
+                    $i->save();
+                    foreach ($currencies as $cu) {
+                        Imeiservicecredit::where('service_id', $c)
+                            ->where('currency', $cu->currency_code)
+                            ->update(['credit' => $saveimeipricing->pricingdefault_sale * $cu->exchange_rate_static]);
+                    }
                     if ($cliendefault == !null) {
                         foreach ($currencies as $cs) {
                             Clientgroupprice::where('group_id', $cliendefault->id)
@@ -124,12 +132,20 @@ class Sales
                 } else {
                     if ($saveimeipricing->sale == 0) {
                         $saveimeipricing->pricing_sale = $i->credit + $imeiprice->discount;
+                        $saveimeipricing->pricingdefault_sale = $i->credit;
                         $saveimeipricing->save();
                     }
                     $saveimeipricing->sale = $request->sales;
                     $saveimeipricing->save();
                     if ($cliendefault == !null) {
                         if ($type == 1) {
+                            $i->credit =$saveimeipricing->pricingdefault_sale* ((100 - $sales) / 100);
+                            $i->save();
+                            foreach ($currencies as $cu) {
+                                Imeiservicecredit::where('service_id', $c)
+                                    ->where('currency', $cu->currency_code)
+                                    ->update(['credit' => ($saveimeipricing->pricingdefault_sale* ((100 - $sales) / 100)) * $cu->exchange_rate_static]);
+                            }
                             foreach ($currencies as $cs) {
                                 Clientgroupprice::where('group_id', $cliendefault->id)
                                     ->where('service_type', 'imei')
@@ -139,6 +155,13 @@ class Sales
                             }
                         }
                         if ($type == 2) {
+                            $i->credit =($saveimeipricing->pricingdefault_sale - ((($saveimeipricing->pricingdefault_sale - $i->purchase_cost) / 100) * $sales));
+                            $i->save();
+                            foreach ($currencies as $cu) {
+                                Imeiservicecredit::where('service_id', $c)
+                                    ->where('currency', $cu->currency_code)
+                                    ->update(['credit' => ($saveimeipricing->pricingdefault_sale - ((($saveimeipricing->pricingdefault_sale - $i->purchase_cost) / 100) * $sales)) * $cu->exchange_rate_static]);
+                            }
                             foreach ($currencies as $cs) {
                                 $xx = ($saveimeipricing->pricing_sale - ((($saveimeipricing->pricing_sale - $i->purchase_cost) / 100) * $sales));
                                 Clientgroupprice::where('group_id', $cliendefault->id)

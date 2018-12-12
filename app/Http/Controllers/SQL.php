@@ -85,6 +85,12 @@ class SQL extends Migration
                 $table->double('pricing_sale')->nullable();
             });
         }
+        if (!Schema::hasColumn('adminplus_imei_service', 'pricingdefault_sale'))
+        {
+            Schema::table('adminplus_imei_service', function (Blueprint $table) {
+                $table->double('pricingdefault_sale')->nullable();
+            });
+        }
         if (!Schema::hasColumn('server_service_quantity_range', 'sale'))
         {
             Schema::table('server_service_quantity_range', function (Blueprint $table) {
