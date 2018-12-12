@@ -19,7 +19,13 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <style>
-
+    #parent {
+        height: 65vh;
+    }
+    .table th{
+        border-top: 0px;
+        z-index: 999;
+    }
     .badge1 {
         position:relative;
     }
@@ -46,6 +52,7 @@
     </div>
 </body>
 <script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ asset('js/tableHeadFixer.js') }}"></script>
 <script src="{{ asset('js/jquery.tableCheckbox.js') }}"></script>
 <script>
     $('table').tableCheckbox({ /* options */ });
@@ -56,5 +63,10 @@
 <script src="{{ asset('js/bootstrap-select.min.js') }}"></script>
 <script>
     $('select').selectpicker();
+</script>
+<script>
+    $(document).ready(function() {
+        $("#fixTable").tableHeadFixer();
+    });
 </script>
 </html>

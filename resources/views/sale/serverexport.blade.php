@@ -54,10 +54,11 @@
                         </div>
                     </div>
                 </form>
-                <div class="card-body">
+                <div id="parent" class="card-body">
                     <form action="" method="post">
                         {{ csrf_field() }}
-                        <table class="table align-items-center table-flush">
+                        <div id="parent" class="table-responsive">
+                        <table id="fixTable" class="table align-items-center table-flush">
                             <thead class="text-primary" id="myHeader">
                             <th style="width:20px;"><input type="checkbox"></th>
                             <th></th>
@@ -171,6 +172,7 @@
                             @endforeach
                             </tbody>
                         </table>
+                        </div>
                         <div class="form-group">
                             <label for="sales">Sales %</label>
                             <input name="sales" type="number" value="" min="0" max="100" required
