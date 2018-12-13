@@ -106,6 +106,7 @@
                             <th scope="col">Total Amount</th>
                             <th scope="col">Status</th>
                             <th scope="col">Payment</th>
+                            <th scope="col">View</th>
                             </thead>
                             <tbody>
                             @foreach($serverorder as $v)
@@ -117,6 +118,7 @@
                                     <td scope="row">{{$v->invoice_amount}} {{$v->currency}}</td>
                                     <td scope="row">{{$v->invoice_status}}</td>
                                     <td scope="row">{{ isset($v->payment) ? $v->payment->gateway_label : '' }}</td>
+                                    <td scope="row"><a href="https://s-unlock.com/admin/payment/view-invoice/{{$v->id}}" target="_blank" class="btn btn-sm btn-primary">View</a></td>
                                 </tr>
                                 <?php $credit += $v->invoice_amount ?>
                                 <?php $count += 1 ?>
