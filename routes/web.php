@@ -85,7 +85,7 @@ Route::post('serverservicewise/{id}', 'ServerserviceController@editwise');
 Route::get('service/{squirrel}/{any}', 'ServerserviceController@status');
 Route::get('serverdelete/{id}', 'ServerserviceController@delete');
 
-Route::get('role', 'Auth\LoginController@role');
+Route::get('role', 'Auth\LoginController@role')->middleware('admin');
 Route::get('role/{squirrel}/{any}', 'Auth\LoginController@status');
 //Invoice Report
 Route::get('invoicereport', 'InvoiceReportController@index');

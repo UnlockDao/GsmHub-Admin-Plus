@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\CUtil;
-use App\Models\Administrator;
 use App\Http\Controllers\Controller;
+use App\Models\Administrator;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -53,12 +52,7 @@ class LoginController extends Controller
                 $role->save();
             }
         }
-        if (CUtil::checkauth()){
-            return view('role', compact('administrator'));
-        }else{
-            return redirect('home');
-        }
-
+        return view('role', compact('administrator'));
     }
 
     public function status($par = NULL, $par2 = NULL)
