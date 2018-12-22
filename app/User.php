@@ -29,4 +29,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+    public function admin()
+    {
+        return $this->belongsTo('App\Models\Administrator','user_id','user_id');
+    }
 }

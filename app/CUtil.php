@@ -4,9 +4,20 @@ namespace App;
 
 use DateTime;
 use DateTimeZone;
+use Illuminate\Support\Facades\Auth;
 
 class CUtil
 {
+    public static function checkauth()
+    {
+         $users = Auth::user()->admin;
+         if($users->administrator_role_id == 1){
+             return true;
+         }else{
+             return false;
+         }
+    }
+
     public static function convertDate($date, $format, $date_format = 'Y-m-d H:i:s')
     {
         if (!$date || '0000-00-00' === $date || '0000-00-00 00:00:00' === $date || '1970-01-01 00:00:00' === $date || '0000-01-01 00:00:00' === $date) {
