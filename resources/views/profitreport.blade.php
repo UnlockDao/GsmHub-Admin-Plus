@@ -1,7 +1,6 @@
 @extends('layouts.header')
 @section('content')
     <div class="container-fluid mt--7">
-    @if (CUtil::checkauth())
         <!-- Table -->
         <div class="row">
             <div class="col">
@@ -68,5 +67,4 @@
                 </div>
             </div>
         </div>
-@endif
 @endsection

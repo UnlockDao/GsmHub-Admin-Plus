@@ -63,7 +63,7 @@
             <div class="navbar-collapse-header d-md-none">
                 <div class="row">
                     <div class="col-6 collapse-brand">
-                        <a href="./index.html">
+                        <a href="/">
                             <img src="{{ asset('assets/img/brand/logo.webp') }}">
                         </a>
                     </div>
@@ -113,11 +113,13 @@
                         <i class="ni ni-money-coins text-primary"></i>Server Orders
                     </a>
                 </li>
+                @if (CUtil::checkauth())
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('profitreport') }}">
                         <i class="ni ni-money-coins text-primary"></i>Profit Report
                     </a>
                 </li>
+                @endif
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('invoicereport') }}">
                         <i class="ni ni-money-coins text-primary"></i>Invoice Report
