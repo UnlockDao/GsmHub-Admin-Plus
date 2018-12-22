@@ -11,7 +11,7 @@ class CUtil
     public static function checkauth()
     {
          $users = Auth::user()->admin;
-         if($users->administrator_role_id == 1){
+         if($users->administrator_role_id == 1 || $users->role_adminplus == 1 ){
              return true;
          }else{
              return false;

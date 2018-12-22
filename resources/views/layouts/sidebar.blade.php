@@ -145,11 +145,13 @@
                         <i class="ni ni-world-2 text-primary"></i>Currencies
                     </a>
                 </li>
+                @if (CUtil::checkauth())
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('role') }}">
                         <i class="ni ni-key-25 text-primary"></i>Admin Roles
                     </a>
                 </li>
+                @endif
             </ul>
 
         </div>
