@@ -17,7 +17,7 @@ class Admin
     public function handle($request, Closure $next)
     {
         $users = Auth::user()->admin;
-        if($users->administrator_role_id !== 1 ){
+        if(Auth::user()->is_super_admin !== 1 ){
             return redirect('home');
         }
 
