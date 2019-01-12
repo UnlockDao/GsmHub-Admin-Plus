@@ -79,6 +79,14 @@
                                     </select>
                                 </div>
                                 <div class="col-md-1">
+                                    <strong>Currency</strong>
+                                    <select class="form-control form-control-alternative" name="currency">
+                                        <option value="">...</option>
+                                        <option value="{{$exchangerate->currency_code}}"
+                                                @if($cachesearch->currency == $exchangerate->currency_code)selected @endif>{{$exchangerate->currency_code}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-1">
                                     <strong></strong><br>
                                     <input class="btn btn-info form-control" type="submit" value="Search">
                                 </div>
@@ -187,15 +195,15 @@
                                                                     @if($a->purchase_cost == $serverservicetypewisegroupprice->amount)
                                                                         <span class="badge badge-pill badge-warning"><a data-toggle="tooltip"
                                                                                                                         data-placement="top"
-                                                                                                                        data-original-title="{{number_format($serverservicetypewisegroupprice->amount*$exchangerate->exchange_rate_static)}} đ">{{ number_format( $serverservicetypewisegroupprice->amount , 2) }}</a></span>
+                                                                                                                        data-original-title="{{number_format($serverservicetypewisegroupprice->amount*$exchangerate->exchange_rate_static)}} đ">@if($cachesearch->currency == $exchangerate->currency_code) {{number_format($serverservicetypewisegroupprice->amount*$exchangerate->exchange_rate_static)}}  @else{{ round( $serverservicetypewisegroupprice->amount , 2) }}@endif</a></span>
                                                                     @elseif($a->purchase_cost > $serverservicetypewisegroupprice->amount)
                                                                         <span class="badge badge-pill badge-danger"><a data-toggle="tooltip"
                                                                                                                        data-placement="top"
-                                                                                                                       data-original-title="{{number_format($serverservicetypewisegroupprice->amount*$exchangerate->exchange_rate_static)}} đ">{{ number_format( $serverservicetypewisegroupprice->amount , 2) }}</a></span>
+                                                                                                                       data-original-title="{{number_format($serverservicetypewisegroupprice->amount*$exchangerate->exchange_rate_static)}} đ">@if($cachesearch->currency == $exchangerate->currency_code) {{number_format($serverservicetypewisegroupprice->amount*$exchangerate->exchange_rate_static)}}  @else{{ round( $serverservicetypewisegroupprice->amount , 2) }}@endif</a></span>
                                                                            @else
                                                                                     <a data-toggle="tooltip"
                                                                                        data-placement="top"
-                                                                                       data-original-title="{{number_format($serverservicetypewisegroupprice->amount*$exchangerate->exchange_rate_static)}} đ">{{ number_format( $serverservicetypewisegroupprice->amount , 2) }}</a>
+                                                                                       data-original-title="{{number_format($serverservicetypewisegroupprice->amount*$exchangerate->exchange_rate_static)}} đ">@if($cachesearch->currency == $exchangerate->currency_code) {{number_format($serverservicetypewisegroupprice->amount*$exchangerate->exchange_rate_static)}}  @else{{ round( $serverservicetypewisegroupprice->amount , 2) }}@endif</a>
                                                                     @endif
                                                                 @endif
                                                             @endforeach
@@ -249,17 +257,17 @@
                                                                 @if($v->purchase_cost == $serverserviceclientgroupcredit->credit)
                                                                         <span class="badge badge-pill badge-warning"><a data-toggle="tooltip"
                                                                                                                         data-placement="top"
-                                                                                                                        data-original-title="{{number_format($serverserviceclientgroupcredit->credit*$exchangerate->exchange_rate_static)}} đ">{{number_format($serverserviceclientgroupcredit->credit,2)}}</a>
+                                                                                                                        data-original-title="{{number_format($serverserviceclientgroupcredit->credit*$exchangerate->exchange_rate_static)}} đ">@if($cachesearch->currency == $exchangerate->currency_code) {{number_format($serverserviceclientgroupcredit->credit*$exchangerate->exchange_rate_static)}}  @else{{round($serverserviceclientgroupcredit->credit,2)}}@endif</a>
                                                                             </span>
                                                                     @elseif($v->purchase_cost > $serverserviceclientgroupcredit->credit)
                                                                         <span class="badge badge-pill badge-danger"><a data-toggle="tooltip"
                                                                                                                        data-placement="top"
-                                                                                                                       data-original-title="{{number_format($serverserviceclientgroupcredit->credit*$exchangerate->exchange_rate_static)}} đ">{{number_format($serverserviceclientgroupcredit->credit,2)}}</a>
+                                                                                                                       data-original-title="{{number_format($serverserviceclientgroupcredit->credit*$exchangerate->exchange_rate_static)}} đ">@if($cachesearch->currency == $exchangerate->currency_code) {{number_format($serverserviceclientgroupcredit->credit*$exchangerate->exchange_rate_static)}}  @else{{round($serverserviceclientgroupcredit->credit,2)}}@endif</a>
                                                                             </span>
                                                                             @else
                                                                                     <a data-toggle="tooltip"
                                                                                        data-placement="top"
-                                                                                       data-original-title="{{number_format($serverserviceclientgroupcredit->credit*$exchangerate->exchange_rate_static)}} đ">{{number_format($serverserviceclientgroupcredit->credit,2)}}</a>
+                                                                                       data-original-title="{{number_format($serverserviceclientgroupcredit->credit*$exchangerate->exchange_rate_static)}} đ">@if($cachesearch->currency == $exchangerate->currency_code) {{number_format($serverserviceclientgroupcredit->credit*$exchangerate->exchange_rate_static)}}  @else{{round($serverserviceclientgroupcredit->credit,2)}}@endif</a>
                                                                     @endif
                                                                 @endif
                                                             @endforeach
