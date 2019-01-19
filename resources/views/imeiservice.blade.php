@@ -78,6 +78,14 @@
                                     </select>
                                 </div>
                                 <div class="col-md-1">
+                                    <strong>Currency</strong>
+                                    <select class="form-control form-control-alternative" name="currency">
+                                        <option value="">...</option>
+                                            <option value="{{$exchangerate->currency_code}}"
+                                                    @if($cachesearch->currency == $exchangerate->currency_code)selected @endif>{{$exchangerate->currency_code}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-1">
                                     <strong></strong><br>
                                     <input class="btn btn-info form-control" type="submit" value="Search">
                                 </div>
@@ -169,19 +177,19 @@
                                             @foreach($usergroup as $u)
                                                 <td>  @foreach($v->clientgroupprice as $cl)
                                                         @if($cl->currency == $currenciessite->config_value && $cl->service_type == 'imei' && $cl->group_id == $u->id )
-                                                            @if($v->purchase_cost == round($v->credit + $cl->discount,10))
+                                                            @if(round($v->purchase_cost,2) == round($v->credit + $cl->discount,2))
                                                                 <span class="badge badge-pill badge-warning"><a
                                                                             data-toggle="tooltip" data-placement="top"
-                                                                            data-original-title="{{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ">{{round($v->credit + $cl->discount,2)}}</a><span>
-                                                            @elseif($v->purchase_cost > round($v->credit + $cl->discount,10))
+                                                                            data-original-title="{{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ">@if($cachesearch->currency == $exchangerate->currency_code) {{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}}  @else{{round($v->credit + $cl->discount,2)}}@endif</a><span>
+                                                            @elseif(round($v->purchase_cost,4) > round($v->credit + $cl->discount,4))
                                                                             <span class="badge badge-pill badge-danger"><a
                                                                                         data-toggle="tooltip"
                                                                                         data-placement="top"
-                                                                                        data-original-title="{{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ">{{round($v->credit + $cl->discount,2)}}</a><span>
+                                                                                        data-original-title="{{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ">@if($cachesearch->currency == $exchangerate->currency_code) {{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}}  @else{{round($v->credit + $cl->discount,2)}}@endif</a><span>
                                                                     @else
                                                                                         <a data-toggle="tooltip"
                                                                                            data-placement="top"
-                                                                                           data-original-title="{{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ">{{round($v->credit + $cl->discount,2)}}</a>
+                                                                                           data-original-title="{{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ">@if($cachesearch->currency == $exchangerate->currency_code) {{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}}  @else{{round($v->credit + $cl->discount,2)}}@endif</a>
                                                             @endif
                                                         @endif
                                                     @endforeach</td>
