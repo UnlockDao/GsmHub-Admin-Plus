@@ -31,6 +31,15 @@ class SupplierController extends Controller
         $supplier = Supplier::find($id);
         $supplier->transactionfee = $request->transactionfee;
         $supplier->exchangerate = $request->exchangerate;
+        if($request->site_username){
+         $supplier->site_username = $request->site_username;
+        }
+        if($request->site_password) {
+            $supplier->site_password = $request->site_password;
+        }
+        if($request->site_url) {
+            $supplier->site_url = $request->site_url;
+        }
         $supplier->save();
         //cập nhập phí+ tỉ giá
         $utility = new Utility();

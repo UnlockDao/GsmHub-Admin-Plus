@@ -24,7 +24,10 @@
                                     <table id="testTable" class="table">
                                         <thead class="text-primary">
                                         <th width="2%">ID</th>
-                                        <th>Source</th>
+                                        <th>Name</th>
+                                        <th>Username </th>
+                                        <th>Password </th>
+                                        <th>Site </th>
                                         <th>Exchange rate </th>
                                         <th> Transaction fee</th>
                                         <th> Edit </th>
@@ -36,6 +39,9 @@
                                             <tr>
                                                 <td>{{$v->id}}</td>
                                                 <td>{{$v->name}}</td>
+                                                <td>{{$v->site_username}}</td>
+                                                <td>{{$v->site_password}}</td>
+                                                <td><a href="{{$v->site_url}}" target="_blank">{{$v->site_url}}</a></td>
                                                 <td><?php echo number_format($v->exchangerate) ?></td>
                                                 <td>{{$v->transactionfee}} %</td>
                                                 <td><a class="material-icons " href="{{ asset('') }}supplier/{{$v->id}}"><i class="ni ni-zoom-split-in"></i></a></td>

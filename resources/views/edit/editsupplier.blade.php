@@ -14,6 +14,21 @@
                               enctype="multipart/form-data" onsubmit="return checkForm(this);">
                             {{ csrf_field() }}
                             <div class="col-md-12">
+                                <strong>Username</strong>
+                                <input type="text" name="site_username" class="form-control"
+                                       value="{{$supplier->site_username}}" placeholder="site_username" autocomplete="off" required>
+                            </div>
+                            <div class="col-md-12">
+                                <strong>Password</strong>
+                                <input type="text" name="site_password" class="form-control"
+                                       value="{{$supplier->site_password}}" placeholder="site_password" autocomplete="off" required>
+                            </div>
+                            <div class="col-md-12">
+                                <strong>Website</strong>
+                                <input type="text" name="site_url" class="form-control"
+                                       value="{{$supplier->site_url}}" placeholder="site_url" autocomplete="off" required>
+                            </div>
+                            <div class="col-md-12">
                                 <strong>Exchange rate</strong>
                                 <input type="text" name="exchangerate" class="form-control"
                                        value="{{$supplier->exchangerate}}" placeholder="%" autocomplete="off" required>
@@ -26,7 +41,7 @@
                             </div>
                             <div class="col-md-12">
                                 <br>
-                                <input class="btn btn-primary pull-right" type="submit" name="myButton" value="Sửa">
+                                <input class="btn btn-primary pull-right" type="submit" name="myButton" value="Save">
                                 <div class="clearfix"></div>
                             </div>
 
