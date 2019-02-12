@@ -145,7 +145,7 @@
                                                     </label>
                                                 </div>
                                             </td>
-                                            <td>@if($v->servicepricing->nhacungcap ==! null)@if (CUtil::checkauth()){{$v->servicepricing->nhacungcap->name}} @else Supplier #{{$v->servicepricing->nhacungcap->id}} @endif @endif</td>
+                                            <td>@if($v->servicepricing->nhacungcap ==! null)@if (CUtil::issuperadmin()){{$v->servicepricing->nhacungcap->name}} @else Supplier #{{$v->servicepricing->nhacungcap->id}} @endif @endif</td>
                                             <td></td>
                                             <td></td>
                                             <td></td>

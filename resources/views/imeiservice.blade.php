@@ -110,8 +110,10 @@
                             @foreach($usergroup as $u)
                                 <th>{{$u->group_name}}</th>
                             @endforeach
+                            @if(CUtil::issuperadmin())
                             <th></th>
                             <th></th>
+                            @endif
                             </thead>
                             <tbody>
                             @foreach($group->where('imeigroup','<>','') as $g)
@@ -147,7 +149,7 @@
                                                     </label>
                                                 </div>
                                             </td>
-                                            <td>@if($v->imeipricing->nhacungcap ==! null) @if (CUtil::checkauth()){{$v->imeipricing->nhacungcap->name}} @else Supplier #{{$v->imeipricing->nhacungcap->id}} @endif @endif</td>
+                                            <td>@if($v->imeipricing->nhacungcap ==! null) @if (CUtil::issuperadmin()){{$v->imeipricing->nhacungcap->name}} @else Supplier #{{$v->imeipricing->nhacungcap->id}} @endif @endif</td>
                                             @if($v->api_id ==! null)
                                                 <td>@if($v->apiserverservices ==! null)<a data-toggle="tooltip"
                                                                                           data-placement="top"
@@ -194,7 +196,7 @@
                                                         @endif
                                                     @endforeach</td>
                                             @endforeach
-
+                                            @if(CUtil::issuperadmin())
                                             <td>@if($v->status == 'active')<a
                                                         class="material-icons fancybox fancybox.iframe"
                                                         href="{{ asset('') }}imei/{{$v->id}}"><i
@@ -202,6 +204,7 @@
                                             <td><a href="{{ asset('') }}imeidelete/{{$v->id}}"
                                                    onclick="return confirm('OK to delete!');"><i
                                                             class="ni ni-fat-remove"></i></a></td>
+                                            @endif
                                         </tr>
                                     @endif
                                 @endforeach
