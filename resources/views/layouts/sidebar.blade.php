@@ -140,11 +140,13 @@
                         <i class="ni ni-money-coins text-primary"></i>Suppliers
                     </a>
                 </li>
+                @if (CUtil::checkauth())
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('currencie') }}">
                         <i class="ni ni-world-2 text-primary"></i>Currencies
                     </a>
                 </li>
+                @endif
                 @if (CUtil::checkauth())
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('role') }}">

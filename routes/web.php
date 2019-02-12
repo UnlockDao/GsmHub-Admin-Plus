@@ -61,7 +61,7 @@ Route::get('clientgroup/{squirrel}/{any}', 'ClientController@status');
 Route::get('clientgroupdelete/{id}', 'ClientController@delete');
 
 //thêm sửa xóa nhà cung cấp, phí giao dịch, tỉ giá
-Route::get('supplier', 'SupplierController@index');
+Route::get('supplier', 'SupplierController@index')->middleware('admin');
 Route::post('supplier/{id}', 'SupplierController@edit');
 Route::post('addsupplier', 'SupplierController@add');
 Route::get('supplier/{id}', 'SupplierController@show');
