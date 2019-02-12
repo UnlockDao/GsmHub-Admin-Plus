@@ -147,7 +147,7 @@
                                                     </label>
                                                 </div>
                                             </td>
-                                            <td>@if($v->imeipricing->nhacungcap ==! null){{$v->imeipricing->nhacungcap->name}}@endif</td>
+                                            <td>@if($v->imeipricing->nhacungcap ==! null) @if (CUtil::checkauth()){{$v->imeipricing->nhacungcap->name}} @else Supplier #{{$v->imeipricing->nhacungcap->id}} @endif @endif</td>
                                             @if($v->api_id ==! null)
                                                 <td>@if($v->apiserverservices ==! null)<a data-toggle="tooltip"
                                                                                           data-placement="top"
