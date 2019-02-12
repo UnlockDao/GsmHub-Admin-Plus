@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Imeiservicepricing;
 use App\Models\Serviceservicepricing;
 use App\Models\Supplier;
+use App\User;
 use Illuminate\Http\Request;
 
 class SupplierController extends Controller
@@ -17,7 +18,8 @@ class SupplierController extends Controller
     public function index(Request $request)
     {
         $supplier = Supplier::get();
-        return view('supplier', compact('supplier'));
+        $supplieruser = User::where('supplier_code','<>','0')->get();
+        return view('supplier', compact('supplier','supplieruser'));
     }
 
     public function show($id)
