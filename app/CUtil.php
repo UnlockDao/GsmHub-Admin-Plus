@@ -17,6 +17,14 @@ class CUtil
              return false;
          }
     }
+    public static function issuperadmin()
+    {
+        if(Auth::user()->is_super_admin == 1 ){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     public static function convertDate($date, $format, $date_format = 'Y-m-d H:i:s')
     {

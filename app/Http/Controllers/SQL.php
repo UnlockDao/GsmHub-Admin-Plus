@@ -31,6 +31,33 @@ class SQL extends Migration
                 $table->double('transactionfee');
             });
         }
+
+        if (!Schema::hasColumn('adminplus_supplier', 'site_username'))
+        {
+            Schema::table('adminplus_supplier', function (Blueprint $table) {
+                $table->string('site_username');
+            });
+        }
+
+        if (!Schema::hasColumn('adminplus_supplier', 'site_password'))
+        {
+            Schema::table('adminplus_supplier', function (Blueprint $table) {
+                $table->string('site_password');
+            });
+        }
+
+        if (!Schema::hasColumn('adminplus_supplier', 'site_url'))
+        {
+            Schema::table('adminplus_supplier', function (Blueprint $table) {
+                $table->string('site_url');
+            });
+        }
+        if (!Schema::hasColumn('adminplus_supplier', 'type'))
+        {
+            Schema::table('adminplus_supplier', function (Blueprint $table) {
+                $table->integer('type');
+            });
+        }
     }
 
     public function imeiPricing()

@@ -24,7 +24,12 @@
                                     <table id="testTable" class="table">
                                         <thead class="text-primary">
                                         <th width="2%">ID</th>
-                                        <th>Source</th>
+                                        <th>Name</th>
+                                        @if(CUtil::issuperadmin())
+                                        <th>Username </th>
+                                        <th>Password </th>
+                                        <th>Site </th>
+                                        @endif
                                         <th>Exchange rate </th>
                                         <th> Transaction fee</th>
                                         <th> Edit </th>
@@ -36,10 +41,17 @@
                                             <tr>
                                                 <td>{{$v->id}}</td>
                                                 <td>{{$v->name}}</td>
+                                                @if(CUtil::issuperadmin())
+                                                <td>{{$v->site_username}}</td>
+                                                <td>{{$v->site_password}}</td>
+                                                <td><a href="{{$v->site_url}}" target="_blank">{{$v->site_url}}</a></td>
+                                                @endif
                                                 <td><?php echo number_format($v->exchangerate) ?></td>
                                                 <td>{{$v->transactionfee}} %</td>
+                                                @if(CUtil::issuperadmin())
                                                 <td><a class="material-icons " href="{{ asset('') }}supplier/{{$v->id}}"><i class="ni ni-zoom-split-in"></i></a></td>
                                                 <td><a href="{{ asset('') }}supplierdelete/{{$v->id}}" onclick="return confirm('OK to delete!');"><i class="ni ni-fat-remove"></i></a></td>
+                                                @endif
                                             </tr>
                                         @endforeach
                                         </tbody>
@@ -79,4 +91,38 @@
             </div>
         </div>
 
+<hr>
+        <div class="row">
+            <div class="col">
+                <div class="card shadow">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <table id="testTable" class="table">
+                                <thead class="text-primary">
+                                <th width="2%">ID</th>
+                                <th>Name</th>
+                                <th>Exchange rate </th>
+                                <th> Transaction fee</th>
+                                <th> Edit </th>
+                                <th> Delete </th>
+
+                                </thead>
+                                <tbody>
+                                @foreach($supplieruser as $v)
+                                    <tr>
+                                        <td>{{$v->supplier_code}}</td>
+                                        <td>{{$v->user_name}}</td>
+                                        <td><?php echo number_format($v->exchangerate) ?></td>
+                                        <td>{{$v->transactionfee}} %</td>
+                                            <td><a class="material-icons " href="{{ asset('') }}supplier/{{$v->id}}"><i class="ni ni-zoom-split-in"></i></a></td>
+                                            <td><a href="{{ asset('') }}supplierdelete/{{$v->id}}" onclick="return confirm('OK to delete!');"><i class="ni ni-fat-remove"></i></a></td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 @endsection
