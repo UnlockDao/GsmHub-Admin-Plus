@@ -15,8 +15,25 @@ class SupplierController extends Controller
         $this->middleware('auth');
     }
 
+    public function checkSupplier()
+    {
+        $usersupplier = User::where('supplier_code','<>','0')->get();
+        foreach ($usersupplier as $v) {
+            $add = Supplier::firstOrCreate(['name'=>$v->user_id,'type'=>1]);
+
+        }
+        $usersupplierdel = Supplier::where('type', 1)->get();
+        foreach ($usersupplierdel as $v) {
+            $check = User::where('supplier_code','<>','0')->where('user_id', $v->name)->first();
+            if ($check == null) {
+               $del= Supplier::where('name', $v->id)->where('type', 1)->delete();
+            }
+        }
+    }
+
     public function index(Request $request)
     {
+        $this->checkSupplier();
         $supplier = Supplier::get();
         $supplieruser = User::where('supplier_code','<>','0')->get();
         return view('supplier', compact('supplier','supplieruser'));

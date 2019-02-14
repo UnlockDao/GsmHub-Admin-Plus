@@ -7,12 +7,13 @@
             <div class="col">
                 <div class="card shadow">
                     <div class="card-header border-0">
-                        <h3 class="mb-0">Edit {{$supplier->name}}</h3>
+                        <h3 class="mb-0">Edit @if($supplier->type == 0){{$supplier->name}} @else {{$supplier->userSupplier->user_name}} @endif</h3>
                     </div>
                     <div class="card-body">
                         <form action="{{ url('supplier') }}/{{$supplier->id}}" method="POST"
                               enctype="multipart/form-data" onsubmit="return checkForm(this);">
                             {{ csrf_field() }}
+                            @if($supplier->type == 0)
                             <div class="col-md-12">
                                 <strong>Username</strong>
                                 <input type="text" name="site_username" class="form-control"
@@ -28,6 +29,7 @@
                                 <input type="text" name="site_url" class="form-control"
                                        value="{{$supplier->site_url}}" placeholder="site_url" autocomplete="off" required>
                             </div>
+                            @endif
                             <div class="col-md-12">
                                 <strong>Exchange rate</strong>
                                 <input type="text" name="exchangerate" class="form-control"
