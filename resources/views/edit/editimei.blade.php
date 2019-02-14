@@ -62,12 +62,40 @@
                                                placeholder="Name IMEI Services" autocomplete="off">
                                     </div>
                                     <div class="col-md-12">
+                                        <strong>Service Listed In Group</strong>
+                                        <select name="service_group" class="form-control">
+                                            @foreach($group as $v)
+                                                <option value="{{$v->id}}"
+                                                        @if($imei->imei->imei_service_group_id == $v->id) selected @endif>{{$v->group_name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-12">
                                         <strong>Supplier</strong>
                                         <select name="id_supplier" class="form-control">
                                             @foreach($nhacungcap as $v)
                                                 <option value="{{$v->id}}"
                                                         @if($imei->id_supplier == $v->id) selected @endif>{{$v->name}}</option>
                                             @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <strong>Delivery Time</strong>
+                                        <input type="text" name="process_time" id="process_time" class="form-control"
+                                               value="{{$imei->imei->process_time}}"
+                                               placeholder="process_time" autocomplete="off">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <strong>Time</strong>
+                                        <select name="time_unit" class="form-control">
+                                                <option value="Minutes" @if($imei->imei->time_unit == 'Minutes') selected @endif>Minutes</option>
+                                                <option value="Hours" @if($imei->imei->time_unit == 'Hours') selected @endif>Hours</option>
+                                                <option value="Weeks" @if($imei->imei->time_unit == 'Weeks') selected @endif>Weeks</option>
+                                                <option value="Days" @if($imei->imei->time_unit == 'Days') selected @endif>Days</option>
+                                                <option value="Months" @if($imei->imei->time_unit == 'Months') selected @endif>Months</option>
+                                                <option value="Instant" @if($imei->imei->time_unit == 'Instant') selected @endif>Instant</option>
                                         </select>
                                     </div>
                                 </div>
