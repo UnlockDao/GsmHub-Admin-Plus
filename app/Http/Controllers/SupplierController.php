@@ -59,6 +59,9 @@ class SupplierController extends Controller
         if($request->site_url) {
             $supplier->site_url = $request->site_url;
         }
+        if($request->info) {
+            $supplier->info = $request->info;
+        }
         $supplier->save();
         //cập nhập phí+ tỉ giá
         $utility = new Utility();
@@ -72,6 +75,10 @@ class SupplierController extends Controller
         $supplier->name = $request->name;
         $supplier->transactionfee = $request->transactionfee;
         $supplier->exchangerate = $request->exchangerate;
+        $supplier->site_username = $request->site_username;
+        $supplier->site_password = $request->site_password;
+        $supplier->site_url = $request->site_url;
+        $supplier->info = $request->info;
         $supplier->save();
         return back();
     }

@@ -30,11 +30,10 @@
                                         <thead class="text-primary">
                                         <th width="2%">ID</th>
                                         <th>Name</th>
-                                        @if(CUtil::issuperadmin())
-                                            <th>Username</th>
-                                            <th>Password</th>
-                                            <th>Site</th>
-                                        @endif
+                                        <th>Username</th>
+                                        <th>Password</th>
+                                        <th>Site</th>
+                                        <th>Info</th>
                                         <th>Exchange rate</th>
                                         <th> Transaction fee</th>
                                         <th> Edit</th>
@@ -46,13 +45,10 @@
                                             <tr>
                                                 <td>{{$v->id}}</td>
                                                 <td>@if($v->type == 0){{$v->name}} @else {{$v->userSupplier->user_name}} @endif</td>
-                                                <td></td>
-                                                @if(CUtil::issuperadmin())
-                                                    <td>{{$v->site_username}}</td>
-                                                    <td>{{$v->site_password}}</td>
-                                                    <td><a href="{{$v->site_url}}" target="_blank">{{$v->site_url}}</a>
-                                                    </td>
-                                                @endif
+                                                <td>{{$v->site_username}}</td>
+                                                <td>{{$v->site_password}}</td>
+                                                <td><a href="{{$v->site_url}}" target="_blank">{{$v->site_url}}</a></td>
+                                                <td>{{$v->info}}</td>
                                                 <td><?php echo number_format($v->exchangerate) ?></td>
                                                 <td>{{$v->transactionfee}} %</td>
                                                 @if(CUtil::issuperadmin())
@@ -76,27 +72,49 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group bmd-form-group">
-                                                    <label class="bmd-label-floating"></label>
+                                                    <label class="bmd-label-floating">Name Supplier</label>
                                                     <input type="text" name="name" placeholder="Name"
                                                            class="form-control" autocomplete="off" required="">
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group bmd-form-group">
-                                                    <label class="bmd-label-floating"></label>
+                                                    <label class="bmd-label-floating">Exchange rate</label>
                                                     <input type="text" name="exchangerate" placeholder="Exchange rate"
                                                            class="form-control" autocomplete="off" required="">
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group bmd-form-group">
-                                                    <label class="bmd-label-floating"></label>
+                                                    <label class="bmd-label-floating">Transaction fee</label>
                                                     <input type="number" name="transactionfee"
                                                            placeholder="Transaction fee" class="form-control"
                                                            autocomplete="off" required="">
                                                 </div>
                                             </div>
+                                            <hr>
+                                            <div class="col-md-12">
+                                                <label class="bmd-label-floating">Username</label>
+                                                <input type="text" name="site_username" class="form-control"
+                                                       value="" placeholder="site_username" autocomplete="off" required>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label class="bmd-label-floating">Password</label>
+                                                <input type="text" name="site_password" class="form-control"
+                                                       value="" placeholder="site_password" autocomplete="off" required>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label class="bmd-label-floating">Website</label>
+                                                <input type="text" name="site_url" class="form-control"
+                                                       value="" placeholder="site_url" autocomplete="off" required>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label class="bmd-label-floating">Info</label>
+                                                <textarea class="form-control" name="info" rows="3"
+                                                          placeholder="Write info text here ..."></textarea>
+                                            </div>
                                         </div>
+                                        <br>
                                         <button type="submit" class="btn btn-rose pull-right">Add</button>
                                         <div class="clearfix"></div>
                                     </form>
