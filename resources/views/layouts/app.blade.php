@@ -17,6 +17,8 @@
     <link href="{{ asset('assets/vendor/@fortawesome/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <script src="{{ asset('assets/vendor/jquery/dist/jquery.min.js') }}"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <style>
     /* for custom scrollbar for webkit browser*/
@@ -38,7 +40,7 @@
         </main>
     </div>
 </body>
-<script src="{{ asset('assets/vendor/jquery/dist/jquery.min.js') }}"></script>
+
 <script src="{{ asset('js/jquery.tableCheckbox.js') }}"></script>
 <script src="{{ asset('assets/js/popper.min.js') }}"></script>
 <script src="{{ asset('assets/js/bootstrap-material-design.min.js') }}"></script>
@@ -47,4 +49,5 @@
 <script>
     $('table').tableCheckbox({ /* options */ });
 </script>
+
 </html>
