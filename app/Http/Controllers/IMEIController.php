@@ -193,9 +193,9 @@ class IMEIController extends Controller
 
         $pricegroup = Clientgroupprice::orderBy('group_id', 'desc')->where('currency', $currenciessite->config_value)->where('service_type', 'imei')->where('service_id', $id)->get();
 
+        $group = Imeiservicegroup::orderBy('display_order','desc')->get();
 
-
-        return view('edit.editimei', compact('imei', 'nhacungcap', 'clien', 'pricegroup', 'exchangerate', 'cliendefault', 'allcurrencies'));
+        return view('edit.editimei', compact('imei', 'nhacungcap', 'clien', 'pricegroup', 'exchangerate', 'cliendefault', 'allcurrencies','group'));
     }
 
     public function edit($id, Request $request)
@@ -208,8 +208,14 @@ class IMEIController extends Controller
         $imei->id_supplier = $request->id_supplier;
         $imei->save();
         //lấy dữ liệu nhập thủ công
-        $giabanle = $request->giabanle;
-        $updateexchangerate = Imeiservice::where('id', $id)->update(['purchase_cost' => $request->purchasenet, 'credit' => $request->credit, 'service_name' => $request->service_name]);
+        $updateexchangerate = Imeiservice::where('id', $id)->update(['purchase_cost' => $request->purchasenet,
+            'credit' => $request->credit,
+            'process_time' => $request->process_time,
+            'time_unit' => $request->time_unit,
+            'imei_service_group_id' => $request->service_group,
+            'service_name' => $request->service_name]);
+
+
         foreach ($currencies as $c) {
             $updateimeiservicecredit = Imeiservicecredit::where('service_id', $id)
                 ->where('currency', $c->currency_code)

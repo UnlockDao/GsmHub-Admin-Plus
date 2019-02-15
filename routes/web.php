@@ -46,6 +46,7 @@ Route::post('updatesupplier/{id}', 'IMEIController@updatesupplier');
 Route::get('imei/{squirrel}/{any}', 'IMEIController@status');
 //xuất giá
 Route::get('imeiexport', 'Export@exportimei');
+Route::post('imeiquickedit', 'Export@imeiquickedit');
 Route::get('serverexport', 'Export@exportserver');
 //sales
 Route::get('imeisales', 'Sales@salesimei');
@@ -64,6 +65,7 @@ Route::get('clientgroupdelete/{id}', 'ClientController@delete');
 Route::get('supplier', 'SupplierController@index')->middleware('admin');
 Route::post('supplier/{id}', 'SupplierController@edit');
 Route::post('addsupplier', 'SupplierController@add');
+Route::post('supplierquickedit', 'SupplierController@quickedit');
 Route::get('supplier/{id}', 'SupplierController@show');
 Route::get('supplierdelete/{id}', 'SupplierController@delete');
 

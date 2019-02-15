@@ -15,8 +15,25 @@ class SupplierController extends Controller
         $this->middleware('auth');
     }
 
+    public function checkSupplier()
+    {
+        $usersupplier = User::where('supplier_code','<>','0')->get();
+        foreach ($usersupplier as $v) {
+            $add = Supplier::firstOrCreate(['name'=>$v->user_id,'type'=>1]);
+
+        }
+        $usersupplierdel = Supplier::where('type', 1)->get();
+        foreach ($usersupplierdel as $v) {
+            $check = User::where('supplier_code','<>','0')->where('user_id', $v->name)->first();
+            if ($check == null) {
+               $del= Supplier::where('name', $v->id)->where('type', 1)->delete();
+            }
+        }
+    }
+
     public function index(Request $request)
     {
+        $this->checkSupplier();
         $supplier = Supplier::get();
         $supplieruser = User::where('supplier_code','<>','0')->get();
         return view('supplier', compact('supplier','supplieruser'));
@@ -42,11 +59,42 @@ class SupplierController extends Controller
         if($request->site_url) {
             $supplier->site_url = $request->site_url;
         }
+        if($request->info) {
+            $supplier->info = $request->info;
+        }
         $supplier->save();
         //cập nhập phí+ tỉ giá
         $utility = new Utility();
         $utility->Repricing($type = 'supplier', $id);
         return redirect('/supplier');
+    }
+
+    public function quickedit(Request $request)
+    {
+        $supplier = Supplier::find($request->id);
+        if($request->name) {
+            $supplier->name = $request->name;
+        }
+        if($request->transactionfee) {
+            $supplier->transactionfee = $request->transactionfee;
+        }
+        if($request->exchangerate) {
+            $supplier->exchangerate = $request->exchangerate;
+        }
+        if($request->site_username){
+            $supplier->site_username = $request->site_username;
+        }
+        if($request->site_password) {
+            $supplier->site_password = $request->site_password;
+        }
+        if($request->site_url) {
+            $supplier->site_url = $request->site_url;
+        }
+        if($request->info) {
+            $supplier->info = $request->info;
+        }
+        $supplier->save();
+        return;
     }
 
     public function add(Request $request)
@@ -55,6 +103,10 @@ class SupplierController extends Controller
         $supplier->name = $request->name;
         $supplier->transactionfee = $request->transactionfee;
         $supplier->exchangerate = $request->exchangerate;
+        $supplier->site_username = $request->site_username;
+        $supplier->site_password = $request->site_password;
+        $supplier->site_url = $request->site_url;
+        $supplier->info = $request->info;
         $supplier->save();
         return back();
     }

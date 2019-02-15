@@ -62,11 +62,10 @@
                     </div>
                 </form>
                 <div class="card-body">
-                    <table class="table align-items-center table-flush">
+                    <table id="imeiquickedit" class="table align-items-center table-flush">
                         <thead class="text-primary" id="myHeader">
                         <th></th>
                         <th>Service Name</th>
-                        <th>Type</th>
                         <th>PC (Net)</th>
                         <th>Default</th>
                         @foreach($usergroup as $u)
@@ -88,10 +87,6 @@
                                         <td>{{$v->id}}</td>
                                         <td @if($v->status == 'soft_deleted' )style="text-decoration: line-through;"@endif>
                                             {{$v->service_name}}</td>
-                                        <td>@if($v->api_id ==! null)<span
-                                                    class="badge badge-pill badge-success">API<span>  @else<span
-                                                            class="badge badge-pill badge-info">Manual<span>  @endif
-                                        </td>
                                         <td>{{number_format($v->purchase_cost, 2)}}</td>
                                         <td>{{number_format($v->credit, 2)}}</td>
                                         @foreach($usergroup as $u)
@@ -120,7 +115,52 @@
         </div>
     </div>
 
+    <script src="js/jquery.tabledit.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $('#imeiquickedit').Tabledit({
+                url: 'imeiquickedit',
+                editButton: false,
+                deleteButton: false,
+                hideIdentifier: true,
+                columns: {
+                    identifier: [0, 'id'],
+                    editable: [[1, 'service_name'], [2, 'purchase_cost'], [3, 'credit']]
+                },
+                onDraw: function() {
+                    console.log('onDraw()');
+                },
+                onSuccess: function(data, textStatus, jqXHR) {
+                    console.log('onSuccess(data, textStatus, jqXHR)');
+                    console.log(data);
+                    console.log(textStatus);
+                    console.log(jqXHR);
+                },
+                onFail: function(jqXHR, textStatus, errorThrown) {
+                    console.log('onFail(jqXHR, textStatus, errorThrown)');
+                    console.log(jqXHR);
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                },
+                onAlways: function() {
+                    console.log('onAlways()');
+                },
+                onAjax: function(action, serialize) {
+                    console.log('onAjax(action, serialize)');
+                    console.log(action);
+                    console.log(serialize);
+                }
+            });
 
+
+        });
+
+    </script>
 
 
 
