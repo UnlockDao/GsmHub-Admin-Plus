@@ -64,6 +64,7 @@ Route::get('clientgroupdelete/{id}', 'ClientController@delete');
 Route::get('supplier', 'SupplierController@index')->middleware('admin');
 Route::post('supplier/{id}', 'SupplierController@edit');
 Route::post('addsupplier', 'SupplierController@add');
+Route::post('supplierquickedit', 'SupplierController@quickedit');
 Route::get('supplier/{id}', 'SupplierController@show');
 Route::get('supplierdelete/{id}', 'SupplierController@delete');
 

@@ -69,6 +69,34 @@ class SupplierController extends Controller
         return redirect('/supplier');
     }
 
+    public function quickedit(Request $request)
+    {
+        $supplier = Supplier::find($request->id);
+        if($request->name) {
+            $supplier->name = $request->name;
+        }
+        if($request->transactionfee) {
+            $supplier->transactionfee = $request->transactionfee;
+        }
+        if($request->exchangerate) {
+            $supplier->exchangerate = $request->exchangerate;
+        }
+        if($request->site_username){
+            $supplier->site_username = $request->site_username;
+        }
+        if($request->site_password) {
+            $supplier->site_password = $request->site_password;
+        }
+        if($request->site_url) {
+            $supplier->site_url = $request->site_url;
+        }
+        if($request->info) {
+            $supplier->info = $request->info;
+        }
+        $supplier->save();
+        return;
+    }
+
     public function add(Request $request)
     {
         $supplier = new Supplier();

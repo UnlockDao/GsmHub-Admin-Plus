@@ -26,7 +26,7 @@
                             <div class="tab-content" id="myTabContent">
                                 <div class="tab-pane fade show active" id="tabs-icons-text-1" role="tabpanel"
                                      aria-labelledby="tabs-icons-text-1-tab">
-                                    <table id="testTable" class="table">
+                                    <table id="supplierquickedit" class="table">
                                         <thead class="text-primary">
                                         <th width="2%">ID</th>
                                         <th>Name</th>
@@ -35,9 +35,9 @@
                                         <th>Site</th>
                                         <th>Info</th>
                                         <th>Exchange rate</th>
-                                        <th> Transaction fee</th>
-                                        <th> Edit</th>
-                                        <th> Delete</th>
+                                        <th>Transaction fee</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th>
 
                                         </thead>
                                         <tbody>
