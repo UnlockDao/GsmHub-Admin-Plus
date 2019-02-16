@@ -85,8 +85,7 @@
                                 @if($v->imei_service_group_id == $g->id )
                                     <tr>
                                         <td>{{$v->id}}</td>
-                                        <td @if($v->status == 'soft_deleted' )style="text-decoration: line-through;"@endif>
-                                            {{$v->service_name}}</td>
+                                        <td @if($v->status == 'soft_deleted' )style="text-decoration: line-through;"@endif>{{$v->service_name}}</td>
                                         <td>{{number_format($v->purchase_cost, 2)}}</td>
                                         <td>{{number_format($v->credit, 2)}}</td>
                                         @foreach($usergroup as $u)
