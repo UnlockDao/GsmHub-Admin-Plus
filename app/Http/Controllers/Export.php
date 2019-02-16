@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Clientgroup;
+use App\Models\Clientgroupprice;
 use App\Models\Config;
 use App\Models\Currencie;
 use App\Models\Currenciepricing;
@@ -79,6 +80,28 @@ class Export
             $imeiservice->service_name = $request->service_name;
         }
         $imeiservice->save();
+
+
+        $currencies = Currencie::where('display_currency', 'Yes')->get();
+        $getimei = Imeiservice::find($request->id);
+        //gọi nhóm user
+        $group_user = Clientgroup::where('status', 'active')->get();
+        //ghi dữ liệu giá vào nhóm user
+        foreach ($group_user as $u) {
+            $idclient = $u->id;
+            if ($request->input('group' . $idclient)) {
+                $u = $request->input('group' . $idclient);
+                $y = $u - $getimei->credit;
+
+                foreach ($currencies as $c) {
+                    Clientgroupprice::where('group_id', $idclient)
+                        ->where('service_type', 'imei')
+                        ->where('currency', $c->currency_code)
+                        ->where('service_id', $request->id)
+                        ->update(['discount' => $y * $c->exchange_rate_static]);
+                }
+            }
+        }
         return;
 
     }

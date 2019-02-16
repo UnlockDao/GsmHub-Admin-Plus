@@ -90,16 +90,16 @@
                                         <td>{{number_format($v->purchase_cost, 2)}}</td>
                                         <td>{{number_format($v->credit, 2)}}</td>
                                         @foreach($usergroup as $u)
-                                            <td>  @foreach($v->clientgroupprice as $cl)
+                                              @foreach($v->clientgroupprice as $cl)
                                                     @if($cl->currency == $currenciessite->config_value && $cl->service_type == 'imei' && $cl->group_id == $u->id )
                                                             @if($cachesearch->currency == null)
-                                                            {{number_format($v->credit + $cl->discount, 2)}}
+                                                        <td>{{number_format($v->credit + $cl->discount, 2)}}</td>
                                                             @else
-                                                            {{number_format(($v->credit + $cl->discount)*$currencies->where('id',$cachesearch->currency)->first()->exchange_rate_static)}}
+                                                        <td>{{number_format(($v->credit + $cl->discount)*$currencies->where('id',$cachesearch->currency)->first()->exchange_rate_static)}}</td>
                                                             @endif
 
                                                     @endif
-                                                @endforeach</td>
+                                                @endforeach
                                         @endforeach
 
                                     </tr>
@@ -130,7 +130,7 @@
                 hideIdentifier: true,
                 columns: {
                     identifier: [0, 'id'],
-                    editable: [[1, 'service_name'], [2, 'purchase_cost'], [3, 'credit']]
+                    editable: [[1, 'service_name'], [2, 'purchase_cost'], [3, 'credit']@foreach($usergroup as $key => $v),[{{ ++$key+3 }}, 'group{{$v->id}}'] @endforeach]
                 },
                 onDraw: function() {
                     console.log('onDraw()');
