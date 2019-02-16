@@ -125,4 +125,50 @@
                 </div>
             </div>
         </div>
+        <script src="js/jquery.tabledit.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $('#supplierquickedit').Tabledit({
+                    url: 'supplierquickedit',
+                    editButton: false,
+                    deleteButton: false,
+                    hideIdentifier: true,
+                    columns: {
+                        identifier: [0, 'id'],
+                        editable: [[1, 'name'], [2, 'site_username'], [3, 'site_password'], [4, 'site_url'], [5, 'info'], [6, 'exchangerate'], [7, 'transactionfee']]
+                    },
+                    onDraw: function() {
+                        console.log('onDraw()');
+                    },
+                    onSuccess: function(data, textStatus, jqXHR) {
+                        console.log('onSuccess(data, textStatus, jqXHR)');
+                        console.log(data);
+                        console.log(textStatus);
+                        console.log(jqXHR);
+                    },
+                    onFail: function(jqXHR, textStatus, errorThrown) {
+                        console.log('onFail(jqXHR, textStatus, errorThrown)');
+                        console.log(jqXHR);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                    },
+                    onAlways: function() {
+                        console.log('onAlways()');
+                    },
+                    onAjax: function(action, serialize) {
+                        console.log('onAjax(action, serialize)');
+                        console.log(action);
+                        console.log(serialize);
+                    }
+                });
+
+
+            });
+
+        </script>
 @endsection
