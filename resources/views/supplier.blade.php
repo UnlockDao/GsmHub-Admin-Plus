@@ -44,7 +44,7 @@
                                         @foreach($supplier as $v)
                                             <tr>
                                                 <td>{{$v->id}}</td>
-                                                <td>@if($v->type == 0){{$v->name}} @else {{$v->userSupplier->user_name}} @endif</td>
+                                                <td>@if($v->type == 0){{$v->name}} @else @if($v->userSupplier) {{$v->userSupplier->user_name}} @endif @endif</td>
                                                 <td>{{$v->site_username}}</td>
                                                 <td>{{$v->site_password}}</td>
                                                 <td><a href="{{$v->site_url}}" target="_blank">{{$v->site_url}}</a></td>
