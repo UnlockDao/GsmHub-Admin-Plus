@@ -35,7 +35,7 @@
                                         <th>Site</th>
                                         <th>Info</th>
                                         <th>Exchange rate</th>
-                                        <th>Transaction fee</th>
+                                        <th>Transaction fee %</th>
                                         <th>Edit</th>
                                         <th>Delete</th>
 
@@ -50,7 +50,7 @@
                                                 <td contenteditable="true" onBlur="saveToDatabase(this,'site_url','{{$v->id}}')" onClick="showEdit(this);">{{$v->site_url}}</td>
                                                 <td contenteditable="true" onBlur="saveToDatabase(this,'info','{{$v->id}}')" onClick="showEdit(this);">{{$v->info}}</td>
                                                 <td contenteditable="true" onBlur="saveToDatabase(this,'exchangerate','{{$v->id}}')" onClick="showEdit(this);">{{ $v->exchangerate }}</td>
-                                                <td contenteditable="true" onBlur="saveToDatabase(this,'transactionfee','{{$v->id}}')" onClick="showEdit(this);">{{$v->transactionfee}} %</td>
+                                                <td contenteditable="true" onBlur="saveToDatabase(this,'transactionfee','{{$v->id}}')" onClick="showEdit(this);">{{$v->transactionfee}}</td>
                                                 @if(CUtil::issuperadmin())
                                                     <td><a class="material-icons "
                                                            href="{{ asset('') }}supplier/{{$v->id}}"><i
