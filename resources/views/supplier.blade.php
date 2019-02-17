@@ -26,7 +26,7 @@
                             <div class="tab-content" id="myTabContent">
                                 <div class="tab-pane fade show active" id="tabs-icons-text-1" role="tabpanel"
                                      aria-labelledby="tabs-icons-text-1-tab">
-                                    <table id="supplierquickedit" class="table">
+                                    <table class="table">
                                         <thead class="text-primary">
                                         <th width="2%">ID</th>
                                         <th>Name</th>
@@ -44,13 +44,13 @@
                                         @foreach($supplier as $v)
                                             <tr>
                                                 <td>{{$v->id}}</td>
-                                                <td>@if($v->type == 0){{$v->name}} @else @if($v->userSupplier) {{$v->userSupplier->user_name}} @endif @endif</td>
-                                                <td>{{$v->site_username}}</td>
-                                                <td>{{$v->site_password}}</td>
-                                                <td><a href="{{$v->site_url}}" target="_blank">{{$v->site_url}}</a></td>
-                                                <td>{{$v->info}}</td>
-                                                <td><?php echo number_format($v->exchangerate) ?></td>
-                                                <td>{{$v->transactionfee}} %</td>
+                                                <td contenteditable="true" onBlur="saveToDatabase(this,'name','{{$v->id}}')" onClick="showEdit(this);">@if($v->type == 0){{$v->name}} @else @if($v->userSupplier) {{$v->userSupplier->user_name}} @endif @endif</td>
+                                                <td contenteditable="true" onBlur="saveToDatabase(this,'site_username','{{$v->id}}')" onClick="showEdit(this);">{{$v->site_username}}</td>
+                                                <td contenteditable="true" onBlur="saveToDatabase(this,'site_password','{{$v->id}}')" onClick="showEdit(this);">{{$v->site_password}}</td>
+                                                <td contenteditable="true" onBlur="saveToDatabase(this,'site_url','{{$v->id}}')" onClick="showEdit(this);">{{$v->site_url}}</td>
+                                                <td contenteditable="true" onBlur="saveToDatabase(this,'info','{{$v->id}}')" onClick="showEdit(this);">{{$v->info}}</td>
+                                                <td contenteditable="true" onBlur="saveToDatabase(this,'exchangerate','{{$v->id}}')" onClick="showEdit(this);">{{ $v->exchangerate }}</td>
+                                                <td contenteditable="true" onBlur="saveToDatabase(this,'transactionfee','{{$v->id}}')" onClick="showEdit(this);">{{$v->transactionfee}} %</td>
                                                 @if(CUtil::issuperadmin())
                                                     <td><a class="material-icons "
                                                            href="{{ asset('') }}supplier/{{$v->id}}"><i
@@ -125,50 +125,28 @@
                 </div>
             </div>
         </div>
-        <script src="js/jquery.tabledit.js"></script>
-        <script type="text/javascript">
-            $(document).ready(function(){
+
+        <script>
+            function showEdit(editableObj) {
+                $(editableObj).css("background","#FFF");
+            }
+
+            function saveToDatabase(editableObj,column,id) {
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
-                $('#supplierquickedit').Tabledit({
-                    url: 'supplierquickedit',
-                    editButton: false,
-                    deleteButton: false,
-                    hideIdentifier: true,
-                    columns: {
-                        identifier: [0, 'id'],
-                        editable: [[1, 'name'], [2, 'site_username'], [3, 'site_password'], [4, 'site_url'], [5, 'info'], [6, 'exchangerate'], [7, 'transactionfee']]
-                    },
-                    onDraw: function() {
-                        console.log('onDraw()');
-                    },
-                    onSuccess: function(data, textStatus, jqXHR) {
-                        console.log('onSuccess(data, textStatus, jqXHR)');
-                        console.log(data);
-                        console.log(textStatus);
-                        console.log(jqXHR);
-                    },
-                    onFail: function(jqXHR, textStatus, errorThrown) {
-                        console.log('onFail(jqXHR, textStatus, errorThrown)');
-                        console.log(jqXHR);
-                        console.log(textStatus);
-                        console.log(errorThrown);
-                    },
-                    onAlways: function() {
-                        console.log('onAlways()');
-                    },
-                    onAjax: function(action, serialize) {
-                        console.log('onAjax(action, serialize)');
-                        console.log(action);
-                        console.log(serialize);
+                $(editableObj).css("background","#FFF url(loaderIcon.gif) no-repeat right");
+                $.ajax({
+                    url: "supplierquickedit",
+                    type: "POST",
+                    data:'column='+column+'&editval='+editableObj.innerHTML+'&id='+id,
+                    success: function(data){
+                        $(editableObj).css("background","#FDFDFD");
                     }
                 });
-
-
-            });
-
+            }
         </script>
+
 @endsection
