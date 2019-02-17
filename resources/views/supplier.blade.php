@@ -48,7 +48,7 @@
                                                 <td contenteditable="true" onBlur="saveToDatabase(this,'site_username','{{$v->id}}')" onClick="showEdit(this);">{{$v->site_username}}</td>
                                                 <td contenteditable="true" onBlur="saveToDatabase(this,'site_password','{{$v->id}}')" onClick="showEdit(this);">{{$v->site_password}}</td>
                                                 <td contenteditable="true" onBlur="saveToDatabase(this,'site_url','{{$v->id}}')" onClick="showEdit(this);">{{$v->site_url}}</td>
-                                                <td contenteditable="true" onBlur="saveToDatabase(this,'info','{{$v->id}}')" onClick="showEdit(this);">{{$v->info}}</td>
+                                                <td contenteditable="true" onBlur="saveToDatabase(this,'info','{{$v->id}}')" onClick="showEdit(this);">{!! $v->info !!}</td>
                                                 <td contenteditable="true" onBlur="saveToDatabase(this,'exchangerate','{{$v->id}}')" onClick="showEdit(this);">{{ $v->exchangerate }}</td>
                                                 <td contenteditable="true" onBlur="saveToDatabase(this,'transactionfee','{{$v->id}}')" onClick="showEdit(this);">{{$v->transactionfee}}</td>
                                                 @if(CUtil::issuperadmin())
