@@ -62,7 +62,7 @@
                     </div>
                 </form>
                 <div class="card-body">
-                    <table id="imeiquickedit" class="table align-items-center table-flush">
+                    <table class="table align-items-center table-flush">
                         <thead class="text-primary" id="myHeader">
                         <th></th>
                         <th>Service Name</th>
@@ -85,19 +85,12 @@
                                 @if($v->imei_service_group_id == $g->id )
                                     <tr>
                                         <td>{{$v->id}}</td>
-                                        <td @if($v->status == 'soft_deleted' )style="text-decoration: line-through;"@endif>{{$v->service_name}}</td>
-                                        <td>{{number_format($v->purchase_cost, 2)}}</td>
-                                        <td>{{number_format($v->credit, 2)}}</td>
+                                        <td @if($v->status == 'soft_deleted' )style="text-decoration: line-through;"@endif  contenteditable="true" onBlur="saveToDatabase(this,'service_name','services','{{$v->id}}')" onClick="showEdit(this);">{{$v->service_name}}</td>
+                                        <td contenteditable="true" onBlur="saveToDatabase(this,'purchase_cost','services','{{$v->id}}')" onClick="showEdit(this);">{{round($v->purchase_cost, 2)}}</td>
+                                        <td contenteditable="true" onBlur="saveToDatabase(this,'credit','services','{{$v->id}}')" onClick="showEdit(this);">{{round($v->credit, 2)}}</td>
                                         @foreach($usergroup as $u)
-                                              @foreach($v->clientgroupprice as $cl)
-                                                    @if($cl->currency == $currenciessite->config_value && $cl->service_type == 'imei' && $cl->group_id == $u->id )
-                                                            @if($cachesearch->currency == null)
-                                                        <td>{{number_format($v->credit + $cl->discount, 2)}}</td>
-                                                            @else
-                                                        <td>{{number_format(($v->credit + $cl->discount)*$currencies->where('id',$cachesearch->currency)->first()->exchange_rate_static)}}</td>
-                                                            @endif
-
-                                                    @endif
+                                              @foreach($v->clientgroupprice->where('service_type','imei')->where('group_id',$u->id)->where('currency',$currenciessite->config_value) as $cl)
+                                                    <td contenteditable="true" onBlur="saveToDatabase(this,'purchase_cost','price','{{$v->id}}','{{$u->id}}')" onClick="showEdit(this);">{{round($v->credit + $cl->discount, 2)}}</td>
                                                 @endforeach
                                         @endforeach
 
@@ -114,55 +107,30 @@
         </div>
     </div>
 
-    <script src="js/jquery.tabledit.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function(){
+
+    <script>
+        function showEdit(editableObj) {
+            $(editableObj).css("background","#FFF");
+        }
+
+        function saveToDatabase(editableObj,column,type,id,idgr) {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            $('#imeiquickedit').Tabledit({
-                url: 'imeiquickedit',
-                editButton: false,
-                deleteButton: false,
-                hideIdentifier: true,
-                columns: {
-                    identifier: [0, 'id'],
-                    editable: [[1, 'service_name'], [2, 'purchase_cost'], [3, 'credit']@foreach($usergroup as $key => $v),[{{ ++$key+3 }}, 'group{{$v->id}}'] @endforeach]
-                },
-                onDraw: function() {
-                    console.log('onDraw()');
-                },
-                onSuccess: function(data, textStatus, jqXHR) {
-                    console.log('onSuccess(data, textStatus, jqXHR)');
+            $(editableObj).css("background","#FFF url(loaderIcon.gif) no-repeat right");
+            $.ajax({
+                url: "imeiquickedit",
+                type: "POST",
+                data:'column='+column+'&type='+type+'&value='+editableObj.innerText+'&id='+id+'&idgr='+idgr,
+                success: function(data){
                     console.log(data);
-                    console.log(textStatus);
-                    console.log(jqXHR);
-                },
-                onFail: function(jqXHR, textStatus, errorThrown) {
-                    console.log('onFail(jqXHR, textStatus, errorThrown)');
-                    console.log(jqXHR);
-                    console.log(textStatus);
-                    console.log(errorThrown);
-                },
-                onAlways: function() {
-                    console.log('onAlways()');
-                },
-                onAjax: function(action, serialize) {
-                    console.log('onAjax(action, serialize)');
-                    console.log(action);
-                    console.log(serialize);
+                    $(editableObj).css("background","#FDFDFD");
                 }
             });
-
-
-        });
-
+        }
     </script>
-
-
-
 
 @endsection
 
