@@ -47,6 +47,7 @@ Route::get('imei/{squirrel}/{any}', 'IMEIController@status');
 //xuất giá
 Route::get('imeiexport', 'Export@exportimei');
 Route::post('imeiquickedit', 'Export@imeiquickedit');
+Route::post('serverquickedit', 'Export@serverquickedit');
 Route::get('serverexport', 'Export@exportserver');
 //sales
 Route::get('imeisales', 'Sales@salesimei');
