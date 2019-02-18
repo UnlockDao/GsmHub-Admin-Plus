@@ -21,6 +21,11 @@ use Illuminate\Http\Request;
 
 class Export
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function exportimei(Request $request)
     {
         $currenciessite = Config::where('config_var', 'site_default_currency')->first();
