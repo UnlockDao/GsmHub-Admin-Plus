@@ -90,7 +90,7 @@
                                         <td contenteditable="true" onBlur="saveToDatabase(this,'credit','services','{{$v->id}}')" onClick="showEdit(this);">{{round($v->credit, 2)}}</td>
                                         @foreach($usergroup as $u)
                                               @foreach($v->clientgroupprice->where('service_type','imei')->where('group_id',$u->id)->where('currency',$currenciessite->config_value) as $cl)
-                                                    <td contenteditable="true" onBlur="saveToDatabase(this,'purchase_cost','price','{{$v->id}}','{{$u->id}}')" onClick="showEdit(this);">{{round($v->credit + $cl->discount, 2)}}</td>
+                                                    <td contenteditable="true" onBlur="saveToDatabase(this,'discount','price','{{$v->id}}','{{$u->id}}')" onClick="showEdit(this);">{{round($v->credit + $cl->discount, 2)}}</td>
                                                 @endforeach
                                         @endforeach
 
