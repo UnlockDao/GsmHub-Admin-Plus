@@ -141,7 +141,7 @@
                 $.ajax({
                     url: "supplierquickedit",
                     type: "POST",
-                    data:'column='+column+'&editval='+editableObj.innerHTML+'&id='+id,
+                    data:{ column: column, editval : editableObj.innerHTML, id : id} ,
                     success: function(data){
                         $(editableObj).css("background","#FDFDFD");
                     }
