@@ -172,7 +172,7 @@
             $.ajax({
                 url: "serverquickedit",
                 type: "POST",
-                data: 'column=' + column + '&type=' + type + '&value=' + editableObj.innerText + '&id=' + id,
+                data: { column: column, type : type, value : editableObj.innerText, id : id} ,
                 success: function (data) {
                     console.log(data);
                     $(editableObj).css("background", "#a2e5fd");
@@ -190,7 +190,7 @@
             $.ajax({
                 url: "serverquickedit",
                 type: "POST",
-                data: 'column=' + column + '&type=' + type + '&value=' + editableObj.innerText + '&id=' + id,
+                data: { column: column, type : type, value : editableObj.innerText, id : id} ,
                 success: function (data) {
                     console.log(data);
                     $(editableObj).css("background", "#a2e5fd");

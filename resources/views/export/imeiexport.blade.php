@@ -123,7 +123,7 @@
             $.ajax({
                 url: "imeiquickedit",
                 type: "POST",
-                data:'column='+column+'&type='+type+'&value='+editableObj.innerText+'&id='+id+'&idgr='+idgr,
+                data:{ column: column, type : type, value : editableObj.innerText, id : id, idgr : idgr} ,
                 success: function(data){
                     console.log(data);
                     $(editableObj).css("background","#FDFDFD");
