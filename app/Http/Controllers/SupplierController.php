@@ -77,9 +77,13 @@ class SupplierController extends Controller
         }
         if($request->column =='transactionfee') {
             $supplier->transactionfee = $request->editval;
+            $utility = new Utility();
+            $utility->Repricing($type = 'supplier', $request->id);
         }
         if($request->column =='exchangerate') {
             $supplier->exchangerate = $request->editval;
+            $utility = new Utility();
+            $utility->Repricing($type = 'supplier', $request->id);
         }
         if($request->column =='site_username'){
             $supplier->site_username = $request->editval;
