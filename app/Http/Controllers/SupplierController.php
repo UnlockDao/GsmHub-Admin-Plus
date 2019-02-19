@@ -72,7 +72,7 @@ class SupplierController extends Controller
     public function quickedit(Request $request)
     {
         $supplier = Supplier::find($request->id);
-        if($request->column =='name') {
+        if($request->column =='name' && $supplier->type ==! 1) {
             $supplier->name = $request->editval;
         }
         if($request->column =='transactionfee') {
