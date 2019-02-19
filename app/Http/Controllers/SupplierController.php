@@ -72,29 +72,33 @@ class SupplierController extends Controller
     public function quickedit(Request $request)
     {
         $supplier = Supplier::find($request->id);
-        if($request->name) {
-            $supplier->name = $request->name;
+        if($request->column =='name' && $supplier->type ==! 1) {
+            $supplier->name = $request->editval;
         }
-        if($request->transactionfee) {
-            $supplier->transactionfee = $request->transactionfee;
+        if($request->column =='transactionfee') {
+            $supplier->transactionfee = $request->editval;
+            $utility = new Utility();
+            $utility->Repricing($type = 'supplier', $request->id);
         }
-        if($request->exchangerate) {
-            $supplier->exchangerate = $request->exchangerate;
+        if($request->column =='exchangerate') {
+            $supplier->exchangerate = $request->editval;
+            $utility = new Utility();
+            $utility->Repricing($type = 'supplier', $request->id);
         }
-        if($request->site_username){
-            $supplier->site_username = $request->site_username;
+        if($request->column =='site_username'){
+            $supplier->site_username = $request->editval;
         }
-        if($request->site_password) {
-            $supplier->site_password = $request->site_password;
+        if($request->column =='site_password') {
+            $supplier->site_password = $request->editval;
         }
-        if($request->site_url) {
-            $supplier->site_url = $request->site_url;
+        if($request->column =='site_url') {
+            $supplier->site_url = $request->editval;
         }
-        if($request->info) {
-            $supplier->info = $request->info;
+        if($request->column =='info') {
+            $supplier->info = $request->editval;
         }
         $supplier->save();
-        return;
+        return $request;
     }
 
     public function add(Request $request)

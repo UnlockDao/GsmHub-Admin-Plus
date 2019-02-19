@@ -45,9 +45,10 @@ Route::post('updatesupplier/{id}', 'IMEIController@updatesupplier');
 //cập nhập status
 Route::get('imei/{squirrel}/{any}', 'IMEIController@status');
 //xuất giá
-Route::get('imeiexport', 'Export@exportimei');
+Route::get('imeiexport', 'Export@exportimei')->middleware('admin');
 Route::post('imeiquickedit', 'Export@imeiquickedit');
-Route::get('serverexport', 'Export@exportserver');
+Route::post('serverquickedit', 'Export@serverquickedit');
+Route::get('serverexport', 'Export@exportserver')->middleware('admin');
 //sales
 Route::get('imeisales', 'Sales@salesimei');
 Route::post('imeisales', 'Sales@updateimei');

@@ -128,7 +128,7 @@
                                     @if($v->imei_service_group_id == $g->id )
                                         <tr>
                                             <td>{{$v->id}}</td>
-                                            <td @if($v->status == 'soft_deleted' )style="text-decoration: line-through;"@endif>
+                                            <td @if($v->status == 'soft_deleted' )style="text-decoration: line-through;"@endif contenteditable="true" onBlur="saveToDatabase(this,'service_name','services','{{$v->id}}')" onClick="showEdit(this);">
                                                 <a href="https://s-unlock.com/admin/imei-service/edit/{{$v->id}}"
                                                    class="max-lines @if($v->imeipricing->sale >0) badge1 @endif"
                                                    data-toggle="tooltip" data-placement="top"
@@ -153,19 +153,19 @@
                                             @if($v->api_id ==! null)
                                                 <td>@if($v->apiserverservices ==! null)<a data-toggle="tooltip"
                                                                                           data-placement="top"
-                                                                                          data-original-title="{{number_format($v->apiserverservices->credits*$exchangerate->exchange_rate_static)}} đ"><?php echo number_format($v->apiserverservices->credits, 2); ?></a>@endif
+                                                                                          data-original-title="{{number_format($v->apiserverservices->credits*$exchangerate->exchange_rate_static)}} đ">{{number_format($v->apiserverservices->credits, 2)}}</a>@endif
                                                 </td>
                                             @else
                                                 <td><a data-toggle="tooltip" data-placement="top"
-                                                       data-original-title="{{number_format($v->imeipricing->purchasecost*$exchangerate->exchange_rate_static)}} đ"><?php echo number_format($v->imeipricing->purchasecost, 2); ?></a>
+                                                       data-original-title="{{number_format($v->imeipricing->purchasecost*$exchangerate->exchange_rate_static)}} đ">{{ number_format($v->imeipricing->purchasecost, 2)}}</a>
                                                 </td>
                                             @endif
 
 
                                             <td><a data-toggle="tooltip" data-placement="top"
-                                                   data-original-title="{{number_format($v->purchase_cost*$exchangerate->exchange_rate_static)}} đ"><?php echo number_format($v->purchase_cost, 2); ?></a>
+                                                   data-original-title="{{number_format($v->purchase_cost*$exchangerate->exchange_rate_static)}} đ">{{number_format($v->purchase_cost, 2)}}</a>
                                             </td>
-                                            <td>
+                                            <td contenteditable="true" onBlur="saveToDatabase(this,'credit','services','{{$v->id}}')" onClick="showEdit(this);">
                                                 @if($v->purchase_cost == $v->credit)
                                                     <span class="badge badge-pill badge-warning">{{number_format($v->credit, 2)}}<span>
                                                 @elseif($v->purchase_cost > $v->credit)
@@ -173,12 +173,12 @@
                                                    @else
                                                                             <a data-toggle="tooltip"
                                                                                data-placement="top"
-                                                                               data-original-title="{{number_format($v->credit*$exchangerate->exchange_rate_static)}} đ"><?php echo number_format($v->credit, 2); ?></a>
+                                                                               data-original-title="{{number_format($v->credit*$exchangerate->exchange_rate_static)}} đ">{{ number_format($v->credit, 2) }}</a>
                                                 @endif
                                             </td>
                                             @foreach($usergroup as $u)
-                                                <td>  @foreach($v->clientgroupprice as $cl)
-                                                        @if($cl->currency == $currenciessite->config_value && $cl->service_type == 'imei' && $cl->group_id == $u->id )
+                                                <td contenteditable="true" onBlur="saveToDatabase(this,'discount','price','{{$v->id}}','{{$u->id}}')" onClick="showEdit(this);">
+                                                    @foreach($v->clientgroupprice->where('currency',$currenciessite->config_value)->where('service_type','imei')->where('group_id',$u->id) as $cl)
                                                             @if(round($v->purchase_cost,2) == round($v->credit + $cl->discount,2))
                                                                 <span class="badge badge-pill badge-warning"><a
                                                                             data-toggle="tooltip" data-placement="top"
@@ -193,7 +193,6 @@
                                                                                            data-placement="top"
                                                                                            data-original-title="{{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ">@if($cachesearch->currency == $exchangerate->currency_code) {{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}}  @else{{round($v->credit + $cl->discount,2)}}@endif</a>
                                                             @endif
-                                                        @endif
                                                     @endforeach</td>
                                             @endforeach
                                             @if(CUtil::issuperadmin())
@@ -222,4 +221,27 @@
                 </div>
             </div>
         </div>
+        <script>
+            function showEdit(editableObj) {
+                $(editableObj).css("background","#FFF");
+            }
+
+            function saveToDatabase(editableObj,column,type,id,idgr) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $(editableObj).css("background","#FFF url(loaderIcon.gif) no-repeat right");
+                $.ajax({
+                    url: "imeiquickedit",
+                    type: "POST",
+                    data:{ column: column, type : type, value : editableObj.innerText, id : id, idgr : idgr} ,
+                    success: function(data){
+                        console.log(data);
+                        $(editableObj).css("background","#FDFDFD");
+                    }
+                });
+            }
+        </script>
 @endsection

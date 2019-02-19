@@ -129,7 +129,9 @@
                                     @if($v->server_service_group_id == $g->id )
                                         <tr class="table-info">
                                             <td>{{$v->id}}</td>
-                                            <td>
+                                            <td contenteditable="true"
+                                                onBlur="saveName(this,'services','service_name','{{$v->id}}')"
+                                                onClick="showEdit(this);">
                                                 <a @if($v->serverservicequantityrange->isEmpty() &&$v->serverservicetypewiseprice->isEmpty())
                                                    style="color: red; background: yellow"
                                                    @endif href="https://s-unlock.com/admin/server-service/edit/{{$v->id}}"
@@ -190,7 +192,9 @@
                                                            data-placement="top"
                                                            data-original-title="{{number_format($a->purchase_cost*$exchangerate->exchange_rate_static)}} đ">{{ number_format($a->purchase_cost, 2) }}</a>
                                                     </td>
-                                                    <td>
+                                                    <td contenteditable="true"
+                                                        onBlur="savePrice(this,'creditwise','amount','{{$a->id}}')"
+                                                        onClick="showEdit(this);">
                                                         @if($a->purchase_cost > $a->amount)
                                                             <span class="badge badge-pill badge-danger">{{ number_format( $a->amount , 2) }}
                                                                 <span>
@@ -201,9 +205,11 @@
                                                         @endif
                                                     </td>
                                                     @foreach($clientgroup as $cg)
-                                                        <td width="5%">@foreach($a->serverservicetypewisegroupprice as $serverservicetypewisegroupprice)
-                                                                @if($serverservicetypewisegroupprice->service_type_id == $a->id &&$serverservicetypewisegroupprice->group_id == $cg->id)
-                                                                    @if($a->purchase_cost == $serverservicetypewisegroupprice->amount)
+                                                        @foreach($a->serverservicetypewisegroupprice->where('service_type_id',$a->id)->where('group_id',$cg->id) as $serverservicetypewisegroupprice)
+                                                            <td contenteditable="true"
+                                                                onBlur="savePrice(this,'pricewise','amount','{{$serverservicetypewisegroupprice->id}}')"
+                                                                onClick="showEdit(this);">
+                                                                @if($a->purchase_cost == $serverservicetypewisegroupprice->amount)
                                                                         <span class="badge badge-pill badge-warning"><a
                                                                                     data-toggle="tooltip"
                                                                                     data-placement="top"
@@ -218,9 +224,8 @@
                                                                            data-placement="top"
                                                                            data-original-title="{{number_format($serverservicetypewisegroupprice->amount*$exchangerate->exchange_rate_static)}} đ">@if($cachesearch->currency == $exchangerate->currency_code) {{number_format($serverservicetypewisegroupprice->amount*$exchangerate->exchange_rate_static)}}  @else{{ round( $serverservicetypewisegroupprice->amount , 2) }}@endif</a>
                                                                     @endif
-                                                                @endif
+                                                            </td>
                                                             @endforeach
-                                                        </td>
                                                     @endforeach
                                                     <td></td>
                                                     <td></td>
@@ -255,8 +260,10 @@
                                                            data-placement="top"
                                                            data-original-title="{{number_format($v->purchase_cost*$exchangerate->exchange_rate_static)}} đ">{{number_format($v->purchase_cost,2)}}</a>
                                                     </td>
-                                                    <td>@foreach($serverservicequantityrange->serverserviceusercredit as $serverserviceusercredit)
-                                                            @if($serverserviceusercredit->currency == $currenciessite->config_value)
+                                                    @foreach($serverservicequantityrange->serverserviceusercredit->where('currency',$currenciessite->config_value) as $serverserviceusercredit)
+                                                        <td contenteditable="true"
+                                                            onBlur="savePrice(this,'creditrange','amount','{{$serverserviceusercredit->id}}')"
+                                                            onClick="showEdit(this);">
                                                                 @if($v->purchase_cost > $serverserviceusercredit->credit)
                                                                     <span class="badge badge-pill badge-danger">{{number_format($serverserviceusercredit->credit,2)}}</span>
                                                                 @else
@@ -264,12 +271,14 @@
                                                                        data-placement="top"
                                                                        data-original-title="{{number_format($serverserviceusercredit->credit*$exchangerate->exchange_rate_static)}} đ">{{number_format($serverserviceusercredit->credit,2)}}</a>
                                                                 @endif
-                                                            @endif
-                                                        @endforeach</td>
+                                                        </td>
+                                                        @endforeach
                                                     @foreach($clientgroup as $cg)
-                                                        <td>@foreach($serverservicequantityrange->serverserviceclientgroupcredit as $serverserviceclientgroupcredit)
-                                                                @if($serverserviceclientgroupcredit->currency== $currenciessite->config_value && $serverserviceclientgroupcredit->client_group_id==$cg->id )
-                                                                    @if($v->purchase_cost == $serverserviceclientgroupcredit->credit)
+                                                        @foreach($serverservicequantityrange->serverserviceclientgroupcredit->where('currency',$currenciessite->config_value)->where('client_group_id',$cg->id) as $serverserviceclientgroupcredit)
+                                                            <td contenteditable="true"
+                                                                onBlur="savePrice(this,'pricerange','amount','{{$serverserviceclientgroupcredit->id}}')"
+                                                                onClick="showEdit(this);">
+                                                                @if($v->purchase_cost == $serverserviceclientgroupcredit->credit)
                                                                         <span class="badge badge-pill badge-warning"><a
                                                                                     data-toggle="tooltip"
                                                                                     data-placement="top"
@@ -286,9 +295,9 @@
                                                                            data-placement="top"
                                                                            data-original-title="{{number_format($serverserviceclientgroupcredit->credit*$exchangerate->exchange_rate_static)}} đ">@if($cachesearch->currency == $exchangerate->currency_code) {{number_format($serverserviceclientgroupcredit->credit*$exchangerate->exchange_rate_static)}}  @else{{round($serverserviceclientgroupcredit->credit,2)}}@endif</a>
                                                                     @endif
-                                                                @endif
+                                                            </td>
                                                             @endforeach
-                                                        </td>
+
                                                     @endforeach
                                                     <td></td>
                                                     <td></td>
@@ -311,5 +320,45 @@
                 </div>
             </div>
         </div>
+        <script>
+            function showEdit(editableObj) {
+                $(editableObj).css("background", "#FFF");
+            }
 
+            function saveName(editableObj, type, column, id) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $(editableObj).css("background", "#FFF url(loaderIcon.gif) no-repeat right");
+                $.ajax({
+                    url: "serverquickedit",
+                    type: "POST",
+                    data: { column: column, type : type, value : editableObj.innerText, id : id} ,
+                    success: function (data) {
+                        console.log(data);
+                        $(editableObj).css("background", "#a2e5fd");
+                    }
+                });
+            }
+
+            function savePrice(editableObj, type, column, id) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $(editableObj).css("background", "#FFF url(loaderIcon.gif) no-repeat right");
+                $.ajax({
+                    url: "serverquickedit",
+                    type: "POST",
+                    data: { column: column, type : type, value : editableObj.innerText, id : id} ,
+                    success: function (data) {
+                        console.log(data);
+                        $(editableObj).css("background", "#a2e5fd");
+                    }
+                });
+            }
+        </script>
 @endsection

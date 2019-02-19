@@ -4,18 +4,24 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Clientgroup;
+use App\Models\Clientgroupprice;
 use App\Models\Config;
 use App\Models\Currencie;
 use App\Models\Currenciepricing;
 use App\Models\Imeiservice;
 use App\Models\Imeiservicegroup;
 use App\Models\Serverservice;
+use App\Models\Serverserviceclientgroupcredit;
 use App\Models\Serverservicegroup;
+use App\Models\Serverservicetypewisegroupprice;
+use App\Models\Serverservicetypewiseprice;
+use App\Models\Serverserviceusercredit;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 
 class Export
 {
+    
     public function exportimei(Request $request)
     {
         $currenciessite = Config::where('config_var', 'site_default_currency')->first();
@@ -68,19 +74,66 @@ class Export
 
     public function imeiquickedit(Request $request)
     {
+        $getimei = Imeiservice::find($request->id);
         $imeiservice = Imeiservice::find($request->id);
-        if ($request->purchase_cost) {
-            $imeiservice->purchase_cost = $request->purchase_cost;
-        }
-        if ($request->credit) {
-            $imeiservice->credit = $request->credit;
-        }
-        if ($request->service_name) {
-            $imeiservice->service_name = $request->service_name;
-        }
-        $imeiservice->save();
-        return;
+        $currencies = Currencie::where('display_currency', 'Yes')->get();
 
+        if ($request->type == "services") {
+            if ($request->column == 'service_name') {
+                $imeiservice->service_name = $request->value;
+            }
+            if ($request->column == 'purchase_cost') {
+                $imeiservice->purchase_cost = $request->value;
+            }
+            if ($request->column == 'credit') {
+                $imeiservice->credit = $request->value;
+            }
+            $imeiservice->save();
+        }
+
+        if ($request->type == "price") {
+            $y = $request->value - $getimei->credit;
+            foreach ($currencies as $c) {
+                Clientgroupprice::where('group_id', $request->idgr)
+                    ->where('service_type', 'imei')
+                    ->where('currency', $c->currency_code)
+                    ->where('service_id', $request->id)
+                    ->update(['discount' => $y * $c->exchange_rate_static]);
+            }
+        }
+
+        return $request;
+
+    }
+
+    public function serverquickedit(Request $request)
+    {
+        if ($request->type == "services") {
+            $serverservice = Serverservice::find($request->id);
+            $serverservice->service_name = $request->value;
+            $serverservice->save();
+        }
+        if ($request->type == "pricewise") {
+            $serverservice = Serverservicetypewisegroupprice::find($request->id);
+            $serverservice->amount = $request->value;
+            $serverservice->save();
+        }
+        if ($request->type == "pricerange") {
+            $serverservice = Serverserviceclientgroupcredit::find($request->id);
+            $serverservice->credit = $request->value;
+            $serverservice->save();
+        }
+        if ($request->type == "creditwise") {
+            $serverservice = Serverservicetypewiseprice::find($request->id);
+            $serverservice->amount = $request->value;
+            $serverservice->save();
+        }
+        if ($request->type == "creditrange") {
+            $serverservice = Serverserviceusercredit::find($request->id);
+            $serverservice->credit = $request->value;
+            $serverservice->save();
+        }
+        return $request;
     }
 
     public function exportserver(Request $request)

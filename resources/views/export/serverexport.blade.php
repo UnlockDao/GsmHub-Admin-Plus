@@ -54,12 +54,10 @@
                     </div>
                 </form>
                 <div class="card-body">
-                    <table class="table align-items-center table-flush">
+                    <table id="" class="table align-items-center table-flush">
                         <thead class="text-primary" id="myHeader">
                         <th></th>
                         <th>Service Name</th>
-                        <th>Type</th>
-                        <th>Supplier</th>
                         <th>PC</th>
                         <th>PC(Net)</th>
                         <th>Credit</th>
@@ -71,7 +69,7 @@
                         @foreach($server_service_group->where('servergroup','<>','') as $g)
                             <tr class="table-warning">
                                 <td><i class="ni ni-ungroup"></td>
-                                <td colspan="6"><strong style="font-weight:700;">{{$g->group_name}}</strong></td>
+                                <td colspan="4"><strong style="font-weight:700;">{{$g->group_name}}</strong></td>
                                 @foreach($clientgroup as $cg)
                                     <td></td>
                                 @endforeach
@@ -80,12 +78,9 @@
                                 @if($v->server_service_group_id == $g->id )
                                     <tr class="table-info">
                                         <td>{{$v->id}}</td>
-                                        <td>{{$v->service_name}}</td>
-                                        <td>@if($v->api_id ==! null)<span
-                                                    class="badge badge-pill badge-success">API<span>  @else<span
-                                                            class="badge badge-pill badge-info">Manual<span>  @endif
-                                        </td>
-                                        <td>@if($v->servicepricing->nhacungcap ==! null){{$v->servicepricing->nhacungcap->name}}@endif</td>
+                                        <td contenteditable="true"
+                                            onBlur="saveName(this,'services','service_name','{{$v->id}}')"
+                                            onClick="showEdit(this);">{{$v->service_name}}</td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -97,23 +92,25 @@
                                     @if(!$v->serverservicetypewiseprice->isEmpty())
                                         @foreach($v->serverservicetypewiseprice as $a)
                                             <tr>
-                                                <td>*</td>
-                                                <td colspan="3"><a>{{$a->service_type}}</a></td>
-                                                <td>@if($v->api_id ==! null)
-                                                        @foreach($v->apiserverservicetypeprice as $apiserverservicetypeprice)@if($apiserverservicetypeprice->service_type==$a->service_type)
-                                                            {{$apiserverservicetypeprice->api_price}}
-                                                        @endif
-                                                        @endforeach
-                                                    @else{{ number_format($a->purchase_cost_not_net, 2) }}@endif</td>
-                                                <td>{{ number_format($a->purchase_cost, 2) }}</td>
-                                                <td>{{ number_format( $a->amount , 2) }}</td>
+                                                <td>{{$a->id}}</td>
+                                                <td colspan="1"><a>{{$a->service_type}}</a></td>
+                                                @if($v->api_id ==! null)
+                                                    @foreach($v->apiserverservicetypeprice as $apiserverservicetypeprice)@if($apiserverservicetypeprice->service_type==$a->service_type)
+                                                        <td>{{$apiserverservicetypeprice->api_price}}</td>
+                                                    @endif
+                                                    @endforeach
+                                                @else{{ round($a->purchase_cost_not_net, 2) }}@endif
+                                                <td>{{ round($a->purchase_cost, 2) }}</td>
+                                                <td contenteditable="true"
+                                                    onBlur="savePrice(this,'creditwise','amount','{{$a->id}}')"
+                                                    onClick="showEdit(this);">{{ round( $a->amount , 2) }}</td>
                                                 @foreach($clientgroup as $cg)
-                                                    <td>@foreach($a->serverservicetypewisegroupprice as $serverservicetypewisegroupprice)
-                                                            @if($serverservicetypewisegroupprice->service_type_id == $a->id &&$serverservicetypewisegroupprice->group_id == $cg->id)
-                                                                {{ number_format( $serverservicetypewisegroupprice->amount , 2) }}
-                                                            @endif
-                                                        @endforeach
-                                                    </td>
+                                                    @foreach($a->serverservicetypewisegroupprice->where('service_type_id',$a->id)->where('group_id',$cg->id) as $serverservicetypewisegroupprice)
+                                                        <td contenteditable="true"
+                                                            onBlur="savePrice(this,'pricewise','amount','{{$serverservicetypewisegroupprice->id}}')"
+                                                            onClick="showEdit(this);">{{ round( $serverservicetypewisegroupprice->amount , 2) }}</td>
+                                                    @endforeach
+
                                                 @endforeach
                                             </tr>
                                         @endforeach
@@ -124,28 +121,26 @@
                                                 <td></td>
                                                 <td>{{$serverservicequantityrange->from_range}}
                                                     - {{$serverservicequantityrange->to_range}}</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td>@if($v->api_id ==! null)
-                                                        {{number_format($v->apiserverservices->credits,2)}}
-                                                    @elseif($v->servicepricing->purchasecost == null)
-                                                        {{number_format($v->purchase_cost,2)}}
-                                                    @else
-                                                        {{number_format($v->servicepricing->purchasecost,2)}}
-                                                    @endif</td>
-                                                <td>{{number_format($v->purchase_cost,2)}}</td>
-                                                <td>@foreach($serverservicequantityrange->serverserviceusercredit as $serverserviceusercredit)
-                                                        @if($serverserviceusercredit->currency == $currenciessite->config_value)
-                                                            {{number_format($serverserviceusercredit->credit,2)}}
-                                                        @endif
-                                                    @endforeach</td>
+                                                @if($v->api_id ==! null)
+                                                    <td>{{round($v->apiserverservices->credits,2)}}</td>
+                                                @elseif($v->servicepricing->purchasecost == null)
+                                                    <td>{{round($v->purchase_cost,2)}}</td>
+                                                @else
+                                                    <td>{{round($v->servicepricing->purchasecost,2)}}</td>
+                                                @endif
+                                                <td>{{round($v->purchase_cost,2)}}</td>
+                                                @foreach($serverservicequantityrange->serverserviceusercredit->where('currency',$currenciessite->config_value) as $serverserviceusercredit)
+                                                    <td contenteditable="true"
+                                                        onBlur="savePrice(this,'creditrange','amount','{{$serverserviceusercredit->id}}')"
+                                                        onClick="showEdit(this);">{{round($serverserviceusercredit->credit,2)}}</td>
+                                                @endforeach
                                                 @foreach($clientgroup as $cg)
-                                                    <td>@foreach($serverservicequantityrange->serverserviceclientgroupcredit as $serverserviceclientgroupcredit)
-                                                            @if($serverserviceclientgroupcredit->currency==$currenciessite->config_value && $serverserviceclientgroupcredit->client_group_id==$cg->id )
-                                                                {{number_format($serverserviceclientgroupcredit->credit,2)}}
-                                                            @endif
-                                                        @endforeach
-                                                    </td>
+                                                    @foreach($serverservicequantityrange->serverserviceclientgroupcredit->where('currency',$currenciessite->config_value)->where('client_group_id',$cg->id) as $serverserviceclientgroupcredit)
+                                                        <td contenteditable="true"
+                                                            onBlur="savePrice(this,'pricerange','amount','{{$serverserviceclientgroupcredit->id}}')"
+                                                            onClick="showEdit(this);">{{round($serverserviceclientgroupcredit->credit,2)}}</td>
+                                                    @endforeach
+
                                                 @endforeach
                                             </tr>
                                         @endforeach
@@ -162,7 +157,47 @@
     </div>
 
 
+    <script>
+        function showEdit(editableObj) {
+            $(editableObj).css("background", "#FFF");
+        }
 
+        function saveName(editableObj, type, column, id) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $(editableObj).css("background", "#FFF url(loaderIcon.gif) no-repeat right");
+            $.ajax({
+                url: "serverquickedit",
+                type: "POST",
+                data: { column: column, type : type, value : editableObj.innerText, id : id} ,
+                success: function (data) {
+                    console.log(data);
+                    $(editableObj).css("background", "#a2e5fd");
+                }
+            });
+        }
+
+        function savePrice(editableObj, type, column, id) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $(editableObj).css("background", "#FFF url(loaderIcon.gif) no-repeat right");
+            $.ajax({
+                url: "serverquickedit",
+                type: "POST",
+                data: { column: column, type : type, value : editableObj.innerText, id : id} ,
+                success: function (data) {
+                    console.log(data);
+                    $(editableObj).css("background", "#a2e5fd");
+                }
+            });
+        }
+    </script>
 
 
 
