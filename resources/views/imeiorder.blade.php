@@ -34,7 +34,15 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-1">
+                                        <label class="form-control-label">Username</label>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control form-control-alternative" name="user_name"
+                                                   autocomplete="off"
+                                                   value="{{$cachesearch->user_name}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
                                         <label class="form-control-label">Time</label>
                                             <input class="form-control form-control-alternative" type="text" name="datefilter" value="{{$cachesearch->datefilter}}" style="width:300px" autocomplete="off"/>
                                     </div>
@@ -87,6 +95,7 @@
                             <thead class="text-primary">
                                 <th scope="col">ID</th>
                                 <th scope="col">Order code</th>
+                                <th scope="col">User</th>
                                 <th scope="col">Name</th>
                                 <th scope="col">Credit</th>
                                 <th scope="col">Profit</th>
@@ -100,6 +109,7 @@
                                 <tr>
                                     <td scope="row">{{$v->id}}</td>
                                     <td scope="row">{{$v->order_code}}</td>
+                                    <td scope="row">{{$v->user->user_name}}</td>
                                     <td scope="row">@if($v->imeiservice == null) @else <a data-toggle="tooltip" data-placement="top" class="max-lines"
                                                                                                               data-original-title="{{$v->imeiservice->service_name}}">{{$v->imeiservice->service_name}}</a> @endif</td>
                                     <td scope="row">{{number_format($v->credit_default_currency,2)}}</td>

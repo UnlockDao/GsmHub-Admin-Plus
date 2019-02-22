@@ -38,6 +38,9 @@ class ImeiorderController extends Controller
 
         if ($datefilter == null) {
             $imeiorder = Imeiserviceorder::orderBy('id', 'desc')
+                ->whereHas('user', function ($query) use ($request) {
+                    $query->where('user_name','LIKE', $request->user_name);
+                })
                 ->where('imei_service_id', 'LIKE', $request->service_name)
                 ->where('status', 'LIKE', $request->status)
                 ->where('updated_by', 'LIKE', $request->updated_by)
@@ -49,6 +52,9 @@ class ImeiorderController extends Controller
 
             if($request->status == 'COMPLETED'){
                 $imeiorder = Imeiserviceorder::orderBy('id', 'desc')
+                    ->whereHas('user', function ($query) use ($request) {
+                        $query->where('user_name','LIKE', $request->user_name);
+                    })
                     ->where('imei_service_id', 'LIKE', $request->service_name)
                     ->where('status', 'LIKE', $request->status)
                     ->where('updated_by', 'LIKE', $request->updated_by)
@@ -56,6 +62,9 @@ class ImeiorderController extends Controller
                     ->paginate($view);
             }else{
                 $imeiorder = Imeiserviceorder::orderBy('id', 'desc')
+                    ->whereHas('user', function ($query) use ($request) {
+                        $query->where('user_name','LIKE', $request->user_name);
+                    })
                     ->where('imei_service_id', 'LIKE', $request->service_name)
                     ->where('status', 'LIKE', $request->status)
                     ->where('updated_by', 'LIKE', $request->updated_by)
