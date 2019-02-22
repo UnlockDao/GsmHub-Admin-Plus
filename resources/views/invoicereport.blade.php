@@ -21,7 +21,15 @@
                                                    value="{{$cachesearch->payment_gateway_ref_id}}">
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-1">
+                                        <label class="form-control-label">Username</label>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control form-control-alternative" name="user_name"
+                                                   autocomplete="off"
+                                                   value="{{$cachesearch->user_name}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
                                         <label class="form-control-label">Time</label>
                                         <input class="form-control form-control-alternative" type="text"
                                                name="datefilter" value="{{$cachesearch->datefilter}}"

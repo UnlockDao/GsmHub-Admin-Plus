@@ -40,12 +40,13 @@ class InvoiceReportController extends Controller
         }
         $payment = Payment::get();
         $currency = Invoice::groupBy('currency')->get();
-
         $cachesearch = $request;
-
 
             if($request->status == 'paid'){
                 $serverorder = Invoice::orderBy('id', 'desc')
+                    ->whereHas('user', function ($query) use ($request) {
+                        $query->where('user_name','LIKE', $request->user_name);
+                    })
                     ->where('invoice_status', 'LIKE', $request->status)
                     ->where('payment_gateway', 'LIKE', $request->payment)
                     ->where('payment_gateway_ref_id', 'LIKE', $request->payment_gateway_ref_id)
@@ -54,6 +55,9 @@ class InvoiceReportController extends Controller
                     ->paginate($view);
             }else{
                 $serverorder = Invoice::orderBy('id', 'desc')
+                    ->whereHas('user', function ($query) use ($request) {
+                        $query->where('user_name','LIKE', $request->user_name);
+                    })
                     ->where('invoice_status', 'LIKE', $request->status)
                     ->where('payment_gateway', 'LIKE', $request->payment)
                     ->where('payment_gateway_ref_id', 'LIKE', $request->payment_gateway_ref_id)
