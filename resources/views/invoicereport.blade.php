@@ -120,7 +120,7 @@
                             @foreach($serverorder as $v)
                                 <tr>
                                     <td scope="row">{{$v->id}}</td>
-                                    <td scope="row">{{$v->user->user_name}}</td>
+                                    <td scope="row">@if($v->user){{$v->user->user_name}}@endif</td>
                                     <td scope="row">{{CUtil::convertDate($v->date_added, 'd-m-Y h:i a') }}</td>
                                     <td scope="row">{{CUtil::convertDate($v->date_paid, 'd-m-Y h:i a') }}</td>
                                     <td scope="row">{{$v->invoice_amount}} {{$v->currency}}</td>
