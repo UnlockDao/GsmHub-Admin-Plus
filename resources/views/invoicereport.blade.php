@@ -59,12 +59,21 @@
                                             </option>
                                         </select>
                                     </div>
-                                    <div class="col-md-2">
-                                        <label class="form-control-label">Payment method</label>
+                                    <div class="col-md-1">
+                                        <label class="form-control-label">Method</label>
                                         <select class="form-control form-control-alternative" name="payment">
                                             <option value="">...</option>
                                             @foreach($payment as $p)
                                                 <option value="{{$p->gateway_key}}" @if($cachesearch->payment == $p->gateway_key)selected @endif>{{$p->gateway_label}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <label class="form-control-label">Payment Status</label>
+                                        <select class="form-control form-control-alternative" name="payment_gateway_status">
+                                            <option value="">...</option>
+                                            @foreach($payment_gateway_status as $p)
+                                                <option value="{{$p->payment_gateway_status}}" @if($cachesearch->payment_gateway_status == $p->payment_gateway_status)selected @endif>{{$p->payment_gateway_status}}</option>
                                             @endforeach
                                         </select>
                                     </div>
