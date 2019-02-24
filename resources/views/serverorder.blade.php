@@ -34,7 +34,15 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-1">
+                                        <label class="form-control-label">Username</label>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control form-control-alternative" name="user_name"
+                                                   autocomplete="off"
+                                                   value="{{$cachesearch->user_name}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
                                         <label class="form-control-label">Time</label>
                                         <input class="form-control form-control-alternative" type="text"
                                                name="datefilter" value="{{$cachesearch->datefilter}}"
@@ -96,6 +104,7 @@
                         <table id="testTable" class="table align-items-center table-flush">
                             <thead class="text-primary">
                             <th scope="col">ID</th>
+                            <th scope="col">User</th>
                             <th scope="col">Order code</th>
                             <th scope="col">Name</th>
                             <th scope="col">Credit</th>
@@ -110,6 +119,7 @@
                             @foreach($serverorder as $v)
                                 <tr>
                                     <td scope="row">{{$v->id}}</td>
+                                    <td scope="row">{{$v->user->user_name}}</td>
                                     <td scope="row">{{$v->order_code}}</td>
                                     <td scope="row">@if($v->serverservice == null) @else <a data-toggle="tooltip"
                                                                                             data-placement="top"
@@ -118,8 +128,8 @@
                                     </td>
                                     <td scope="row">{{number_format($v->credit_default_currency,2)}}</td>
                                     <td scope="row">{{$v->credit_default_currency-($v->purchase_cost*$v->quantity)}}</td>
-                                    <td scope="row"><a data-toggle="tooltip" data-placement="top" class="max-lines"
-                                                       data-original-title="{{$v->result}}">{{$v->result}}</a></td>
+                                    <td scope="row"><a data-toggle="tooltip" data-placement="top"
+                                                       data-original-title="{!! $v->result !!}">@if($v->status == 'REJECTED') {!! $v->reject_reason !!} @else {!! $v->result !!} @endif </a></td>
                                     <td scope="row">{{CUtil::convertDate($v->date_added, 'd-m-Y h:i a') }}</td>
                                     <td scope="row">{{CUtil::convertDate($v->completed_on, 'd-m-Y h:i a') }}</td>
                                     <td scope="row">{{$v->status}}</td>

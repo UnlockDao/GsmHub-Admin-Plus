@@ -21,7 +21,15 @@
                                                    value="{{$cachesearch->payment_gateway_ref_id}}">
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-1">
+                                        <label class="form-control-label">Username</label>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control form-control-alternative" name="user_name"
+                                                   autocomplete="off"
+                                                   value="{{$cachesearch->user_name}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
                                         <label class="form-control-label">Time</label>
                                         <input class="form-control form-control-alternative" type="text"
                                                name="datefilter" value="{{$cachesearch->datefilter}}"
@@ -51,12 +59,21 @@
                                             </option>
                                         </select>
                                     </div>
-                                    <div class="col-md-2">
-                                        <label class="form-control-label">Payment method</label>
+                                    <div class="col-md-1">
+                                        <label class="form-control-label">Method</label>
                                         <select class="form-control form-control-alternative" name="payment">
                                             <option value="">...</option>
                                             @foreach($payment as $p)
                                                 <option value="{{$p->gateway_key}}" @if($cachesearch->payment == $p->gateway_key)selected @endif>{{$p->gateway_label}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <label class="form-control-label">Payment Status</label>
+                                        <select class="form-control form-control-alternative" name="payment_gateway_status">
+                                            <option value="">...</option>
+                                            @foreach($payment_gateway_status as $p)
+                                                <option value="{{$p->payment_gateway_status}}" @if($cachesearch->payment_gateway_status == $p->payment_gateway_status)selected @endif>{{$p->payment_gateway_status}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -112,7 +129,7 @@
                             @foreach($serverorder as $v)
                                 <tr>
                                     <td scope="row">{{$v->id}}</td>
-                                    <td scope="row">{{$v->user->user_name}}</td>
+                                    <td scope="row">@if($v->user){{$v->user->user_name}}@endif</td>
                                     <td scope="row">{{CUtil::convertDate($v->date_added, 'd-m-Y h:i a') }}</td>
                                     <td scope="row">{{CUtil::convertDate($v->date_paid, 'd-m-Y h:i a') }}</td>
                                     <td scope="row">{{$v->invoice_amount}} {{$v->currency}}</td>

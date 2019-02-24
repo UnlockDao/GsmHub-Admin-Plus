@@ -21,7 +21,7 @@ use Illuminate\Http\Request;
 
 class Export
 {
-    
+
     public function exportimei(Request $request)
     {
         $currenciessite = Config::where('config_var', 'site_default_currency')->first();
@@ -77,6 +77,9 @@ class Export
         $getimei = Imeiservice::find($request->id);
         $imeiservice = Imeiservice::find($request->id);
         $currencies = Currencie::where('display_currency', 'Yes')->get();
+        $cliengroup = Clientgroup::get();
+        $currenciessite = Config::where('config_var', 'site_default_currency')->first();
+        $cliendefault = Clientgroup::where('status', 'active')->where('chietkhau', '0')->first();
 
         if ($request->type == "services") {
             if ($request->column == 'service_name') {
@@ -99,6 +102,23 @@ class Export
                     ->where('currency', $c->currency_code)
                     ->where('service_id', $request->id)
                     ->update(['discount' => $y * $c->exchange_rate_static]);
+            }
+            if ($cliendefault->id == $request->idgr) {
+                foreach ($cliengroup as $clg) {
+                    $imeiprice = Clientgroupprice::where('service_id', $request->id)->where('group_id', $cliendefault->id)->where('currency', $currenciessite->config_value)->first();
+                    if ($imeiprice == !null) {
+                        $giabanle = $getimei->credit + $imeiprice->discount;
+                        $chietkhau = ($giabanle - ((($giabanle - $getimei->purchase_cost) / 100) * $clg->chietkhau));
+                        $y = $chietkhau - $getimei->credit;
+                        foreach ($currencies as $c) {
+                            $updatepriceuse = Clientgroupprice::where('group_id', $clg->id)
+                                ->where('service_type', 'imei')
+                                ->where('currency', $c->currency_code)
+                                ->where('service_id', $getimei->id)
+                                ->update(['discount' => $y * $c->exchange_rate_static]);
+                        }
+                    }
+                }
             }
         }
 

@@ -40,30 +40,37 @@ class InvoiceReportController extends Controller
         }
         $payment = Payment::get();
         $currency = Invoice::groupBy('currency')->get();
-
+        $payment_gateway_status = Invoice::groupBy('payment_gateway_status')->get();
         $cachesearch = $request;
-
 
             if($request->status == 'paid'){
                 $serverorder = Invoice::orderBy('id', 'desc')
+                    ->whereHas('user', function ($query) use ($request) {
+                        $query->where('user_name','LIKE', $request->user_name);
+                    })
                     ->where('invoice_status', 'LIKE', $request->status)
                     ->where('payment_gateway', 'LIKE', $request->payment)
                     ->where('payment_gateway_ref_id', 'LIKE', $request->payment_gateway_ref_id)
                     ->where('currency', 'LIKE', $request->currency)
+                    ->where('payment_gateway_status', 'LIKE', $request->payment_gateway_status)
                     ->whereBetween('date_paid', [$tg1,$tg2])
                     ->paginate($view);
             }else{
                 $serverorder = Invoice::orderBy('id', 'desc')
+                    ->whereHas('user', function ($query) use ($request) {
+                        $query->where('user_name','LIKE', $request->user_name);
+                    })
                     ->where('invoice_status', 'LIKE', $request->status)
                     ->where('payment_gateway', 'LIKE', $request->payment)
                     ->where('payment_gateway_ref_id', 'LIKE', $request->payment_gateway_ref_id)
+                    ->where('payment_gateway_status', 'LIKE', $request->payment_gateway_status)
                     ->where('currency', 'LIKE', $request->currency)
                     ->whereBetween('date_added', [$tg1,$tg2])
                     ->paginate($view);
             }
 
 
-        return view('invoicereport', compact('serverorder',  'cachesearch','payment','currency'));
+        return view('invoicereport', compact('serverorder',  'cachesearch','payment','currency','payment_gateway_status'));
     }
 
 

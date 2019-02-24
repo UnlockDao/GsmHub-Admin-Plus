@@ -41,6 +41,9 @@ class ServerorderController extends Controller
 
         if ($datefilter == null) {
             $serverorder = Serverserviceorder::orderBy('id', 'desc')
+                ->whereHas('user', function ($query) use ($request) {
+                    $query->where('user_name','LIKE', $request->user_name);
+                })
                 ->where('server_service_id', 'LIKE', $request->service_name)
                 ->where('status', 'LIKE', $request->status)
                 ->where('updated_by', 'LIKE', $request->updated_by)
@@ -51,6 +54,9 @@ class ServerorderController extends Controller
 
             if ($request->status == 'COMPLETED') {
                 $serverorder = Serverserviceorder::orderBy('id', 'desc')
+                    ->whereHas('user', function ($query) use ($request) {
+                        $query->where('user_name','LIKE', $request->user_name);
+                    })
                     ->where('server_service_id', 'LIKE', $request->service_name)
                     ->where('status', 'LIKE', $request->status)
                     ->where('updated_by', 'LIKE', $request->updated_by)
@@ -58,6 +64,9 @@ class ServerorderController extends Controller
                     ->paginate($view);
             } else {
                 $serverorder = Serverserviceorder::orderBy('id', 'desc')
+                    ->whereHas('user', function ($query) use ($request) {
+                        $query->where('user_name','LIKE', $request->user_name);
+                    })
                     ->where('server_service_id', 'LIKE', $request->service_name)
                     ->where('status', 'LIKE', $request->status)
                     ->where('updated_by', 'LIKE', $request->updated_by)
