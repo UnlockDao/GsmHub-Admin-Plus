@@ -216,6 +216,12 @@ class SQL extends Migration
                 $table->integer('role_adminplus')->default(1);
             });
         }
+        if (!Schema::hasColumn('administrator', 'supplier_access'))
+        {
+            Schema::table('administrator', function (Blueprint $table) {
+                $table->enum('supplier_access', ['Staff', 'ServiceManager', 'Admin']);
+            });
+        }
     }
 
     public function createSiteProfitDetails()

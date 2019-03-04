@@ -8,6 +8,39 @@ use Illuminate\Support\Facades\Auth;
 
 class CUtil
 {
+
+    //role admin plus
+
+    public static function apAdmin()
+    {
+        $users = Auth::user()->admin;
+        if($users->supplier_access == 'Admin'){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public static function apServiceManager()
+    {
+        $users = Auth::user()->admin;
+        if($users->supplier_access == 'ServiceManager'){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public static function apStaff()
+    {
+        $users = Auth::user()->admin;
+        if($users->supplier_access == 'Staff'){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    //end
     public static function checkauth()
     {
          $users = Auth::user()->admin;

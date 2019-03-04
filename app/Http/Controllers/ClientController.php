@@ -16,7 +16,7 @@ class ClientController extends Controller
     public function index(Request $request)
     {
         $client = Clientgroup::get();
-        return view('clientgroup', compact('client'));
+        return view('setting.clientgroup', compact('client'));
     }
 
     public function show($id)

@@ -21,7 +21,7 @@ class ProfitController extends Controller
         $cron->runcrontoday();
 
         $profit = AdminPlus_SiteProfitDetails::orderBy('date_profit', 'desc')->paginate(30);
-        return view('profitreport', compact('profit', 'cachesearch'));
+        return view('report.profitreport', compact('profit', 'cachesearch'));
     }
 
 }

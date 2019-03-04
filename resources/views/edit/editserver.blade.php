@@ -29,7 +29,7 @@
                     <div class="card">
                         <div class="card-header card-header-icon card-header-rose">
                             <div class="card-icon">
-                                <i class="material-icons">edit</i>
+                                <i class="">edit</i>
                             </div>
                             <h4 class="card-title ">Edit {{$serverservice->service_name}} </h4>
 

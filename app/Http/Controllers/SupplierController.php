@@ -36,7 +36,7 @@ class SupplierController extends Controller
         $this->checkSupplier();
         $supplier = Supplier::get();
         $supplieruser = User::where('supplier_code','<>','0')->get();
-        return view('supplier', compact('supplier','supplieruser'));
+        return view('setting.supplier', compact('supplier','supplieruser'));
     }
 
     public function show($id)

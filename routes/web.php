@@ -27,7 +27,8 @@ Route::get('/logout', function () {
 Route::get('login','Auth\LoginController@getLogin')->name('login');
 Route::post('login','Auth\LoginController@postLogin')->name('login');
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('home', 'HomeController@index')->middleware('admin');
+Route::get('orderdashboard', 'HomeController@orderdashboard')->name('orderdashboard');
 
 
 //trang chủ
@@ -88,7 +89,7 @@ Route::post('serverservicewise/{id}', 'ServerserviceController@editwise');
 Route::get('service/{squirrel}/{any}', 'ServerserviceController@status');
 Route::get('serverdelete/{id}', 'ServerserviceController@delete');
 
-Route::get('role', 'Auth\LoginController@role')->middleware('admin');
+Route::get('role', 'Auth\LoginController@role')->middleware('admin','auth');
 Route::get('role/{squirrel}/{any}', 'Auth\LoginController@status');
 //Invoice Report
 Route::get('invoicereport', 'InvoiceReportController@index');
@@ -108,3 +109,5 @@ Route::get('profitreport', 'ProfitController@index');
 Route::get('cronjobprofit', 'ProfitCronController@runcron');
 Route::get('runcronrange', 'ProfitCronController@runcronrange');
 Route::post('reloadprofit', 'ProfitCronController@reloadprofit');
+
+Route::get('nvp','Payment\PaypalNVP@fetchPaypalNVPTransactionDetails');

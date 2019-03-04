@@ -75,7 +75,7 @@ class ServerorderController extends Controller
             }
 
         }
-        return view('serverorder', compact('serverorder', 'groupsearch', 'cachesearch', 'nameserver', 'updateby'));
+        return view('order.serverorder', compact('serverorder', 'groupsearch', 'cachesearch', 'nameserver', 'updateby'));
     }
 
     public function show($id)

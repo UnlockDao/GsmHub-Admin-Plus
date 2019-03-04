@@ -16,7 +16,7 @@ class CurrencieController extends Controller
     public function index(Request $request)
     {
         $currencie = Currencie::orderBy('display_currency')->get();
-        return view('currency', compact('currencie'));
+        return view('setting.currency', compact('currencie'));
     }
 
     public function show($id)
@@ -44,7 +44,7 @@ class CurrencieController extends Controller
             $currencie = Currencie::find($id);
             $currencie->display_currency = $par2;
             $currencie->save();
-            if ($par2 == 'Yes') {
+            if ($par2 == 'yes') {
                 echo 'Active Currency ';
             } else {
                 echo 'Disable Currency ';

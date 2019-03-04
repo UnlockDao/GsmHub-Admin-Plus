@@ -52,7 +52,7 @@ class LoginController extends Controller
                 $role->save();
             }
         }
-        return view('role', compact('administrator'));
+        return view('setting.role', compact('administrator'));
     }
 
     public function status($par = NULL, $par2 = NULL)

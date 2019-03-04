@@ -1,7 +1,17 @@
 @extends('layouts.header')
 @section('content')
 
-    <div class="container-fluid mt--7">
+    <div class="container-fluid">
+
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Member</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
         <form action="" method="get">
         <div class="row">
             <div class="col-xl-9 col-lg-9">
