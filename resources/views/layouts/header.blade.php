@@ -20,6 +20,47 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
 </head>
+<style>
+    /* for custom scrollbar for webkit browser*/
+
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 75, 180, 0.3);
+    }
+    ::-webkit-scrollbar-thumb {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    }
+    #parent {
+        height: 65vh;
+    }
+    .table th{
+        border-top: 0px;
+        z-index: 999;
+    }
+</style>
+<style>
+    .badge1 {
+        position: relative;
+    }
+
+    .badge1[data-badge]:after {
+        content: attr(data-badge);
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        font-size: .7em;
+        background: green;
+        color: white;
+        width: 18px;
+        height: 18px;
+        text-align: center;
+        line-height: 18px;
+        border-radius: 50%;
+        box-shadow: 0 0 1px #333;
+    }
+</style>
 
 <body class="sidebar-enable" data-keep-enlarged="true">
 
