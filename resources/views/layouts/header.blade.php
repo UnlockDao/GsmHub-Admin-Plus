@@ -58,7 +58,7 @@
     }
 </style>
 
-<body class="sidebar-enable" data-keep-enlarged="true">
+<body data-keep-enlarged="true">
 
 <!-- Begin page -->
 <div class="wrapper">

@@ -91,6 +91,7 @@ Route::get('serverdelete/{id}', 'ServerserviceController@delete');
 
 Route::get('role', 'Auth\LoginController@role')->middleware('admin','auth');
 Route::get('role/{squirrel}/{any}', 'Auth\LoginController@status');
+Route::post('supplier_access', 'Auth\LoginController@supplier_access');
 //Invoice Report
 Route::get('invoicereport', 'InvoiceReportController@index');
 //Utility

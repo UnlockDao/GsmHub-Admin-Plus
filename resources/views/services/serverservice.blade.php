@@ -141,8 +141,8 @@
                                     @if($v->server_service_group_id == $g->id )
                                         <tr class="table-info">
                                             <td>{{$v->id}}</td>
-                                            <td contenteditable="true"
-                                                onBlur="saveName(this,'services','service_name','{{$v->id}}')"
+                                            <td @if(!CUtil::apStaff())contenteditable="true" @endif
+                                            onBlur="saveName(this,'services','service_name','{{$v->id}}')"
                                                 onClick="showEdit(this);">
                                                 <a @if($v->serverservicequantityrange->isEmpty() &&$v->serverservicetypewiseprice->isEmpty())
                                                    style="color: red; background: yellow"
@@ -201,8 +201,8 @@
                                                            data-placement="top"
                                                            data-original-title="{{number_format($a->purchase_cost*$exchangerate->exchange_rate_static)}} đ">{{ number_format($a->purchase_cost, 2) }}</a>
                                                     </td>
-                                                    <td contenteditable="true"
-                                                        onBlur="savePrice(this,'creditwise','amount','{{$a->id}}')"
+                                                    <td @if(!CUtil::apStaff())contenteditable="true" @endif
+                                                    onBlur="savePrice(this,'creditwise','amount','{{$a->id}}')"
                                                         onClick="showEdit(this);">
                                                         @if($a->purchase_cost > $a->amount)
                                                             <span class="badge badge-pill badge-danger">{{ number_format( $a->amount , 2) }}
@@ -215,8 +215,8 @@
                                                     </td>
                                                     @foreach($clientgroup as $cg)
                                                         @foreach($a->serverservicetypewisegroupprice->where('service_type_id',$a->id)->where('group_id',$cg->id) as $serverservicetypewisegroupprice)
-                                                            <td contenteditable="true"
-                                                                onBlur="savePrice(this,'pricewise','amount','{{$serverservicetypewisegroupprice->id}}')"
+                                                            <td @if(!CUtil::apStaff())contenteditable="true" @endif
+                                                            onBlur="savePrice(this,'pricewise','amount','{{$serverservicetypewisegroupprice->id}}')"
                                                                 onClick="showEdit(this);">
                                                                 @if($a->purchase_cost == $serverservicetypewisegroupprice->amount)
                                                                     <span class="badge badge-pill badge-warning"><a
@@ -270,8 +270,8 @@
                                                            data-original-title="{{number_format($v->purchase_cost*$exchangerate->exchange_rate_static)}} đ">{{number_format($v->purchase_cost,2)}}</a>
                                                     </td>
                                                     @foreach($serverservicequantityrange->serverserviceusercredit->where('currency',$currenciessite->config_value) as $serverserviceusercredit)
-                                                        <td contenteditable="true"
-                                                            onBlur="savePrice(this,'creditrange','amount','{{$serverserviceusercredit->id}}')"
+                                                        <td @if(!CUtil::apStaff())contenteditable="true" @endif
+                                                        onBlur="savePrice(this,'creditrange','amount','{{$serverserviceusercredit->id}}')"
                                                             onClick="showEdit(this);">
                                                             @if($v->purchase_cost > $serverserviceusercredit->credit)
                                                                 <span class="badge badge-pill badge-danger">{{number_format($serverserviceusercredit->credit,2)}}</span>
@@ -284,8 +284,8 @@
                                                     @endforeach
                                                     @foreach($clientgroup as $cg)
                                                         @foreach($serverservicequantityrange->serverserviceclientgroupcredit->where('currency',$currenciessite->config_value)->where('client_group_id',$cg->id) as $serverserviceclientgroupcredit)
-                                                            <td contenteditable="true"
-                                                                onBlur="savePrice(this,'pricerange','amount','{{$serverserviceclientgroupcredit->id}}')"
+                                                            <td @if(!CUtil::apStaff())contenteditable="true" @endif
+                                                            onBlur="savePrice(this,'pricerange','amount','{{$serverserviceclientgroupcredit->id}}')"
                                                                 onClick="showEdit(this);">
                                                                 @if($v->purchase_cost == $serverserviceclientgroupcredit->credit)
                                                                     <span class="badge badge-pill badge-warning"><a
