@@ -65,7 +65,13 @@
                                                 </label>
                                             </div>
                                         </td>
-                                        <td>{{$v->supplier_access}}</td>
+                                        <td>
+                                            <select class="form-control form-control-alternative"  onchange="saveToDatabase(this.value,'{{$v->id}}')" name="supplier_access">
+                                                <option @if($v->supplier_access == 'Saff') selected @endif value="Saff">Saff</option>
+                                                <option @if($v->supplier_access == 'ServiceManager') selected @endif value="ServiceManager">ServiceManager</option>
+                                                <option @if($v->supplier_access == 'Admin') selected @endif value="Admin">Admin</option>
+                                            </select>
+                                        </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -79,5 +85,23 @@
 
     </div> <!-- container -->
 
+    <script>
 
+        function saveToDatabase(editableObj, id) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: "supplier_access",
+                type: "POST",
+                data: {value: editableObj, id: id},
+                success: function (data) {
+                    $(editableObj).css("background", "#FDFDFD");
+                    console.log(data);
+                }
+            });
+        }
+    </script>
 @endsection

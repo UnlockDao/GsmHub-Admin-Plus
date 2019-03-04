@@ -71,4 +71,13 @@ class LoginController extends Controller
         }
         return;
     }
+
+
+    public function supplier_access(Request $request)
+    {
+        $role = Administrator::find($request->id);
+        $role->supplier_access = $request->value;
+        $role->save();
+        return $role;
+    }
 }
