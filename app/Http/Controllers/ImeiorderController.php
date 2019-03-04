@@ -74,7 +74,7 @@ class ImeiorderController extends Controller
 
 
         }
-        return view('imeiorder', compact('imeiorder', 'groupsearch', 'cachesearch', 'nameimei', 'updateby'));
+        return view('order.imeiorder', compact('imeiorder', 'groupsearch', 'cachesearch', 'nameimei', 'updateby'));
     }
 
 

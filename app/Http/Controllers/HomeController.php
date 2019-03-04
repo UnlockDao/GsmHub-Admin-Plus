@@ -77,7 +77,58 @@ class HomeController extends Controller
         $incomechart = $this->incomechart($datefilter);
         $revenuechart = $this->revenuechart($datefilter);
 
-        return view('home', compact('serveroder', 'imeioder', 'invoice', 'pendingoder', 'topservice', 'profitchart', 'ordercountchart', 'incomechart','revenuechart'));
+        return view('home.home', compact('serveroder', 'imeioder', 'invoice', 'pendingoder', 'topservice', 'profitchart', 'ordercountchart', 'incomechart','revenuechart'));
+    }
+
+    public function orderdashboard(Request $request)
+    {
+        $datefilter = $request->datefilterh;
+        $tg = explode(" - ", $datefilter);
+        if ($datefilter == null) {
+            $datefilter = date("Y/m/01 0:00:00") . ' - ' . date("Y/m/t 23:59:59");
+            $tg = explode(" - ", $datefilter);
+            $tg1 = CUtil::convertDateS($tg[0]);
+            $tg2 = CUtil::convertDateS($tg[1]);
+        } else {
+            $tg1 = CUtil::convertDateS($tg[0]);
+            $tg2 = CUtil::convertDateS($tg[1]);
+        }
+
+        $imeioder = Imeiserviceorder::whereBetween('completed_on', [$tg1, $tg2])
+            ->where('ignore_profit', 0)
+            //->where('purchase_cost', '>', 0) // wrong condition
+            ->where('credit_default_currency', '!=', 0)
+            ->where('status', '=', 'Completed')
+            ->where('amount_debitted', '=', 1)
+            ->selectRaw('sum(if(link_order_id != 0, credit_default_currency, credit_default_currency - purchase_cost)) as profit,sum(if(link_order_id != 0, credit_default_currency, credit_default_currency)) as revenue, sum(if(link_order_id != 0, credit_default_currency, 0 )) as linked_profit')
+            ->first();
+        $serveroder = Serverserviceorder::whereBetween('completed_on', [$tg1, $tg2])
+            ->where('ignore_profit', 0)
+            //->where('purchase_cost', '>', 0) // wrong condition
+            ->where('status', '=', 'Completed')
+            ->where('credit_default_currency', '!=', 0)
+            ->selectRaw('sum(credit_default_currency - ( purchase_cost * IF( quantity >0, quantity, 1 ) ) ) as profit,sum(credit_default_currency) as revenue')
+            ->first();
+        $invoice = Invoice::whereBetween('date_added', [$tg1, $tg2])
+            ->where('created_by', '=', 0)
+            ->where('invoice_status', 'paid')
+            ->select(DB::raw('count(id) as icount, sum(invoice_amount) as amt, currency'))
+            ->where('currency','USD')->first();
+        //get day in month
+        $date = DateTime::createFromFormat("Y-n", "2018-11");
+        $datesArray = array();
+        for ($i = 1; $i <= $date->format("t"); $i++) {
+            $datesArray[] = DateTime::createFromFormat("Y-n-d", "2018-11-$i")->format('d-n-Y');
+        }
+
+        $pendingoder = $this->pendingoder();;
+        $topservice = $this->topserviceordercount();
+        $profitchart = $this->profitchart($datefilter);
+        $ordercountchart = $this->ordercountchart($datefilter);
+        $incomechart = $this->incomechart($datefilter);
+        $revenuechart = $this->revenuechart($datefilter);
+
+        return view('home.orderdashboard', compact('serveroder', 'imeioder', 'invoice', 'pendingoder', 'topservice', 'profitchart', 'ordercountchart', 'incomechart','revenuechart'));
     }
 
     public function pendingoder()

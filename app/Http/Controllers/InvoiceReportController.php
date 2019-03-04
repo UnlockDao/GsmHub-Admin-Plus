@@ -70,7 +70,7 @@ class InvoiceReportController extends Controller
             }
 
 
-        return view('invoicereport', compact('serverorder',  'cachesearch','payment','currency','payment_gateway_status'));
+        return view('report.invoicereport', compact('serverorder',  'cachesearch','payment','currency','payment_gateway_status'));
     }
 
 

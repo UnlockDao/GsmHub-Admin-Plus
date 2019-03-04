@@ -17,10 +17,11 @@ class Admin
     public function handle($request, Closure $next)
     {
         $users = Auth::user()->admin;
-        if(Auth::user()->is_super_admin !== 1 ){
-            return redirect('home');
-        }
+        if($users->user_id == 1 || $users->supplier_access == 'Admin' ){
+            return $next($request);
 
-        return $next($request);
+        }
+        return redirect('orderdashboard');
+
     }
 }
