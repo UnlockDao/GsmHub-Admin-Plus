@@ -35,10 +35,6 @@
     #parent {
         height: 65vh;
     }
-    .table th{
-        border-top: 0px;
-        z-index: 999;
-    }
 </style>
 <style>
     .badge1 {
