@@ -119,6 +119,17 @@
         });
     });
 </script>
+<script src="{{ asset('js/tableHeadFixer.js') }}"></script>
+<script>
+    $(document).ready(function() {
+        $("#fixTable").tableHeadFixer();
+    });
+</script>
+<script type="text/javascript">
+    $('.defaultcurrency').on('change', function () {
+        $('.defaultcurrency').not(this).prop('checked', false);
+    });
+</script>
 </body>
 
 </html>
