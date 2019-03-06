@@ -43,6 +43,7 @@ class Utility
                 $cliengroup = Clientgroup::where('id', $id)->get();
             }
             //imei
+            $this->imeicheckapi();
             if ($cliendefault == !null) {
                 $imei = Imeiservice::get();
                 foreach ($cliengroup as $clg) {
@@ -128,6 +129,7 @@ class Utility
             }
         }
         if ($type == 'imei') {
+            $this->imeicheckapi();
             $cliengroup = Clientgroup::get();
             //imei
             if ($cliendefault == !null) {
@@ -352,6 +354,29 @@ class Utility
                     }
                 }
             }
+        }
+    }
+    public function imeicheckapi()
+    {
+        $defaultcurrency = Currenciepricing::where('type', '1')->first();
+        $exchangerate = Currencie::find($defaultcurrency->currency_id);
+        $checkapi = Imeiservicepricing::get();
+        foreach ($checkapi as $c) {
+            if ($c->imei->api_id == !null) {
+                if ($c->nhacungcap == !null) {
+                    $giatransactionfee = ($c->nhacungcap->exchangerate * $c->imei->apiserverservices->credits) / $exchangerate->exchange_rate_static + (($c->imei->apiserverservices->credits / 100) * $c->nhacungcap->transactionfee);
+                    $updategiatransactionfee = Imeiservice::where('id', $c->id)->update(['purchase_cost' => $giatransactionfee]);
+                }
+            } elseif ($c->imei->purchasecost == !null) {
+                if ($c->nhacungcap == !null) {
+                    $giatransactionfee = ($c->nhacungcap->exchangerate * $c->imei->purchasecost) / $exchangerate->exchange_rate_static + (($c->imei->purchasecost / 100) * $c->nhacungcap->transactionfee);
+                    $updategiatransactionfee = Imeiservice::where('id', $c->id)->update(['purchase_cost' => $giatransactionfee]);
+                }
+            }
+        }
+        $checkenableapi = Imeiservice::where('pricefromapi', '<>', '0')->get();
+        foreach ($checkenableapi as $ci) {
+            $updateenableapi = Imeiservice::where('id', $ci->id)->update(['pricefromapi' => '0']);
         }
     }
 
