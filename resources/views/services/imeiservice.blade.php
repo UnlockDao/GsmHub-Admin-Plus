@@ -46,7 +46,7 @@
                                     <div class="col-md-2">
                                         <strong>Service Group</strong>
                                         <select class="form-control" name="group_name">
-                                            <option>...</option>
+                                            <option value="">...</option>
                                             @foreach($groupsearch as $g )
                                                 <option value="{{$g->id}}"
                                                         @if($cachesearch->group_name == $g->id) selected @endif>{{$g->group_name}}</option>
