@@ -65,10 +65,10 @@ class ServerserviceController extends Controller
 
     public function index(Request $request)
     {
-//        $this->checkServer();
-//        $this->checkNullUser();
-//        $this->UpdatePurchaseCostNetServer();
-//        $this->checkApiToNull();
+        $this->checkServer();
+        $this->checkNullUser();
+        $this->UpdatePurchaseCostNetServer();
+        $this->checkApiToNull();
         $currenciessite = Config::where('config_var','site_default_currency')->first();
         //
         $defaultcurrency = Currenciepricing::where('type', '1')->first();
