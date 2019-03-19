@@ -163,8 +163,15 @@
                                                         </label>
                                                     </div>
                                                 </td>
-                                                <td>@if($v->imeipricing->nhacungcap ==! null) @if (CUtil::issuperadmin()){{$v->imeipricing->nhacungcap->name}} @else
-                                                        Supplier #{{$v->imeipricing->nhacungcap->id}} @endif @endif</td>
+                                                <td>@if($v->imeipricing->nhacungcap ==! null)
+                                                        @if (CUtil::issuperadmin())
+                                                            {{$v->imeipricing->nhacungcap->name}}
+                                                        @else
+                                                            Supplier #{{$v->imeipricing->nhacungcap->id}}
+                                                        @endif
+                                                    @else
+                                                        <a class="badge badge-pill badge-success">New</a>
+                                                    @endif</td>
                                                 @if($v->api_id ==! null)
                                                     <td>@if($v->apiserverservices ==! null)<a data-toggle="tooltip"
                                                                                               data-placement="top"
