@@ -22,7 +22,7 @@
                         <div class="row">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-2">
+                                    <div class="col-md-3">
                                         <label class="form-control-label">Transaction Ref Id</label>
                                         <div class="form-group">
                                             <input type="text" class="form-control form-control-alternative" name="payment_gateway_ref_id"
@@ -30,7 +30,7 @@
                                                    value="{{$cachesearch->payment_gateway_ref_id}}">
                                         </div>
                                     </div>
-                                    <div class="col-md-1">
+                                    <div class="col-md-3">
                                         <label class="form-control-label">Username</label>
                                         <div class="form-group">
                                             <input type="text" class="form-control form-control-alternative" name="user_name"
@@ -38,13 +38,13 @@
                                                    value="{{$cachesearch->user_name}}">
                                         </div>
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="col-md-3">
                                         <label class="form-control-label">Time</label>
                                         <input class="form-control form-control-alternative" type="text"
                                                name="datefilter" value="{{$cachesearch->datefilter}}"
                                                autocomplete="off"/>
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="col-md-3">
                                         <label class="form-control-label">Status</label>
                                         <select class="form-control form-control-alternative" name="status">
                                             <option value="">...</option>
@@ -68,7 +68,9 @@
                                             </option>
                                         </select>
                                     </div>
-                                    <div class="col-md-1">
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
                                         <label class="form-control-label">Method</label>
                                         <select class="form-control form-control-alternative" name="payment">
                                             <option value="">...</option>
@@ -77,7 +79,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-md-1">
+                                    <div class="col-md-3">
                                         <label class="form-control-label">Payment Status</label>
                                         <select class="form-control form-control-alternative" name="payment_gateway_status">
                                             <option value="">...</option>
@@ -86,13 +88,20 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-md-1">
+                                    <div class="col-md-3">
                                         <label class="form-control-label">Currency</label>
                                         <select class="form-control form-control-alternative" name="currency">
                                             <option value="">...</option>
                                             @foreach($currency as $p)
                                                 <option value="{{$p->currency}}" @if($cachesearch->currency == $p->currency)selected @endif>{{$p->currency}}</option>
                                             @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <label class="form-control-label">Log</label>
+                                        <select class="form-control form-control-alternative" name="log">
+                                            <option value="">...</option>
+                                            <option value="1">Show</option>
                                         </select>
                                     </div>
                                     <div class="col-md-1">
@@ -132,6 +141,9 @@
                             <th scope="col">Total Amount</th>
                             <th scope="col">Status</th>
                             <th scope="col">Payment</th>
+                            @if($cachesearch->log == 1)
+                            <th scope="col">Log</th>
+                            @endif
                             <th scope="col">View</th>
                             </thead>
                             <tbody>
@@ -144,6 +156,11 @@
                                     <td scope="row">{{$v->invoice_amount}} {{$v->currency}}</td>
                                     <td scope="row">{{$v->invoice_status}}</td>
                                     <td scope="row">{{ isset($v->payment) ? $v->payment->gateway_label : '' }}</td>
+                                    @if($cachesearch->log == 1)
+                                    <td scope="row">@if($v->paypal_transaction)
+                                                       <pre>{{$v->paypal_transaction->paypal_post_vars }}</pre>
+                                        @endif</td>
+                                    @endif
                                     <td scope="row"><a href="https://s-unlock.com/admin/payment/view-invoice/{{$v->id}}" target="_blank" class="btn btn-sm btn-primary">View</a></td>
                                 </tr>
                                 <?php $credit += $v->invoice_amount ?>
