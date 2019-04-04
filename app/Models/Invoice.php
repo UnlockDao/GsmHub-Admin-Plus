@@ -23,5 +23,9 @@ class Invoice extends Model
     {
         return $this->belongsTo('App\Models\Payment','payment_gateway','gateway_key');
     }
+    public function paypal_transaction()
+    {
+        return $this->belongsTo('App\Models\PaypalTransaction','id','payment_id');
+    }
 }
 
