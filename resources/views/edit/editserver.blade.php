@@ -260,19 +260,70 @@
                                             <input type="text" name="service_name" id="service_name"
                                                    class="form-control"
                                                    value="{{$serverservice->service_name}}"
+                                                   onBlur="saveToDatabase(this,'service_name','services','{{$serverservice->id}}')"
+                                                   onClick="showEdit(this);"
                                                    placeholder="Name IMEI Services" autocomplete="off">
                                         </div>
                                         <div class="col-md-12">
+                                            <strong>Service Listed In Group</strong>
+                                            <select name="service_group" class="form-control"
+                                                    onBlur="saveToDatabase(this,'service_group','services','{{$serverservice->id}}')"
+                                                    onClick="showEdit(this);">
+                                                @foreach($group as $v)
+                                                    <option value="{{$v->id}}"
+                                                            @if($serverservice->server_service_group_id == $v->id) selected @endif>{{$v->group_name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-md-12">
                                             <strong>Supplier</strong>
-                                            <select name="id_supplier" class="form-control">
+                                            <select name="id_supplier" class="form-control"
+                                                    onchange="saveToDatabase(this,'id_supplier','services','{{$serverservice->id}}')"
+                                                    onClick="showEdit(this);">
                                                 @foreach($supplier as $v)
                                                     <option value="{{$v->id}}"
                                                             @if($serverservice->servicepricing->id_supplier == $v->id) selected @endif>{{$v->name}}</option>
                                                 @endforeach
                                             </select>
-                                            <hr>
+
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <strong>Delivery Time</strong>
+                                            <input type="text" name="process_time" id="process_time" class="form-control"
+                                                   value="{{$serverservice->process_time}}"
+                                                   onBlur="saveToDatabase(this,'process_time','services','{{$serverservice->id}}')"
+                                                   onClick="showEdit(this);"
+                                                   placeholder="process_time" autocomplete="off">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <strong>Time</strong>
+                                            <select name="time_unit" class="form-control"
+                                                    onchange="saveToDatabase(this,'time_unit','services','{{$serverservice->id}}')"
+                                                    onClick="showEdit(this);">
+                                                <option value="Minutes"
+                                                        @if($serverservice->time_unit == 'Minutes') selected @endif>Minutes
+                                                </option>
+                                                <option value="Hours"
+                                                        @if($serverservice->time_unit == 'Hours') selected @endif>Hours
+                                                </option>
+                                                <option value="Weeks"
+                                                        @if($serverservice->time_unit == 'Weeks') selected @endif>Weeks
+                                                </option>
+                                                <option value="Days" @if($serverservice->time_unit == 'Days') selected @endif>
+                                                    Days
+                                                </option>
+                                                <option value="Months"
+                                                        @if($serverservice->time_unit == 'Months') selected @endif>Months
+                                                </option>
+                                                <option value="Instant"
+                                                        @if($serverservice->time_unit == 'Instant') selected @endif>Instant
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <hr>
                                     <div class="row">
                                         <div class="col-md-3">
                                             <h5>Purchase Cost : </h5>
