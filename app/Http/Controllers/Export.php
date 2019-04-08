@@ -10,6 +10,7 @@ use App\Models\Currencie;
 use App\Models\Currenciepricing;
 use App\Models\Imeiservice;
 use App\Models\Imeiservicegroup;
+use App\Models\Imeiservicepricing;
 use App\Models\Serverservice;
 use App\Models\Serverserviceclientgroupcredit;
 use App\Models\Serverservicegroup;
@@ -91,7 +92,32 @@ class Export
             if ($request->column == 'credit') {
                 $imeiservice->credit = $request->value;
             }
+            if ($request->column == 'service_group') {
+                $imeiservice->imei_service_group_id = $request->value;
+            }
+            if ($request->column == 'process_time') {
+                $imeiservice->process_time = $request->value;
+            }
+            if ($request->column == 'time_unit') {
+                $imeiservice->time_unit = $request->value;
+            }
             $imeiservice->save();
+        }
+
+        if ($request->type == "services") {
+            if ($request->column == 'id_supplier') {
+                $updatesupplier = Imeiservicepricing::find($request->id);
+                $updatesupplier->id_supplier = $request->value;
+                $updatesupplier->save();
+                //tính giá + phí
+                $exchangerate = Currencie::where('currency_code', 'VND')->first();
+                $imeiprice = Imeiservicepricing::where('id_supplier', $request->value)->find($request->id);
+                if ($imeiprice->imei->api_id == !null && $imeiprice->imei->apiserverservices == !null) {
+                    $giatransactionfee = ($imeiprice->nhacungcap->exchangerate * $imeiprice->imei->apiserverservices->credits) / $exchangerate->exchange_rate_static + (($imeiprice->imei->apiserverservices->credits / 100) * $imeiprice->nhacungcap->transactionfee);
+                    Imeiservice::where('id', $request->id)->update(['purchase_cost' => $giatransactionfee]);
+                }
+
+            }
         }
 
         if ($request->type == "price") {
