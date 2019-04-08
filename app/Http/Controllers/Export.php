@@ -102,6 +102,9 @@ class Export
             if ($request->column == 'time_unit') {
                 $imeiservice->time_unit = $request->value;
             }
+            if ($request->column == 'service_information') {
+                $imeiservice->service_information = $request->value;
+            }
             $imeiservice->save();
         }
 
@@ -173,6 +176,9 @@ class Export
             }
             if ($request->column == 'time_unit') {
                 $serverservice->time_unit = $request->value;
+            }
+            if ($request->column == 'service_information') {
+                $serverservice->service_information = $request->value;
             }
             $serverservice->save();
             if ($request->column == 'id_supplier') {

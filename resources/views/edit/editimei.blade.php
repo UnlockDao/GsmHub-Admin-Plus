@@ -136,6 +136,19 @@
                                 <input class="btn btn-danger pull-right"
                                        onfocus="parent.$.fancybox.close();" type="button" value="Close">
                                 <div class="clearfix"></div>
+
+                                <div class="card-body">
+                                    <h4 class="header-title">Service Information</h4>
+                                    <!-- basic summernote-->
+                                    <div id="summernote-basic">{!! $imei->imei->service_information !!}</div>
+                                </div>
+                                <script>
+                                    $(document).ready(function() {
+                                        $('.note-editable').blur(function() {
+                                            saveinformation(this,'service_information','services','{{$imei->id}}')
+                                        });
+                                    });
+                                </script>
                             </form>
                         </div>
                     </div>
@@ -206,6 +219,24 @@
                     url: "{{ url('imeiquickedit') }}",
                     type: "POST",
                     data: {column: column, type: type, value: editableObj.value, id: id, idgr: idgr},
+                    success: function (data) {
+                        console.log(data);
+                        $(editableObj).css("background", "#FDFDFD");
+                    }
+                });
+            }
+
+            function saveinformation(editableObj, column, type, id, idgr) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $(editableObj).css("background", "#FFF url({{ url('loaderIcon.gif') }}) no-repeat right");
+                $.ajax({
+                    url: "{{ url('imeiquickedit') }}",
+                    type: "POST",
+                    data: {column: column, type: type, value: editableObj.innerHTML, id: id, idgr: idgr},
                     success: function (data) {
                         console.log(data);
                         $(editableObj).css("background", "#FDFDFD");

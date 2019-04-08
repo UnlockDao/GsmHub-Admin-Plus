@@ -199,6 +199,19 @@
                                     <input class="btn btn-danger pull-right" type="button"
                                            onfocus="parent.$.fancybox.close();" value="Close">
                                     <div class="clearfix"></div>
+
+                                    <div class="card-body">
+                                        <h4 class="header-title">Service Information</h4>
+                                        <!-- basic summernote-->
+                                        <div id="summernote-basic">{!! $serverservice->service_information !!}</div>
+                                    </div>
+                                    <script>
+                                        $(document).ready(function() {
+                                            $('.note-editable').blur(function() {
+                                                saveinformation(this,'service_information','services','{{$serverservice->id}}')
+                                            });
+                                        });
+                                    </script>
                                 </form>
                             </div>
                         </div>
@@ -521,6 +534,23 @@
                 success: function (data) {
                     console.log(data);
                     $(editableObj).css("background", "#a2e5fd");
+                }
+            });
+        }
+        function saveinformation(editableObj, column, type, id, idgr) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $(editableObj).css("background", "#FFF url({{ url('loaderIcon.gif') }}) no-repeat right");
+            $.ajax({
+                url: "{{ url('serverquickedit') }}",
+                type: "POST",
+                data: {column: column, type: type, value: editableObj.innerHTML, id: id, idgr: idgr},
+                success: function (data) {
+                    console.log(data);
+                    $(editableObj).css("background", "#FDFDFD");
                 }
             });
         }

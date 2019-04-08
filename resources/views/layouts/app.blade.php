@@ -9,14 +9,14 @@
 
     <title>S-Unlock</title>
 
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
-    <!-- Icons -->
-    <link href="{{ asset('assets/vendor/nucleo/css/nucleo.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/vendor/@fortawesome/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
-    <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <!-- Summernote css -->
+    <link href="{{asset('')}}/assets/css/vendor/summernote-bs4.css" rel="stylesheet" type="text/css" />
+    <!-- SimpleMDE css -->
+    <link href="{{asset('')}}/assets/css/vendor/simplemde.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- App css -->
+    <link href="{{asset('')}}/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="{{asset('')}}/assets/css/app.min.css" rel="stylesheet" type="text/css" />
     <script src="{{ asset('assets/vendor/jquery/dist/jquery.min.js') }}"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
@@ -40,14 +40,92 @@
         </main>
     </div>
 </body>
-
+<script src="{{asset('')}}/assets/js/app.min.js"></script>
 <script src="{{ asset('js/jquery.tableCheckbox.js') }}"></script>
-<script src="{{ asset('assets/js/popper.min.js') }}"></script>
-<script src="{{ asset('assets/js/bootstrap-material-design.min.js') }}"></script>
-<script src="{{ asset('assets/js/perfect-scrollbar.jquery.min.js') }}"></script>
-<script src="{{ asset('assets/js/material-dashboard.js?v=2.0.1') }}"></script>
 <script>
     $('table').tableCheckbox({ /* options */ });
 </script>
+
+<!-- Summernote js -->
+<script src="{{asset('')}}/assets/js/vendor/summernote-bs4.min.js"></script>
+<script>
+    !function ($) {
+        "use strict";
+
+        var Summernote = function () {
+            this.$body = $("body")
+        };
+
+
+        /* Initializing */
+        Summernote.prototype.init = function () {
+            $('#summernote-basic').summernote({
+                placeholder: 'Write something...',
+                height: 230,
+                callbacks: {
+                    // fix broken checkbox on link modal
+                    onInit: function onInit(e) {
+                        var editor = $(e.editor);
+                        editor.find('.custom-control-description').addClass('custom-control-label').parent().removeAttr('for');
+                    }
+                }
+            });
+            // air mode on
+            $('#summernote-airmode').summernote({
+                airMode: true,
+                callbacks: {
+                    // fix broken checkbox on link modal
+                    onInit: function onInit(e) {
+                        var editor = $(e.editor);
+                        editor.find('.custom-control-description').addClass('custom-control-label').parent().removeAttr('for');
+                    }
+                }
+            });
+
+            // click to edit
+            var edit = function edit() {
+                $('#summernote-editmode').summernote({
+                    focus: true,
+                    callbacks: {
+                        // fix broken checkbox on link modal
+                        onInit: function onInit(e) {
+                            var editor = $(e.editor);
+                            editor.find('.custom-control-description').addClass('custom-control-label d-block').parent().removeAttr('for');
+                        }
+                    }
+                });
+            };
+            var save = function save() {
+                var makrup = $('#summernote-editmode').summernote('code');
+                $('#summernote-editmode').summernote('destroy');
+            };
+
+            $('#summernote-edit').on('click', function () {
+                edit();
+                // toggle buttons
+                $(this).hide();
+                $('#summernote-save').show();
+            });
+            $('#summernote-save').on('click', function () {
+                save();
+                // toggle buttons
+                $(this).hide();
+                $('#summernote-edit').show();
+            });
+        },
+
+            //init Summernote
+            $.Summernote = new Summernote, $.Summernote.Constructor = Summernote
+
+    }(window.jQuery),
+
+        //initializing Summernote
+        function ($) {
+            "use strict";
+            $.Summernote.init()
+        }(window.jQuery);
+
+</script>
+
 
 </html>
