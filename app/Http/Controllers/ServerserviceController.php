@@ -199,7 +199,9 @@ class ServerserviceController extends Controller
 
         $currenciessite = Config::where('config_var','site_default_currency')->first();
 
-        return view('edit.editserver', compact('serverservice', 'supplier', 'exchangerate','clientgroup','cliendefault','allcurrencies','currenciessite'));
+        $group = Serverservicegroup::get();
+
+        return view('edit.editserver', compact('serverservice', 'supplier', 'exchangerate','clientgroup','cliendefault','allcurrencies','currenciessite','group'));
     }
 
     public function updatesupplier($id, Request $request)

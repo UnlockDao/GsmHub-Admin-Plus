@@ -17,6 +17,7 @@ use App\Models\Serverservicegroup;
 use App\Models\Serverservicetypewisegroupprice;
 use App\Models\Serverservicetypewiseprice;
 use App\Models\Serverserviceusercredit;
+use App\Models\Serviceservicepricing;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 
@@ -154,15 +155,57 @@ class Export
 
     public function serverquickedit(Request $request)
     {
+        $cliendefault = Clientgroup::where('status', 'active')->where('chietkhau', '0')->first();
+
+        $serverservice = Serverservice::find($request->id);
         if ($request->type == "services") {
-            $serverservice = Serverservice::find($request->id);
-            $serverservice->service_name = $request->value;
+            if ($request->column == 'service_name') {
+                $serverservice->service_name = $request->value;
+            }
+            if ($request->column == 'purchase_cost') {
+                $serverservice->purchase_cost = $request->value;
+            }
+            if ($request->column == 'service_group') {
+                $serverservice->server_service_group_id = $request->value;
+            }
+            if ($request->column == 'process_time') {
+                $serverservice->process_time = $request->value;
+            }
+            if ($request->column == 'time_unit') {
+                $serverservice->time_unit = $request->value;
+            }
             $serverservice->save();
+            if ($request->column == 'id_supplier') {
+                $servicepricing = Serviceservicepricing::find($request->id);
+                $servicepricing->id_supplier = $request->value;
+                $servicepricing->save();
+            }
         }
+
+
+
         if ($request->type == "pricewise") {
             $serverservice = Serverservicetypewisegroupprice::find($request->id);
             $serverservice->amount = $request->value;
             $serverservice->save();
+
+            if ($cliendefault->id == $serverservice->group_id) {
+                $wise = Serverservicetypewiseprice::where('server_service_id', $serverservice->server_service_id)->get();
+                foreach ($wise as $wi) {
+                    if ($wi->adminplus_service == !null) {
+                        $wi->servicetypegroupprice->where('group_id', $cliendefault->id)->first()->amount;
+                        $giabanle = $wi->servicetypegroupprice->where('group_id', $cliendefault->id)->first()->amount;
+                        foreach ($wi->servicetypegroupprice as $groupprice) {
+                            if ($groupprice->clientgroup == !null) {
+                                $chietkhau = ($giabanle - ((($giabanle - $wi->purchase_cost) / 100) * $groupprice->clientgroup->chietkhau));
+                                Serverservicetypewisegroupprice::where('id', $groupprice->id)
+                                    ->update(['amount' => $chietkhau]);
+                            }
+
+                        }
+                    }
+                }
+            }
         }
         if ($request->type == "pricerange") {
             $serverservice = Serverserviceclientgroupcredit::find($request->id);
