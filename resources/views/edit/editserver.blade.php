@@ -1,38 +1,12 @@
 @extends('layouts.app')
 @section('content')
-    <script>
-        function VNtoUSD() {
-            if(Enabled == 1) {
-                var vnd, usd;
-                //Lấy text từ thẻ input title
-                vnd = document.getElementById("valueExchangerates").value;
-                var b = parseFloat(vnd) / {{$exchangerate->exchange_rate_static}};
-                result = b;
-                document.getElementById('results').value = result;
-            }
-        }
-        function USDtoVND() {
-            if(Enabled == 2)
-            {
-                var vnd, usd;
-                //Lấy text từ thẻ input title
-                usd = document.getElementById("results").value;
-                var b = parseFloat(usd) * {{$exchangerate->exchange_rate_static}};
-                document.getElementById('valueExchangerates').value = b;
-            }
-        }
-    </script>
     @if($serverservice->servicepricing->id_supplier == null)
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header card-header-icon card-header-rose">
-                            <div class="card-icon">
-                                <i class="">edit</i>
-                            </div>
                             <h4 class="card-title ">Edit {{$serverservice->service_name}} </h4>
-
                         </div>
                         <div class="card-body">
                             <form action="{{ url('updatesupplierserver') }}/{{$serverservice->id}}" method="POST"
@@ -60,8 +34,6 @@
     @else
         <!-- service-->
         @if(!$serverservice->serverservicetypewiseprice->isEmpty())
-
-
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12">
@@ -70,51 +42,77 @@
                                 <h4 class="card-title ">Edit {{$serverservice->service_name}}</h4>
                             </div>
                             <div class="card-body">
-                                <form action="{{ url('serverservicewise') }}/{{$serverservice->id}}" method="POST"
-                                      enctype="multipart/form-data">
-                                    {{ csrf_field() }}
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <strong>Exchangerates</strong>
-                                            <input id="valueExchangerates" class="form-control" autocomplete="off"
-                                                   onchange="VNtoUSD();" onfocus="Enabled=1;USDtoVND();">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <strong>From</strong>
-                                            <select class="form-control" id="valueFrom">
-                                                <option value="VND">VND</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <strong>To</strong>
-                                            <select class="form-control" id="valueTo">
-                                                <option value="USD">USD</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <strong>Result</strong>
-                                            <input onchange="USDtoVND();" onfocus="Enabled=3;VNtoUSD();Enabled=2;USDtoVND();" id=results class="form-control" autocomplete="off">
-                                        </div>
-                                    </div>
+                                <form action="#">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <strong>Name Server Services</strong>
                                             <input type="text" name="service_name" id="service_name"
                                                    class="form-control"
                                                    value="{{$serverservice->service_name}}"
+                                                   onBlur="saveToDatabase(this,'service_name','services','{{$serverservice->id}}')"
+                                                   onClick="showEdit(this);"
                                                    placeholder="Name IMEI Services" autocomplete="off">
                                         </div>
                                         <div class="col-md-12">
+                                            <strong>Service Listed In Group</strong>
+                                            <select name="service_group" class="form-control"
+                                                    onBlur="saveToDatabase(this,'service_group','services','{{$serverservice->id}}')"
+                                                    onClick="showEdit(this);">
+                                                @foreach($group as $v)
+                                                    <option value="{{$v->id}}"
+                                                            @if($serverservice->server_service_group_id == $v->id) selected @endif>{{$v->group_name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-md-12">
                                             <strong>Supplier</strong>
-                                            <select name="id_supplier" class="form-control">
+                                            <select name="id_supplier" class="form-control"
+                                                    onchange="saveToDatabase(this,'id_supplier','services','{{$serverservice->id}}')"
+                                                    onClick="showEdit(this);">
                                                 @foreach($supplier as $v)
                                                     <option value="{{$v->id}}"
                                                             @if($serverservice->servicepricing->id_supplier == $v->id) selected @endif>{{$v->name}}</option>
                                                 @endforeach
                                             </select>
-                                            <hr>
+
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <strong>Delivery Time</strong>
+                                            <input type="text" name="process_time" id="process_time" class="form-control"
+                                                   value="{{$serverservice->process_time}}"
+                                                   onBlur="saveToDatabase(this,'process_time','services','{{$serverservice->id}}')"
+                                                   onClick="showEdit(this);"
+                                                   placeholder="process_time" autocomplete="off">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <strong>Time</strong>
+                                            <select name="time_unit" class="form-control"
+                                                    onchange="saveToDatabase(this,'time_unit','services','{{$serverservice->id}}')"
+                                                    onClick="showEdit(this);">
+                                                <option value="Minutes"
+                                                        @if($serverservice->time_unit == 'Minutes') selected @endif>Minutes
+                                                </option>
+                                                <option value="Hours"
+                                                        @if($serverservice->time_unit == 'Hours') selected @endif>Hours
+                                                </option>
+                                                <option value="Weeks"
+                                                        @if($serverservice->time_unit == 'Weeks') selected @endif>Weeks
+                                                </option>
+                                                <option value="Days" @if($serverservice->time_unit == 'Days') selected @endif>
+                                                    Days
+                                                </option>
+                                                <option value="Months"
+                                                        @if($serverservice->time_unit == 'Months') selected @endif>Months
+                                                </option>
+                                                <option value="Instant"
+                                                        @if($serverservice->time_unit == 'Instant') selected @endif>Instant
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <hr>
                                     <div class="table-responsive table-full-width table-hover">
                                         <table id="testTable" class="table table-striped">
                                             <thead class="text-primary">
@@ -135,14 +133,14 @@
                                                     <td>@if($serverservice->api_id ==! null)
                                                             @foreach($a->apiservicetypewisepriceid as $apiserverservicetypeprice)
                                                                 @if($apiserverservicetypeprice->id == $a->api_service_type_wise_price_id)
-                                                                <input
-                                                                        id="purchase_cost_{{$a->id}}"
-                                                                        class="form-control"
-                                                                        name="purchase_cost_{{$a->id}}"
-                                                                        type="text" onchange="Purchasenet();"
-                                                                        autocomplete="off" readonly
-                                                                        value="{{$apiserverservicetypeprice->api_price}}">
-                                                            @endif
+                                                                    <input
+                                                                            id="purchase_cost_{{$a->id}}"
+                                                                            class="form-control"
+                                                                            name="purchase_cost_{{$a->id}}"
+                                                                            type="text" onchange="Purchasenet();"
+                                                                            autocomplete="off" readonly
+                                                                            value="{{$apiserverservicetypeprice->api_price}}">
+                                                                @endif
                                                             @endforeach</td>
                                                     @else
                                                         <input
@@ -166,6 +164,8 @@
                                                                type="text"
                                                                class="form-control"
                                                                autocomplete="off"
+                                                               onBlur="savePrice(this,'creditwise','amount','{{$a->id}}')"
+                                                               onClick="showEdit(this);"
                                                                value="{{ $a->amount }}"></td>
                                                     @foreach($clientgroup as $cg)
                                                         <td>@foreach($a->serverservicetypewisegroupprice as $serverservicetypewisegroupprice)
@@ -175,6 +175,8 @@
                                                                             class="form-control"
                                                                             name="client_group_amount_{{$serverservicetypewisegroupprice->id}}_{{$serverservicetypewisegroupprice->group_id}}"
                                                                             type="text"
+                                                                            onBlur="savePrice(this,'pricewise','amount','{{$serverservicetypewisegroupprice->id}}')"
+                                                                            onClick="showEdit(this);"
                                                                             @if($serverservicetypewisegroupprice->group_id == $cliendefault->id) onchange="Chietkhau();"
                                                                             onfocus="Enabled=true;Chietkhau();" @endif
                                                                             autocomplete="off"
@@ -193,8 +195,9 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <input class="btn btn-primary pull-right" type="submit"
-                                           onfocus="parent.$.fancybox.close();" value="Save">
+                                    <input class="btn btn-primary pull-right" type="button" value="Save">
+                                    <input class="btn btn-danger pull-right" type="button"
+                                           onfocus="parent.$.fancybox.close();" value="Close">
                                     <div class="clearfix"></div>
                                 </form>
                             </div>
@@ -208,6 +211,7 @@
                 var tipurchasecost = {{$serverservice->servicepricing->nhacungcap->exchangerate}};
                 var transactionfeegd = {{$serverservice->servicepricing->nhacungcap->transactionfee}};
                 var exchangerategoc = {{$exchangerate->exchange_rate_static}};
+
                 function Purchasenet() {
                             @foreach($serverservice->serverservicetypewiseprice as $a)
                     var purchase_cost_{{$a->id}} = document.getElementById("purchase_cost_{{$a->id}}").value;
@@ -215,13 +219,15 @@
                     document.getElementById('purchase_cost_vip_{{$a->id}}').value = giatransactionfee.toFixed(4);
                     @endforeach
                 }
+
                 var Enabled = true;
+
                 function Chietkhau() {
                     if (Enabled == true) {
                                 @foreach($serverservice->serverservicetypewiseprice as $a)
                         var purchase_cost_vip_{{$a->id}} = document.getElementById("purchase_cost_vip_{{$a->id}}").value;
                         var priceuser_{{$a->id}} = document.getElementById("client_group_amount_{{$cliendefault->id}}_{{$a->id}}").value;
-                        console.log(priceuser_{{$a->id}})
+
                                 @foreach($clientgroup as $cg)
                                 @foreach($a->serverservicetypewisegroupprice as $serverservicetypewisegroupprice)
                                 @if($serverservicetypewisegroupprice->service_type_id == $a->id &&$serverservicetypewisegroupprice->group_id == $cg->id)
@@ -235,6 +241,7 @@
                         @endforeach
                     }
                 }
+
                 document.addEventListener('DOMContentLoaded', function () {
                 }, false);
             </script>
@@ -248,47 +255,75 @@
                                       enctype="multipart/form-data">
                                     {{ csrf_field() }}
                                     <div class="row">
-                                        <div class="col-md-4">
-                                            <strong>Exchangerates</strong>
-                                            <input id="valueExchangerates" class="form-control" autocomplete="off"
-                                                   onchange="VNtoUSD();" onfocus="Enabled=1;USDtoVND();">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <strong>From</strong>
-                                            <select class="form-control" id="valueFrom">
-                                                <option value="VND">VND</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-1">
-                                            <strong>To</strong>
-                                            <select class="form-control" id="valueTo">
-                                                <option value="USD">USD</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-5">
-                                            <strong>Result</strong>
-                                            <input onchange="USDtoVND();" onfocus="Enabled=3;VNtoUSD();Enabled=2;USDtoVND();" id=results class="form-control" autocomplete="off">
-                                        </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col-md-12">
                                             <strong>Name Server Services</strong>
                                             <input type="text" name="service_name" id="service_name"
                                                    class="form-control"
                                                    value="{{$serverservice->service_name}}"
+                                                   onBlur="saveToDatabase(this,'service_name','services','{{$serverservice->id}}')"
+                                                   onClick="showEdit(this);"
                                                    placeholder="Name IMEI Services" autocomplete="off">
                                         </div>
                                         <div class="col-md-12">
+                                            <strong>Service Listed In Group</strong>
+                                            <select name="service_group" class="form-control"
+                                                    onBlur="saveToDatabase(this,'service_group','services','{{$serverservice->id}}')"
+                                                    onClick="showEdit(this);">
+                                                @foreach($group as $v)
+                                                    <option value="{{$v->id}}"
+                                                            @if($serverservice->server_service_group_id == $v->id) selected @endif>{{$v->group_name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-md-12">
                                             <strong>Supplier</strong>
-                                            <select name="id_supplier" class="form-control">
+                                            <select name="id_supplier" class="form-control"
+                                                    onchange="saveToDatabase(this,'id_supplier','services','{{$serverservice->id}}')"
+                                                    onClick="showEdit(this);">
                                                 @foreach($supplier as $v)
                                                     <option value="{{$v->id}}"
                                                             @if($serverservice->servicepricing->id_supplier == $v->id) selected @endif>{{$v->name}}</option>
                                                 @endforeach
                                             </select>
-                                            <hr>
+
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <strong>Delivery Time</strong>
+                                            <input type="text" name="process_time" id="process_time" class="form-control"
+                                                   value="{{$serverservice->process_time}}"
+                                                   onBlur="saveToDatabase(this,'process_time','services','{{$serverservice->id}}')"
+                                                   onClick="showEdit(this);"
+                                                   placeholder="process_time" autocomplete="off">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <strong>Time</strong>
+                                            <select name="time_unit" class="form-control"
+                                                    onchange="saveToDatabase(this,'time_unit','services','{{$serverservice->id}}')"
+                                                    onClick="showEdit(this);">
+                                                <option value="Minutes"
+                                                        @if($serverservice->time_unit == 'Minutes') selected @endif>Minutes
+                                                </option>
+                                                <option value="Hours"
+                                                        @if($serverservice->time_unit == 'Hours') selected @endif>Hours
+                                                </option>
+                                                <option value="Weeks"
+                                                        @if($serverservice->time_unit == 'Weeks') selected @endif>Weeks
+                                                </option>
+                                                <option value="Days" @if($serverservice->time_unit == 'Days') selected @endif>
+                                                    Days
+                                                </option>
+                                                <option value="Months"
+                                                        @if($serverservice->time_unit == 'Months') selected @endif>Months
+                                                </option>
+                                                <option value="Instant"
+                                                        @if($serverservice->time_unit == 'Instant') selected @endif>Instant
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <hr>
                                     <div class="row">
                                         <div class="col-md-3">
                                             <h5>Purchase Cost : </h5>
@@ -332,7 +367,8 @@
                                                                    autocomplete="off"
                                                                    value="{{$serverserviceusercredit->credit}}"
                                                                    @if($cliendefault == null)
-                                                                   onfocus="Enabled=true;Chietkhau();"  onchange="Chietkhau();"
+                                                                   onfocus="Enabled=true;Chietkhau();"
+                                                                   onchange="Chietkhau();"
                                                                    @endif
                                                                    type="text">@endif @endforeach</td>
                                                     @foreach($clientgroup as $cg)
@@ -368,10 +404,10 @@
                                                                type="text">
                                                         </span></td>
                                                     <td><input class="form-control"
-                                                                   name="credit_new"
-                                                                   autocomplete="off"
-                                                                   value=""
-                                                                   type="text"></td>
+                                                               name="credit_new"
+                                                               autocomplete="off"
+                                                               value=""
+                                                               type="text"></td>
                                                     @foreach($clientgroup as $cg)
                                                         <td><input class="form-control"
                                                                    name="sel_client_group_{{$cg->id}}_new"
@@ -422,7 +458,7 @@
                                 @foreach($serverservicequantityrange->serverserviceclientgroupcredit as $serverserviceclientgroupcredit)
                                 @if($serverserviceclientgroupcredit->currency== $currenciessite->config_value && $serverserviceclientgroupcredit->client_group_id==$cg->id )
                             sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}} = (priceuser_{{$serverservicequantityrange->id}} - (((priceuser_{{$serverservicequantityrange->id}} - giatransactionfee) / 100) *{{$cg->chietkhau}}));
-                        console.log(sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}});
+
 
                         @if($cliendefault == null)
                         document.getElementById('sel_client_group_{{$cg->id}}_{{$serverservicequantityrange->id}}').value = sel_client_group_{{$cg->id}}_{{$serverserviceclientgroupcredit->id}}.toFixed(4);
@@ -448,6 +484,46 @@
             <!--wise service-->
         @endif
     @endif
+    <script>
+        function showEdit(editableObj) {
+            $(editableObj).css("background", "#FFF");
+        }
 
+        function saveToDatabase(editableObj, column, type, id, idgr) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $(editableObj).css("background", "#FFF url({{ url('loaderIcon.gif') }}) no-repeat right");
+            $.ajax({
+                url: "{{ url('serverquickedit') }}",
+                type: "POST",
+                data: {column: column, type: type, value: editableObj.value, id: id, idgr: idgr},
+                success: function (data) {
+                    console.log(data);
+                    $(editableObj).css("background", "#FDFDFD");
+                }
+            });
+        }
+
+        function savePrice(editableObj, type, column, id) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $(editableObj).css("background", "#FFF url({{url('loaderIcon.gif')}}) no-repeat right");
+            $.ajax({
+                url: "{{url('serverquickedit')}}",
+                type: "POST",
+                data: {column: column, type: type, value: editableObj.value, id: id},
+                success: function (data) {
+                    console.log(data);
+                    $(editableObj).css("background", "#a2e5fd");
+                }
+            });
+        }
+    </script>
 @endsection
 
