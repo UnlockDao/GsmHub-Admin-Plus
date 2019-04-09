@@ -126,6 +126,7 @@ class Export
                     if ($c->nhacungcap == !null) {
                         $giatransactionfee = ($c->nhacungcap->exchangerate * $c->purchasecost) / $exchangerate->exchange_rate_static + (($c->purchasecost / 100) * $c->nhacungcap->transactionfee);
                         Imeiservice::where('id', $c->id)->update(['purchase_cost' => $giatransactionfee]);
+                        $this->repriceimei($request->id);
                     }
                 }
             }
@@ -141,6 +142,7 @@ class Export
                 if ($c->nhacungcap == !null) {
                     $giatransactionfee = ($c->nhacungcap->exchangerate * $c->purchasecost) / $exchangerate->exchange_rate_static + (($c->purchasecost / 100) * $c->nhacungcap->transactionfee);
                     Imeiservice::where('id', $c->id)->update(['purchase_cost' => $giatransactionfee]);
+                    $this->repriceimei($request->id);
                 }
             }
         }
@@ -175,6 +177,30 @@ class Export
 
         return $request;
 
+    }
+
+    public function repriceimei($id)
+    {
+        $getimei = Imeiservice::find($id);
+        $currencies = Currencie::where('display_currency', 'Yes')->get();
+        $cliengroup = Clientgroup::get();
+        $currenciessite = Config::where('config_var', 'site_default_currency')->first();
+        $cliendefault = Clientgroup::where('status', 'active')->where('chietkhau', '0')->first();
+        foreach ($cliengroup as $clg) {
+            $imeiprice = Clientgroupprice::where('service_id', $id)->where('group_id', $cliendefault->id)->where('currency', $currenciessite->config_value)->first();
+            if ($imeiprice == !null) {
+                $giabanle = $getimei->credit + $imeiprice->discount;
+                $chietkhau = ($giabanle - ((($giabanle - $getimei->purchase_cost) / 100) * $clg->chietkhau));
+                $y = $chietkhau - $getimei->credit;
+                foreach ($currencies as $c) {
+                    $updatepriceuse = Clientgroupprice::where('group_id', $clg->id)
+                        ->where('service_type', 'imei')
+                        ->where('currency', $c->currency_code)
+                        ->where('service_id', $getimei->id)
+                        ->update(['discount' => $y * $c->exchange_rate_static]);
+                }
+            }
+        }
     }
 
     public function serverquickedit(Request $request)
