@@ -364,12 +364,12 @@ class Utility
         foreach ($checkapi as $c) {
             if ($c->imei->api_id == !null) {
                 if ($c->nhacungcap == !null) {
-                    $giatransactionfee = ($c->nhacungcap->exchangerate * $c->imei->apiserverservices->credits) / $exchangerate->exchange_rate_static + (($c->imei->apiserverservices->credits / 100) * $c->nhacungcap->transactionfee);
+                    $giatransactionfee = ($c->nhacungcap->exchangerate * $c->apiserverservices->credits) / $exchangerate->exchange_rate_static + (($c->apiserverservices->credits / 100) * $c->nhacungcap->transactionfee);
                     $updategiatransactionfee = Imeiservice::where('id', $c->id)->update(['purchase_cost' => $giatransactionfee]);
                 }
             } elseif ($c->imei->purchasecost == !null) {
                 if ($c->nhacungcap == !null) {
-                    $giatransactionfee = ($c->nhacungcap->exchangerate * $c->imei->purchasecost) / $exchangerate->exchange_rate_static + (($c->imei->purchasecost / 100) * $c->nhacungcap->transactionfee);
+                    $giatransactionfee = ($c->nhacungcap->exchangerate * $c->purchasecost) / $exchangerate->exchange_rate_static + (($c->purchasecost / 100) * $c->nhacungcap->transactionfee);
                     $updategiatransactionfee = Imeiservice::where('id', $c->id)->update(['purchase_cost' => $giatransactionfee]);
                 }
             }
