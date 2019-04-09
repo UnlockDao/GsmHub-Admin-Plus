@@ -87,7 +87,7 @@ class Export
             if ($request->column == 'service_name') {
                 $imeiservice->service_name = $request->value;
             }
-            if ($request->column == 'purchase_cost') {
+            if ($request->column == 'purchasecostnet') {
                 $imeiservice->purchase_cost = $request->value;
             }
             if ($request->column == 'credit') {
@@ -119,8 +119,29 @@ class Export
                 if ($imeiprice->imei->api_id == !null && $imeiprice->imei->apiserverservices == !null) {
                     $giatransactionfee = ($imeiprice->nhacungcap->exchangerate * $imeiprice->imei->apiserverservices->credits) / $exchangerate->exchange_rate_static + (($imeiprice->imei->apiserverservices->credits / 100) * $imeiprice->nhacungcap->transactionfee);
                     Imeiservice::where('id', $request->id)->update(['purchase_cost' => $giatransactionfee]);
+                } else {
+                    $defaultcurrency = Currenciepricing::where('type', '1')->first();
+                    $exchangerate = Currencie::find($defaultcurrency->currency_id);
+                    $c = Imeiservicepricing::find($request->id);
+                    if ($c->nhacungcap == !null) {
+                        $giatransactionfee = ($c->nhacungcap->exchangerate * $c->purchasecost) / $exchangerate->exchange_rate_static + (($c->purchasecost / 100) * $c->nhacungcap->transactionfee);
+                        Imeiservice::where('id', $c->id)->update(['purchase_cost' => $giatransactionfee]);
+                    }
                 }
+            }
 
+            if ($request->column == 'purchase_cost') {
+                $imeipricing = Imeiservicepricing::find($request->id);
+                $imeipricing->purchasecost = $request->value;
+                $imeipricing->save();
+
+                $defaultcurrency = Currenciepricing::where('type', '1')->first();
+                $exchangerate = Currencie::find($defaultcurrency->currency_id);
+                $c = Imeiservicepricing::find($request->id);
+                if ($c->nhacungcap == !null) {
+                    $giatransactionfee = ($c->nhacungcap->exchangerate * $c->purchasecost) / $exchangerate->exchange_rate_static + (($c->purchasecost / 100) * $c->nhacungcap->transactionfee);
+                    Imeiservice::where('id', $c->id)->update(['purchase_cost' => $giatransactionfee]);
+                }
             }
         }
 
@@ -187,7 +208,6 @@ class Export
                 $servicepricing->save();
             }
         }
-
 
 
         if ($request->type == "pricewise") {

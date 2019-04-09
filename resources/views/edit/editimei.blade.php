@@ -88,6 +88,8 @@
                                         <strong>Purchase Cost(Net) </strong>
                                         <input type="text" name="purchasenet" id="purchasenet" class="form-control"
                                                value="{{$imei->imei->purchase_cost}}"
+                                               onchange="saveToDatabase(this,'purchasecostnet','services','{{$imei->id}}')"
+                                               onClick="showEdit(this);"
                                                placeholder="Purchase Cost(Net)" autocomplete="off" readonly>
                                     </div>
                                 </div>
@@ -107,6 +109,8 @@
                                                    value="{{$imei->imei->credit}}"
                                                    @if($cliendefault == null) onchange="Chietkhau();"
                                                    onfocus="Enabled=true;Chietkhau();" @endif
+                                                   onChange="saveToDatabase(this,'credit','services','{{$imei->id}}')"
+                                                   onClick="showEdit(this);"
                                                    placeholder="Credit" autocomplete="off"></td>
                                         @foreach($pricegroup as $c)
                                             @if($c->chietkhau ==! null)
