@@ -206,10 +206,12 @@
                                         <div id="summernote-basic">{!! $serverservice->service_information !!}</div>
                                     </div>
                                     <script>
-                                        $(document).ready(function() {
-                                            $('.note-editable').blur(function() {
+                                        $(function () {
+                                            $(document).on("blur",".note-editable",function () {
                                                 saveinformation(this,'service_information','services','{{$serverservice->id}}')
+
                                             });
+
                                         });
                                     </script>
                                 </form>
