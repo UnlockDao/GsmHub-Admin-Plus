@@ -140,7 +140,6 @@
                             <th scope="col">Date Paid</th>
                             <th scope="col">Total Amount</th>
                             <th scope="col">Status</th>
-                            <th scope="col">Payment</th>
                             @if($cachesearch->log == 1)
                             <th scope="col">Log</th>
                             @endif
@@ -154,8 +153,12 @@
                                     <td scope="row">{{CUtil::convertDate($v->date_added, 'd-m-Y h:i a') }}</td>
                                     <td scope="row">{{CUtil::convertDate($v->date_paid, 'd-m-Y h:i a') }}</td>
                                     <td scope="row">{{$v->invoice_amount}} {{$v->currency}}</td>
-                                    <td scope="row">{{$v->invoice_status}}</td>
-                                    <td scope="row">{{ isset($v->payment) ? $v->payment->gateway_label : '' }}</td>
+                                    <td scope="row">{{$v->invoice_status}}<br>
+                                        {{ isset($v->payment) ? $v->payment->gateway_label : '' }}<br>
+                                        {{$v->payment_gateway_receiver}}<br>
+                                        {{$v->payment_gateway_ref_id}}<br>
+
+                                    </td>
                                     @if($cachesearch->log == 1)
                                     <td scope="row">@if($v->paypal_transaction)
                                                        <pre>{{$v->paypal_transaction->paypal_post_vars }}</pre>
