@@ -4,12 +4,17 @@
     <?php $credit = 0 ?>
     <?php $count = 0 ?>
     <!-- Start Content-->
+
     <div class="container-fluid">
+
 
         <!-- start page title -->
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box">
+                    <div class="page-title-right">
+                        <button type="button" onclick="tableToExcel('testTable', 'IMEI Order')" class="btn btn-success">Export</button>
+                    </div>
                     <h4 class="page-title">Imei Order</h4>
                 </div>
             </div>
@@ -20,7 +25,6 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row mb-2">
                             <form action="" method="GET">
                                 <div class="row">
                                     <div class="card-body">
@@ -35,7 +39,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="col-md-1">
+                                            <div class="col-md-2">
                                                 <label class="form-control-label">Username</label>
                                                 <div class="form-group">
                                                     <input type="text" class="form-control form-control-alternative" name="user_name"
@@ -78,11 +82,7 @@
                                             </div>
                                             <div class="col-md-1">
                                                 <label class="form-control-label">Search</label>
-                                                <button class="btn btn-primary" type="submit">Search</button>
-                                            </div>
-                                            <div class="col-md-1">
-                                                <label class="form-control-label">Export</label>
-                                                <button type="button" onclick="tableToExcel('testTable', 'IMEI Order')" class="btn btn-success">Export</button>
+                                                <input class="form-group btn btn-primary" type="submit" value="Search">
                                             </div>
                                         </div>
                                     </div>
