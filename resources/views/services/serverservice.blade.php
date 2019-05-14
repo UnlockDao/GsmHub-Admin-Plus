@@ -31,6 +31,10 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box">
+                    <div class="page-title-right">
+                        <a class="fancybox fancybox.iframe btn btn-info"
+                           href="{{ asset('serversales') }}?group_name={{$cachesearch->group_name}}">Sales</a>
+                    </div>
                     <h4 class="page-title">Server Services</h4>
                 </div>
             </div>
@@ -40,12 +44,12 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row mb-2">
+
                             <form action="" method="GET">
                                 <div class="row">
                                     <div class="col-md-3">
                                         <strong>Service Group</strong>
-                                        <select class="form-control form-control-alternative selectpicker"
+                                        <select class="form-control form-control-alternative  select2" data-toggle="select2"
                                                 data-live-search="true" name="group_name">
                                             <option value="">...</option>
                                             @foreach($groupsearch as $g )
@@ -88,7 +92,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-md-1">
+                                    <div class="col-md-2">
                                         <strong>Currency</strong>
                                         <select class="form-control form-control-alternative" name="currency">
                                             <option value="">...</option>
@@ -100,14 +104,8 @@
                                         <strong></strong><br>
                                         <input class="btn btn-info form-control" type="submit" value="Search">
                                     </div>
-                                    <div class="col-md-1">
-                                        <strong></strong><br>
-                                        <a class="fancybox fancybox.iframe btn btn-info"
-                                           href="{{ asset('serversales') }}?group_name={{$cachesearch->group_name}}">Sales</a>
-                                    </div>
                                 </div>
                             </form>
-                        </div>
                     </div>
                     <div id="parent" class="table-responsive">
                         <table id="fixTable" class="table align-items-center table-flush">

@@ -9,6 +9,10 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box">
+                    <div class="page-title-right">
+                        <a onclick="tableToExcel('testTable', 'Invoice Report')" class="btn btn-sm btn-primary"
+                           style="color: #fff">Export</a>
+                    </div>
                     <h4 class="page-title">Invoice Report</h4>
                 </div>
             </div>
@@ -124,10 +128,6 @@
                         <div class="row align-items-center">
                             <div class="col">
                                 <h3 class="mb-0">Invoice Report</h3>
-                            </div>
-                            <div class="col text-right">
-                                <a onclick="tableToExcel('testTable', 'Invoice Report')" class="btn btn-sm btn-primary"
-                                   style="color: #fff">Export</a>
                             </div>
                         </div>
                     </div>

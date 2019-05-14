@@ -65,15 +65,15 @@ Route::get('clientgroupdelete/{id}', 'ClientController@delete');
 
 //thêm sửa xóa nhà cung cấp, phí giao dịch, tỉ giá
 Route::get('supplier', 'SupplierController@index')->middleware('admin');
-Route::post('supplier/{id}', 'SupplierController@edit');
-Route::post('addsupplier', 'SupplierController@add');
-Route::post('supplierquickedit', 'SupplierController@quickedit');
-Route::get('supplier/{id}', 'SupplierController@show');
-Route::get('supplierdelete/{id}', 'SupplierController@delete');
+Route::post('supplier/{id}', 'SupplierController@edit')->middleware('admin');
+Route::post('addsupplier', 'SupplierController@add')->middleware('admin');
+Route::post('supplierquickedit', 'SupplierController@quickedit')->middleware('admin');
+Route::get('supplier/{id}', 'SupplierController@show')->middleware('admin')->middleware('admin');
+Route::get('supplierdelete/{id}', 'SupplierController@delete')->middleware('admin');
 
 
 //thêm sửa xóa currencie
-Route::get('currencie', 'CurrencieController@index');
+Route::get('currencie', 'CurrencieController@index')->middleware('admin');
 Route::post('currencie/{id}', 'CurrencieController@edit');
 Route::post('addcurrencie', 'CurrencieController@add');
 Route::get('currencie/{id}', 'CurrencieController@show');
@@ -106,7 +106,7 @@ Route::get('members', 'MemberController@index');
 
 Route::get('mail', 'MailController@index');
 
-Route::get('profitreport', 'ProfitController@index');
+Route::get('profitreport', 'ProfitController@index')->middleware('admin');
 Route::get('cronjobprofit', 'ProfitCronController@runcron');
 Route::get('runcronrange', 'ProfitCronController@runcronrange');
 Route::post('reloadprofit', 'ProfitCronController@reloadprofit');
