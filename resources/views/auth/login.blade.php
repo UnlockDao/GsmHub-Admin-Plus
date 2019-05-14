@@ -24,7 +24,7 @@
                     <!-- Logo -->
                     <div class="card-header pt-4 pb-4 text-center bg-primary">
                         <a href="#">
-                            <span><img src="assets/images/logo.png" alt="" height="18"></span>
+                            <span><img src="assets/images/logos.png" alt="" height="18"></span>
                         </a>
                     </div>
 
