@@ -40,16 +40,16 @@ return [
         ],
 
         'mysql' => [
-          'driver'    => 'mysql',
-    			'host'      => '10.130.17.67',
-          'port' => '3306',
-    			'database'  => 'sunlock_gsmhub2018_InnoDB',
-    			'username'  => 'sunlockdb',
-    			'password'  => 'Gv8xlcr^O7l2Loim',
-    			'charset'   => 'utf8',
-    			'collation' => 'utf8_unicode_ci',
-    			'engine' => 'InnoDB',
-    			'prefix'    => '',
+            'driver'    => 'mysql',
+            'host'      => '10.130.136.234',
+            'port' => '3306',
+            'database'  => 'sunlock_gsmhub2018_new',
+            'username'  => 'sunlockdb',
+            'password'  => 'kvcblc00zpJ2Q!Qv',
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'engine' => 'InnoDB',
+            'prefix'    => '',
         ],
 
         'pgsql' => [
