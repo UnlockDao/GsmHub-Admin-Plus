@@ -83,6 +83,9 @@
                     <li>
                         <a href="{{ url('invoicereport') }}">Invoice Report</a>
                     </li>
+                    <li>
+                        <a href="{{ url('check-transaction') }}">Check Transaction</a>
+                    </li>
                 </ul>
             </li>
 
