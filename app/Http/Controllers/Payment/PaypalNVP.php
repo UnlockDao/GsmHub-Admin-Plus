@@ -3,25 +3,28 @@
 namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 require_once "PaypalNVPConstants.php";
 class PaypalNVP extends Controller
 {
 
-    public function __construct()
+    public function __construct($api_username, $api_signature, $api_password)
     {
         $this->middleware('auth');
-        $this->api_username = 'tungkick777_api1.yahoo.com';
-        $this->api_signature = 'AgX0Je7wr6408gPQ2DQxyTbLKqQZAv5-1tTusGrkHaS.4K6GTVre1X7C';
+        $this->api_username = $api_username;
+        $this->api_signature = $api_signature;
         $this->api_endpoint = "https://api-3t.paypal.com/nvp";
-        $this->api_password = 'W7FUNPVDGFVWRXWD';
+        $this->api_password = $api_password;
         $this->subject = SUBJECT;
         $this->proxy_host = PROXY_HOST;
         $this->proxy_port = PROXY_PORT;
         $this->version = VERSION;
     }
-    public function fetchPaypalNVPTransactionDetails()
+    public function fetchPaypalNVPTransactionDetails($transaction_id)
     {
-        $transactionID = urlencode('3749134269253160G');
+        $transactionID = urlencode($transaction_id);
         $nvpStr = "&TRANSACTIONID=" . $transactionID;
         $resArray = $this->hash_call("GetTransactionDetails", $nvpStr);
         return $resArray;

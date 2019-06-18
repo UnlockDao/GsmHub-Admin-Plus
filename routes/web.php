@@ -111,4 +111,4 @@ Route::get('cronjobprofit', 'ProfitCronController@runcron');
 Route::get('runcronrange', 'ProfitCronController@runcronrange');
 Route::post('reloadprofit', 'ProfitCronController@reloadprofit');
 
-Route::get('nvp','Payment\PaypalNVP@fetchPaypalNVPTransactionDetails');
+Route::get('check-transaction','Payment\CheckTransaction@index');
