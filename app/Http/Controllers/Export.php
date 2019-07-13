@@ -9,6 +9,7 @@ use App\Models\Config;
 use App\Models\Currencie;
 use App\Models\Currenciepricing;
 use App\Models\Imeiservice;
+use App\Models\Imeiservicecredit;
 use App\Models\Imeiservicegroup;
 use App\Models\Imeiservicepricing;
 use App\Models\Serverservice;
@@ -92,6 +93,11 @@ class Export
             }
             if ($request->column == 'credit') {
                 $imeiservice->credit = $request->value;
+                foreach ($currencies as $c) {
+                    Imeiservicecredit::where('service_id', $request->id)
+                        ->where('currency', $c->currency_code)
+                        ->update(['credit' => $request->value * $c->exchange_rate_static]);
+                }
             }
             if ($request->column == 'service_group') {
                 $imeiservice->imei_service_group_id = $request->value;
