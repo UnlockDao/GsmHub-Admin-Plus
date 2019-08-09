@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 require_once "PaypalNVPConstants.php";
+
 class PaypalNVP extends Controller
 {
 
@@ -22,6 +21,45 @@ class PaypalNVP extends Controller
         $this->proxy_port = PROXY_PORT;
         $this->version = VERSION;
     }
+
+    function CallGetBalance()
+    {
+        // setting the curl parameters.
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->api_endpoint);
+        curl_setopt($ch, CURLOPT_VERBOSE, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+
+        // NVPRequest for submitting to server
+        $nvpreq = "METHOD=GetBalance" . "&RETURNALLCURRENCIES=1" . "&VERSION=" . $this->version . "&PWD=" . $this->api_password . "&USER=" . $this->api_username . "&SIGNATURE=" . $this->api_signature;
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $nvpreq);
+        $response = curl_exec($ch);
+
+        $nvpResArray = $this->deformatNVP($response);
+
+        curl_close($ch);
+
+        return $nvpResArray;
+    }
+
+    public function deformatNVP($nvpstr)
+    {
+        $intial = 0;
+        $nvpArray = array();
+        while (strlen($nvpstr)) {
+            $keypos = strpos($nvpstr, "=");
+            $valuepos = strpos($nvpstr, "&") ? strpos($nvpstr, "&") : strlen($nvpstr);
+            $keyval = substr($nvpstr, $intial, $keypos);
+            $valval = substr($nvpstr, $keypos + 1, $valuepos - $keypos - 1);
+            $nvpArray[urldecode($keyval)] = urldecode($valval);
+            $nvpstr = substr($nvpstr, $valuepos + 1, strlen($nvpstr));
+        }
+        return $nvpArray;
+    }
+
     public function fetchPaypalNVPTransactionDetails($transaction_id)
     {
         $transactionID = urlencode($transaction_id);
@@ -29,29 +67,60 @@ class PaypalNVP extends Controller
         $resArray = $this->hash_call("GetTransactionDetails", $nvpStr);
         return $resArray;
     }
-    public function fetchPaypalNVPTransactionSearchResults($startDate, $receiver)
+
+    public function hash_call($methodName, $nvpStr)
     {
-        $nvpStr = "";
-        if (isset($startDate) && $startDate != "") {
-            $nvpStr = "&STARTDATE=" . $startDate;
+        global $API_Endpoint;
+        global $version;
+        global $API_UserName;
+        global $API_Password;
+        global $API_Signature;
+        global $nvp_Header;
+        global $subject;
+        global $AUTH_token;
+        global $AUTH_signature;
+        global $AUTH_timestamp;
+        $API_Password = $this->api_password;
+        $subject = $this->subject;
+        $version = $this->version;
+        $nvpheader = $this->nvpHeader();
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->api_endpoint);
+        curl_setopt($ch, CURLOPT_VERBOSE, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        if (!empty($AUTH_token) && !empty($AUTH_signature) && !empty($AUTH_timestamp)) {
+            $headers_array[] = "X-PP-AUTHORIZATION: " . $nvpheader;
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers_array);
+            curl_setopt($ch, CURLOPT_HEADER, false);
+        } else {
+            $nvpStr = $nvpheader . $nvpStr;
         }
-        if (isset($endDate) && $endDate != "") {
-            $end_time = strtotime($endDate);
-            $iso_end = date("Y-m-d\\TH:i:s\\Z", $end_time);
-            $nvpStr .= "&ENDDATE=" . $iso_end;
+        if (USE_PROXY) {
+            curl_setopt($ch, CURLOPT_PROXY, $this->proxy_host . ":" . $this->proxy_port);
         }
-        if (isset($receiver) && $receiver != "") {
-            $nvpStr .= "&RECEIVER=" . $receiver;
+        if (strlen(str_replace("VERSION=", "", strtoupper($nvpStr))) == strlen($nvpStr)) {
+            $nvpStr = "&VERSION=" . urlencode($version) . $nvpStr;
         }
-        $resArray = $this->hash_call("TransactionSearch", $nvpStr);
-        return $resArray;
+        $nvpreq = "METHOD=" . urlencode($methodName) . $nvpStr;
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $nvpreq);
+        $response = curl_exec($ch);
+        $nvpResArray = $this->deformatNVP($response);
+        $nvpReqArray = $this->deformatNVP($nvpreq);
+        $_SESSION["nvpReqArray"] = $nvpReqArray;
+        if (curl_errno($ch)) {
+            $_SESSION["curl_error_no"] = curl_errno($ch);
+            $_SESSION["curl_error_msg"] = curl_error($ch);
+            $location = "APIError.php";
+            header("Location: " . $location);
+        } else {
+            curl_close($ch);
+        }
+        return $nvpResArray;
     }
-    public function fetchPaypalNVPReversedTransactions($startDate = "", $type = "REFUND")
-    {
-        $nvpStr = "&TRANSACTIONCLASS=" . $type . "&STARTDATE=" . $startDate;
-        $resArray = $this->hash_call("TransactionSearch", $nvpStr);
-        return $resArray;
-    }
+
     public function nvpHeader()
     {
         global $API_Endpoint;
@@ -107,71 +176,30 @@ class PaypalNVP extends Controller
         }
         return $nvpHeaderStr;
     }
-    public function deformatNVP($nvpstr)
+
+    public function fetchPaypalNVPTransactionSearchResults($startDate, $receiver)
     {
-        $intial = 0;
-        $nvpArray = array();
-        while (strlen($nvpstr)) {
-            $keypos = strpos($nvpstr, "=");
-            $valuepos = strpos($nvpstr, "&") ? strpos($nvpstr, "&") : strlen($nvpstr);
-            $keyval = substr($nvpstr, $intial, $keypos);
-            $valval = substr($nvpstr, $keypos + 1, $valuepos - $keypos - 1);
-            $nvpArray[urldecode($keyval)] = urldecode($valval);
-            $nvpstr = substr($nvpstr, $valuepos + 1, strlen($nvpstr));
+        $nvpStr = "";
+        if (isset($startDate) && $startDate != "") {
+            $nvpStr = "&STARTDATE=" . $startDate;
         }
-        return $nvpArray;
+        if (isset($endDate) && $endDate != "") {
+            $end_time = strtotime($endDate);
+            $iso_end = date("Y-m-d\\TH:i:s\\Z", $end_time);
+            $nvpStr .= "&ENDDATE=" . $iso_end;
+        }
+        if (isset($receiver) && $receiver != "") {
+            $nvpStr .= "&RECEIVER=" . $receiver;
+        }
+        $resArray = $this->hash_call("TransactionSearch", $nvpStr);
+        return $resArray;
     }
-    public function hash_call($methodName, $nvpStr)
+
+    public function fetchPaypalNVPReversedTransactions($startDate = "", $type = "REFUND")
     {
-        global $API_Endpoint;
-        global $version;
-        global $API_UserName;
-        global $API_Password;
-        global $API_Signature;
-        global $nvp_Header;
-        global $subject;
-        global $AUTH_token;
-        global $AUTH_signature;
-        global $AUTH_timestamp;
-        $API_Password = $this->api_password;
-        $subject = $this->subject;
-        $version = $this->version;
-        $nvpheader = $this->nvpHeader();
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->api_endpoint);
-        curl_setopt($ch, CURLOPT_VERBOSE, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        if (!empty($AUTH_token) && !empty($AUTH_signature) && !empty($AUTH_timestamp)) {
-            $headers_array[] = "X-PP-AUTHORIZATION: " . $nvpheader;
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers_array);
-            curl_setopt($ch, CURLOPT_HEADER, false);
-        } else {
-            $nvpStr = $nvpheader . $nvpStr;
-        }
-        if (USE_PROXY) {
-            curl_setopt($ch, CURLOPT_PROXY, $this->proxy_host . ":" . $this->proxy_port);
-        }
-        if (strlen(str_replace("VERSION=", "", strtoupper($nvpStr))) == strlen($nvpStr)) {
-            $nvpStr = "&VERSION=" . urlencode($version) . $nvpStr;
-        }
-        $nvpreq = "METHOD=" . urlencode($methodName) . $nvpStr;
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $nvpreq);
-        $response = curl_exec($ch);
-        $nvpResArray = $this->deformatNVP($response);
-        $nvpReqArray = $this->deformatNVP($nvpreq);
-        $_SESSION["nvpReqArray"] = $nvpReqArray;
-        if (curl_errno($ch)) {
-            $_SESSION["curl_error_no"] = curl_errno($ch);
-            $_SESSION["curl_error_msg"] = curl_error($ch);
-            $location = "APIError.php";
-            header("Location: " . $location);
-        } else {
-            curl_close($ch);
-        }
-        return $nvpResArray;
+        $nvpStr = "&TRANSACTIONCLASS=" . $type . "&STARTDATE=" . $startDate;
+        $resArray = $this->hash_call("TransactionSearch", $nvpStr);
+        return $resArray;
     }
 }
 

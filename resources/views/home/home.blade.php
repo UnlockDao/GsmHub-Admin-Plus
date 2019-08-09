@@ -98,7 +98,7 @@
                                 <h5 class="text-muted font-weight-normal mt-0 text-truncate" title="Campaign Sent">IMEI Service Profit</h5>
                                 <h3 class="my-2 py-1">{{round($imeioder->profit)}} USD</h3>
                                 <p class="mb-0 text-muted">
-                                    <span class="text-success mr-2"><i class="mdi mdi-arrow-up-bold"></i> {{number_format($imeioder->profit*22000)}} VND</span>
+                                    <span class="text-success mr-2"> {{number_format($imeioder->profit*22000)}} VND</span>
                                 </p>
                             </div>
                             <div class="col-6">
@@ -119,7 +119,7 @@
                                 <h5 class="text-muted font-weight-normal mt-0 text-truncate" title="New Leads">Server Service Profit</h5>
                                 <h3 class="my-2 py-1">{{round($serveroder->profit)}} USD</h3>
                                 <p class="mb-0 text-muted">
-                                    <span class="text-danger mr-2"><i class="mdi mdi-arrow-down-bold"></i> {{number_format($serveroder->profit*22000)}} VND</span>
+                                    <span class="text-danger mr-2"> {{number_format($serveroder->profit*22000)}} VND</span>
                                 </p>
                             </div>
                             <div class="col-6">
@@ -140,7 +140,7 @@
                                 <h5 class="text-muted font-weight-normal mt-0 text-truncate" title="Deals">Total Profit</h5>
                                 <h3 class="my-2 py-1">{{round($serveroder->profit+$imeioder->profit)}}</h3>
                                 <p class="mb-0 text-muted">
-                                    <span class="text-success mr-2"><i class="mdi mdi-arrow-up-bold"></i>{{number_format(($serveroder->profit+$imeioder->profit)*22000)}} VND </span>
+                                    <span class="text-success mr-2">{{number_format(($serveroder->profit+$imeioder->profit)*22000)}} VND </span>
                                 </p>
                             </div>
                             <div class="col-6">
@@ -158,10 +158,10 @@
                     <div class="card-body">
                         <div class="row align-items-center">
                             <div class="col-6">
-                                <h5 class="text-muted font-weight-normal mt-0 text-truncate" title="Booked Revenue">Total Income</h5>
-                                <h3 class="my-2 py-1">{{$invoice->amt}}</h3>
+                                <h5 class="text-muted font-weight-normal mt-0 text-truncate" title="Booked Revenue">Balance Paypal</h5>
+                                <h3 class="my-2 py-1">{{$balance_payment['L_AMT0']}}</h3>
                                 <p class="mb-0 text-muted">
-                                    <span class="text-success mr-2"><i class="mdi mdi-arrow-up-bold"></i> {{number_format(($invoice->amt)*22000)}}</span>
+                                    <span class="text-success mr-2"> {{number_format(($balance_payment['L_AMT0'])*22000)}}</span>
                                 </p>
                             </div>
                             <div class="col-6">

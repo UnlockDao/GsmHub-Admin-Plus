@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CUtil;
+use App\Http\Controllers\Payment\PaypalNVP;
 use App\Models\Imeiserviceorder;
 use App\Models\Invoice;
 use App\Models\Serverserviceorder;
@@ -76,8 +77,10 @@ class HomeController extends Controller
         $ordercountchart = $this->ordercountchart($datefilter);
         $incomechart = $this->incomechart($datefilter);
         $revenuechart = $this->revenuechart($datefilter);
-
-        return view('home.home', compact('serveroder', 'imeioder', 'invoice', 'pendingoder', 'topservice', 'profitchart', 'ordercountchart', 'incomechart','revenuechart'));
+        $receiver = DB::table('paypal_receiver_details')->first();
+        $paypalNvpService = new PaypalNVP($receiver->api_user_name, $receiver->api_signature, $receiver->api_password);
+        $balance_payment = $paypalNvpService->CallGetBalance();
+        return view('home.home', compact('serveroder', 'imeioder', 'invoice', 'pendingoder', 'topservice', 'profitchart', 'ordercountchart', 'incomechart','revenuechart','balance_payment'));
     }
 
     public function orderdashboard(Request $request)
