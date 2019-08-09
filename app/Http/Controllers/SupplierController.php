@@ -33,7 +33,7 @@ class SupplierController extends Controller
 
     public function index(Request $request)
     {
-        $this->checkSupplier();
+//        $this->checkSupplier();
         $supplier = Supplier::get();
         $supplieruser = User::where('supplier_code','<>','0')->get();
         return view('setting.supplier', compact('supplier','supplieruser'));
@@ -61,6 +61,9 @@ class SupplierController extends Controller
         }
         if($request->info) {
             $supplier->info = $request->info;
+        }
+        if($request->api_key) {
+            $supplier->api_key = $request->api_key;
         }
         $supplier->save();
         //cập nhập phí+ tỉ giá
@@ -96,6 +99,9 @@ class SupplierController extends Controller
         }
         if($request->column =='info') {
             $supplier->info = $request->editval;
+        }
+        if($request->column =='api_key') {
+            $supplier->api_key = $request->editval;
         }
         $supplier->save();
         return $request;

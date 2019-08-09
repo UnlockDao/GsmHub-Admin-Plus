@@ -41,6 +41,7 @@
                                     <th>Username</th>
                                     <th>Password</th>
                                     <th>Site</th>
+                                    <th>API Key</th>
                                     <th>Info</th>
                                     <th>Exchange rate</th>
                                     <th>Transaction fee %</th>
@@ -62,6 +63,10 @@
                                             <td contenteditable="true"
                                                 onBlur="saveToDatabase(this,'site_url','{{$v->id}}')"
                                                 onClick="showEdit(this);">{{$v->site_url}}</td>
+                                            <td contenteditable="true"
+                                            <td contenteditable="true"
+                                                onBlur="saveToDatabase(this,'api_key','{{$v->id}}')"
+                                                onClick="showEdit(this);">{{$v->api_key}}</td>
                                             <td contenteditable="true"
                                                 onBlur="saveToDatabase(this,'info','{{$v->id}}')"
                                                 onClick="showEdit(this);">{!! $v->info !!}</td>

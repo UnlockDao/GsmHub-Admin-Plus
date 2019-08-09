@@ -64,6 +64,12 @@ class SQL extends Migration
                 $table->text('info');
             });
         }
+        if (!Schema::hasColumn('adminplus_supplier', 'api_key'))
+        {
+            Schema::table('adminplus_supplier', function (Blueprint $table) {
+                $table->text('api_key');
+            });
+        }
     }
 
     public function imeiPricing()

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CUtil;
+use App\Http\Controllers\Functions\Gsm;
 use App\Http\Controllers\Payment\PaypalNVP;
 use App\Models\Imeiserviceorder;
 use App\Models\Invoice;
@@ -130,8 +131,9 @@ class HomeController extends Controller
         $ordercountchart = $this->ordercountchart($datefilter);
         $incomechart = $this->incomechart($datefilter);
         $revenuechart = $this->revenuechart($datefilter);
-
-        return view('home.orderdashboard', compact('serveroder', 'imeioder', 'invoice', 'pendingoder', 'topservice', 'profitchart', 'ordercountchart', 'incomechart','revenuechart'));
+        $gsm = new Gsm();
+        $balance_supplier = $gsm->getBalanceSupplier();
+        return view('home.orderdashboard', compact('serveroder', 'imeioder', 'invoice', 'pendingoder', 'topservice', 'profitchart', 'ordercountchart', 'incomechart','revenuechart','balance_supplier'));
     }
 
     public function pendingoder()

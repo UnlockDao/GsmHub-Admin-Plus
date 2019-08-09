@@ -97,7 +97,38 @@
         <hr>
 
         <div class="row">
-            <div class="col-xl-6">
+            <div class="col-xl-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="header-title mt-2">Balance Supplier API </h4>
+
+                        <div class="table-responsive">
+                            <!-- Projects table -->
+                            <div id="table-scroll">
+                                <table class="table table-centered table-hover mb-0">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">Supplier</th>
+                                        <th scope="col">Balance</th>
+                                        <th scope="col">Currency</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($balance_supplier as $key => $i)
+                                        <tr>
+                                            <th scope="row">{{$key}}</th>
+                                            <th scope="row">{{$i['credit']}}</th>
+                                            <th scope="row">{{$i['currency']}}</th>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div> <!-- end card-body-->
+                </div> <!-- end card-->
+            </div> <!-- end col-->
+            <div class="col-xl-4">
                 <div class="card">
                     <div class="card-body">
                         <h4 class="header-title mt-2">Top Service IMEI Orders</h4>
@@ -128,7 +159,7 @@
                     </div> <!-- end card-body-->
                 </div> <!-- end card-->
             </div> <!-- end col-->
-            <div class="col-xl-6">
+            <div class="col-xl-4">
                 <div class="card">
                     <div class="card-body">
                         <h4 class="header-title mt-2">Top Service Server Orders</h4>
