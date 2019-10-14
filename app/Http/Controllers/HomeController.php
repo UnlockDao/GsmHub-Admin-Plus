@@ -131,9 +131,7 @@ class HomeController extends Controller
         $ordercountchart = $this->ordercountchart($datefilter);
         $incomechart = $this->incomechart($datefilter);
         $revenuechart = $this->revenuechart($datefilter);
-        $gsm = new Gsm();
-        $balance_supplier = $gsm->getBalanceSupplier();
-        return view('home.orderdashboard', compact('serveroder', 'imeioder', 'invoice', 'pendingoder', 'topservice', 'profitchart', 'ordercountchart', 'incomechart','revenuechart','balance_supplier'));
+        return view('home.orderdashboard', compact('serveroder', 'imeioder', 'invoice', 'pendingoder', 'topservice', 'profitchart', 'ordercountchart', 'incomechart','revenuechart'));
     }
 
     public function pendingoder()

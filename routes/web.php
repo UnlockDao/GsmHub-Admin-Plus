@@ -110,5 +110,6 @@ Route::get('profitreport', 'ProfitController@index')->middleware('admin');
 Route::get('cronjobprofit', 'ProfitCronController@runcron');
 Route::get('runcronrange', 'ProfitCronController@runcronrange');
 Route::post('reloadprofit', 'ProfitCronController@reloadprofit');
+Route::POST('checkCreditSuppliers', 'CronApiController@checkCreditSuppliers');
 
 Route::get('check-transaction','Payment\CheckTransaction@index');

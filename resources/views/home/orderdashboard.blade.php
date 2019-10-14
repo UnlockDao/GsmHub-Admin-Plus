@@ -113,14 +113,11 @@
                                         <th scope="col">Currency</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
-                                    @foreach($balance_supplier as $key => $i)
-                                        <tr>
-                                            <th scope="row">{{$key}}</th>
-                                            <th scope="row">{{$i['credit']}}</th>
-                                            <th scope="row">{{$i['currency']}}</th>
-                                        </tr>
-                                    @endforeach
+                                    <div class="d-flex flex-row justify-content-center align-items-center">
+                                        <div class="spinner-grow text-success" role="status" id="loader">
+                                        </div>
+                                    </div>
+                                    <tbody id="creditsuppliers">
                                     </tbody>
                                 </table>
                             </div>
@@ -257,5 +254,25 @@
                 data: {{$ordercountchart['serverREJECTED']}}
             }]
         });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: "checkCreditSuppliers",
+                type: "POST",
+                success: function (data) {
+                    $("#loader").removeAttr('pk').hide();
+                    $("#creditsuppliers").append(data);
+                },
+                error: function (x, e) {
+
+                }
+            });
+        }, false);
     </script>
 @endsection
