@@ -1,6 +1,5 @@
 @extends('layouts.header')
 @section('dashboard')
-
     @if (!CUtil::checkauth())
         <div class="container-fluid">
             <div class="header-body">
@@ -60,6 +59,35 @@
     @endif
 @endsection
 @section('content')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: "preLoadimei",
+                type: "get",
+                success: function (data) {
+                    $("#loaderimei").removeAttr('pk').hide();
+                },
+                error: function (x, e) {
+
+                }
+            });
+            $.ajax({
+                url: "preLoadservice",
+                type: "get",
+                success: function (data) {
+                    $("#loaderservice").removeAttr('pk').hide();
+                },
+                error: function (x, e) {
+
+                }
+            });
+        }, false);
+    </script>
     <style>
         .table .thead-light th {
             min-width: 100px;
@@ -84,7 +112,10 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box">
-                    <h4 class="page-title">Dashboard</h4>
+                    <h4 class="page-title">Dashboard
+                        <div class="spinner-grow text-success" role="status" id="loaderimei"></div>
+                        <div class="spinner-grow text-primary" role="status" id="loaderserver"></div>
+                    </h4>
                 </div>
             </div>
         </div>
@@ -95,7 +126,8 @@
                     <div class="card-body">
                         <div class="row align-items-center">
                             <div class="col-6">
-                                <h5 class="text-muted font-weight-normal mt-0 text-truncate" title="Campaign Sent">IMEI Service Profit</h5>
+                                <h5 class="text-muted font-weight-normal mt-0 text-truncate" title="Campaign Sent">IMEI
+                                    Service Profit</h5>
                                 <h3 class="my-2 py-1">{{round($imeioder->profit)}} USD</h3>
                                 <p class="mb-0 text-muted">
                                     <span class="text-success mr-2"> {{number_format($imeioder->profit*22000)}} VND</span>
@@ -116,7 +148,8 @@
                     <div class="card-body">
                         <div class="row align-items-center">
                             <div class="col-6">
-                                <h5 class="text-muted font-weight-normal mt-0 text-truncate" title="New Leads">Server Service Profit</h5>
+                                <h5 class="text-muted font-weight-normal mt-0 text-truncate" title="New Leads">Server
+                                    Service Profit</h5>
                                 <h3 class="my-2 py-1">{{round($serveroder->profit)}} USD</h3>
                                 <p class="mb-0 text-muted">
                                     <span class="text-danger mr-2"> {{number_format($serveroder->profit*22000)}} VND</span>
@@ -137,7 +170,8 @@
                     <div class="card-body">
                         <div class="row align-items-center">
                             <div class="col-6">
-                                <h5 class="text-muted font-weight-normal mt-0 text-truncate" title="Deals">Total Profit</h5>
+                                <h5 class="text-muted font-weight-normal mt-0 text-truncate" title="Deals">Total
+                                    Profit</h5>
                                 <h3 class="my-2 py-1">{{round($serveroder->profit+$imeioder->profit)}}</h3>
                                 <p class="mb-0 text-muted">
                                     <span class="text-success mr-2">{{number_format(($serveroder->profit+$imeioder->profit)*22000)}} VND </span>
@@ -158,7 +192,8 @@
                     <div class="card-body">
                         <div class="row align-items-center">
                             <div class="col-6">
-                                <h5 class="text-muted font-weight-normal mt-0 text-truncate" title="Booked Revenue">Balance Paypal</h5>
+                                <h5 class="text-muted font-weight-normal mt-0 text-truncate" title="Booked Revenue">
+                                    Balance Paypal</h5>
                                 <h3 class="my-2 py-1">{{$balance_payment['L_AMT0']}}</h3>
                                 <p class="mb-0 text-muted">
                                     <span class="text-success mr-2"> {{number_format(($balance_payment['L_AMT0'])*22000)}}</span>
@@ -211,140 +246,140 @@
     </div> <!-- container -->
 
 
-        <link rel="stylesheet" type="text/css" href="{{ asset('js/highcharts_date_range_grouping.css') }}">
-        <script src="{{ asset('js/highcharts.js') }}"></script>
-        <script src="{{ asset('js/highcharts_date_range_grouping.min.js') }}"></script>
-        <script>
-            Highcharts.chart('profitchart', {
-                chart: {
-                    type: 'column'
-                }, dateRangeGrouping: {
-                    dayFormat: {month: 'numeric', day: 'numeric', year: 'numeric'},
-                    weekFormat: {month: 'numeric', day: 'numeric', year: 'numeric'},
-                    monthFormat: {month: 'numeric', year: 'numeric'}
-                },
+    <link rel="stylesheet" type="text/css" href="{{ asset('js/highcharts_date_range_grouping.css') }}">
+    <script src="{{ asset('js/highcharts.js') }}"></script>
+    <script src="{{ asset('js/highcharts_date_range_grouping.min.js') }}"></script>
+    <script>
+        Highcharts.chart('profitchart', {
+            chart: {
+                type: 'column'
+            }, dateRangeGrouping: {
+                dayFormat: {month: 'numeric', day: 'numeric', year: 'numeric'},
+                weekFormat: {month: 'numeric', day: 'numeric', year: 'numeric'},
+                monthFormat: {month: 'numeric', year: 'numeric'}
+            },
+            title: {
+                text: 'Profit'
+            },
+            xAxis: {
+                categories:  {!! $profitchart['date'] !!}
+            },
+            yAxis: {
                 title: {
-                    text: 'Profit'
+                    text: ''
                 },
-                xAxis: {
-                    categories:  {!! $profitchart['date'] !!}
-                },
-                yAxis: {
-                    title: {
-                        text: ''
-                    },
-                    stackLabels: {
-                        enabled: true,
-                        style: {
-                            fontWeight: 'bold',
-                            color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-                        }
+                stackLabels: {
+                    enabled: true,
+                    style: {
+                        fontWeight: 'bold',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
                     }
-                },
-                colors: [
-                    '#5e72e4',
-                    '#2dce89',
-                ],
-                plotOptions: {
-                    column: {
-                        stacking: 'normal',
-                        colorByPoint: false,
-                    }
-                },
-                series: [{
-                    name: 'IMEI',
-                    data:  {{$profitchart['imei']}}
-                }, {
-                    name: 'Server',
-                    data: {{$profitchart['server']}}
-                }]
-            });
-            Highcharts.chart('revenuechart', {
-                chart: {
-                    type: 'column'
-                }, dateRangeGrouping: {
-                    dayFormat: {month: 'numeric', day: 'numeric', year: 'numeric'},
-                    weekFormat: {month: 'numeric', day: 'numeric', year: 'numeric'},
-                    monthFormat: {month: 'numeric', year: 'numeric'}
-                },
+                }
+            },
+            colors: [
+                '#5e72e4',
+                '#2dce89',
+            ],
+            plotOptions: {
+                column: {
+                    stacking: 'normal',
+                    colorByPoint: false,
+                }
+            },
+            series: [{
+                name: 'IMEI',
+                data:  {{$profitchart['imei']}}
+            }, {
+                name: 'Server',
+                data: {{$profitchart['server']}}
+            }]
+        });
+        Highcharts.chart('revenuechart', {
+            chart: {
+                type: 'column'
+            }, dateRangeGrouping: {
+                dayFormat: {month: 'numeric', day: 'numeric', year: 'numeric'},
+                weekFormat: {month: 'numeric', day: 'numeric', year: 'numeric'},
+                monthFormat: {month: 'numeric', year: 'numeric'}
+            },
+            title: {
+                text: 'Revenue'
+            },
+            xAxis: {
+                categories:  {!! $revenuechart['date'] !!}
+            },
+            yAxis: {
+                min: 0,
                 title: {
-                    text: 'Revenue'
+                    text: ''
                 },
-                xAxis: {
-                    categories:  {!! $revenuechart['date'] !!}
-                },
-                yAxis: {
-                    min: 0,
-                    title: {
-                        text: ''
-                    },
-                    stackLabels: {
-                        enabled: true,
-                        style: {
-                            fontWeight: 'bold',
-                            color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-                        }
+                stackLabels: {
+                    enabled: true,
+                    style: {
+                        fontWeight: 'bold',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
                     }
-                },
-                colors: [
-                    '#5e72e4',
-                    '#2dce89',
-                ],
-                plotOptions: {
-                    column: {
-                        stacking: 'normal',
-                        colorByPoint: false,
-                    }
-                },
-                series: [{
-                    name: 'IMEI',
-                    data:  {{$revenuechart['imei']}}
-                }, {
-                    name: 'Server',
-                    data: {{$revenuechart['server']}}
-                }]
-            });
-            Highcharts.chart('invoice', {
-                chart: {
-                    type: 'column'
-                }, dateRangeGrouping: {
-                    dayFormat: {month: 'numeric', day: 'numeric', year: 'numeric'},
-                    weekFormat: {month: 'numeric', day: 'numeric', year: 'numeric'},
-                    monthFormat: {month: 'numeric', year: 'numeric'}
-                },
+                }
+            },
+            colors: [
+                '#5e72e4',
+                '#2dce89',
+            ],
+            plotOptions: {
+                column: {
+                    stacking: 'normal',
+                    colorByPoint: false,
+                }
+            },
+            series: [{
+                name: 'IMEI',
+                data:  {{$revenuechart['imei']}}
+            }, {
+                name: 'Server',
+                data: {{$revenuechart['server']}}
+            }]
+        });
+        Highcharts.chart('invoice', {
+            chart: {
+                type: 'column'
+            }, dateRangeGrouping: {
+                dayFormat: {month: 'numeric', day: 'numeric', year: 'numeric'},
+                weekFormat: {month: 'numeric', day: 'numeric', year: 'numeric'},
+                monthFormat: {month: 'numeric', year: 'numeric'}
+            },
+            title: {
+                text: 'Income'
+            },
+            xAxis: {
+                categories:  {!! $incomechart['date'] !!}
+            },
+            yAxis: {
+                min: 0,
                 title: {
-                    text: 'Income'
+                    text: ''
                 },
-                xAxis: {
-                    categories:  {!! $incomechart['date'] !!}
-                },
-                yAxis: {
-                    min: 0,
-                    title: {
-                        text: ''
-                    },
-                    stackLabels: {
-                        enabled: true,
-                        style: {
-                            fontWeight: 'bold',
-                            color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-                        }
+                stackLabels: {
+                    enabled: true,
+                    style: {
+                        fontWeight: 'bold',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
                     }
-                },
-                colors: [
-                    '#5e72e4',
-                    '#2dce89',
-                ],
-                plotOptions: {
-                    column: {
-                        stacking: 'normal',
-                        colorByPoint: false,
-                    }
-                },
-                series: [{
-                    name: 'Income',
-                    data: {{$incomechart['income']}}
-                }]
-            });
-        </script>
+                }
+            },
+            colors: [
+                '#5e72e4',
+                '#2dce89',
+            ],
+            plotOptions: {
+                column: {
+                    stacking: 'normal',
+                    colorByPoint: false,
+                }
+            },
+            series: [{
+                name: 'Income',
+                data: {{$incomechart['income']}}
+            }]
+        });
+    </script>
 @endsection

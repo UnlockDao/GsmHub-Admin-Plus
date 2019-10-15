@@ -35,6 +35,7 @@ Route::get('orderdashboard', 'HomeController@orderdashboard')->name('orderdashbo
 //imeiserver
 //hiển thị danh sách dịch vụ, tiền tệ
 Route::get('imei', 'IMEIController@imei');
+Route::get('preLoadimei', 'IMEIController@runStart');
 //hiển thị dịch vụ theo id
 Route::get('imei/{id}', 'IMEIController@show');
 //xóa dịch vụ imei
@@ -82,6 +83,7 @@ Route::get('defaultcurrency/{squirrel}/{any}', 'CurrencieController@defaultcurre
 
 //ServerserviceController
 Route::get('serverservice', 'ServerserviceController@index');
+Route::get('preLoadservice', 'ServerserviceController@runStart');
 Route::get('serverservice/{id}', 'ServerserviceController@show');
 Route::post('updatesupplierserver/{id}', 'ServerserviceController@updatesupplier');
 Route::post('serverservice/{id}', 'ServerserviceController@edit');

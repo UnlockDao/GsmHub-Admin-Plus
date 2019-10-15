@@ -48,13 +48,18 @@ class IMEIController extends Controller
         return redirect('/imei');
     }
 
-    public function imei(Request $request)
-    {
-        $currenciessite = Config::where('config_var', 'site_default_currency')->first();
+    public function runStart(){
         $this->checkNullUser();
         $this->checkdelete();
         $this->checkimei();
         $this->checkapi();
+        return 'done';
+    }
+
+    public function imei(Request $request)
+    {
+        $currenciessite = Config::where('config_var', 'site_default_currency')->first();
+
         //
         $defaultcurrency = Currenciepricing::where('type', '1')->first();
         $exchangerate = Currencie::find($defaultcurrency->currency_id);

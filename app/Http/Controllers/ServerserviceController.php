@@ -62,13 +62,15 @@ class ServerserviceController extends Controller
             }
         }
     }
-
-    public function index(Request $request)
-    {
+    public function runStart(){
         $this->checkServer();
         $this->checkNullUser();
         $this->UpdatePurchaseCostNetServer();
         $this->checkApiToNull();
+        return 'done';
+    }
+    public function index(Request $request)
+    {
         $currenciessite = Config::where('config_var','site_default_currency')->first();
         //
         $defaultcurrency = Currenciepricing::where('type', '1')->first();
@@ -113,7 +115,7 @@ class ServerserviceController extends Controller
                 })
                 ->get();
         }
-        
+
         return view('services.serverservice', compact('serverservice','server_service_group','clientgroup','exchangerate','supplier','groupsearch','cachesearch','currenciessite'));
     }
 
