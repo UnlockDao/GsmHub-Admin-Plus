@@ -114,7 +114,7 @@
                 <div class="page-title-box">
                     <h4 class="page-title">Dashboard
                         <div class="spinner-grow text-success" role="status" id="loaderimei"></div>
-                        <div class="spinner-grow text-primary" role="status" id="loaderserver"></div>
+                        <div class="spinner-grow text-primary" role="status" id="loaderservice"></div>
                     </h4>
                 </div>
             </div>
