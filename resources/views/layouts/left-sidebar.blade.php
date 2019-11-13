@@ -31,7 +31,7 @@
                     </li>
                     @endif
                     <li>
-                        <a href="{{ url('orderdashboard') }}">Order</a>
+                        <a href="{{ url('orderdashboard') }}">Orders</a>
                     </li>
                 </ul>
             </li>
@@ -47,7 +47,7 @@
                         <a href="{{ url('imei') }}">IMEI Services</a>
                     </li>
                     <li>
-                        <a href="{{ url('serverservice') }}">Server Service</a>
+                        <a href="{{ url('serverservice') }}">Server Services</a>
                     </li>
                 </ul>
             </li>
@@ -55,7 +55,7 @@
             <li class="side-nav-item">
                 <a href="javascript: void(0);" class="side-nav-link">
                     <i class="dripicons-copy"></i>
-                    <span> Order </span>
+                    <span> Orders </span>
                     <span class="menu-arrow"></span>
                 </a>
                 <ul class="side-nav-second-level" aria-expanded="false">
@@ -71,25 +71,25 @@
             <li class="side-nav-item">
                 <a href="javascript: void(0);" class="side-nav-link">
                     <i class="dripicons-browser"></i>
-                    <span> Report </span>
+                    <span> Reports </span>
                     <span class="menu-arrow"></span>
                 </a>
                 <ul class="side-nav-second-level" aria-expanded="false">
                     @if(CUtil::apAdmin())
                     <li>
-                        <a href="{{ url('profitreport') }}">Profit Report</a>
+                        <a href="{{ url('profitreport') }}">Profit Reports</a>
                     </li>
                     @endif
                     <li>
-                        <a href="{{ url('invoicereport') }}">Invoice Report</a>
+                        <a href="{{ url('invoicereport') }}">Invoice Reports</a>
                     </li>
                     <li>
-                        <a href="{{ url('check-transaction') }}">Check Transaction</a>
+                        <a href="{{ url('check-transaction') }}">Check Transactions</a>
                     </li>
                 </ul>
             </li>
 
-            <li class="side-nav-title side-nav-item mt-1">Other</li>
+            <li class="side-nav-title side-nav-item mt-1">Others</li>
 
             <li class="side-nav-item">
                 <a href="{{ url('members') }}" class="side-nav-link">
@@ -106,16 +106,16 @@
                 </a>
                 <ul class="side-nav-second-level" aria-expanded="false">
                     <li>
-                        <a href="{{ url('clientgroup') }}">Clientgroup</a>
+                        <a href="{{ url('clientgroup') }}">User Group</a>
                     </li>
                     <li>
-                        <a href="{{ url('supplier') }}">Supplier</a>
+                        <a href="{{ url('supplier') }}">Suppliers</a>
                     </li>
                     <li>
-                        <a href="{{ url('currencie') }}">Currencie</a>
+                        <a href="{{ url('currencie') }}">Currencies</a>
                     </li>
                     <li>
-                        <a href="{{ url('role') }}">Role</a>
+                        <a href="{{ url('role') }}">Roles</a>
                     </li>
                 </ul>
             </li>
