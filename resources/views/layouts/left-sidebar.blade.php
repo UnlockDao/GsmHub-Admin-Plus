@@ -4,7 +4,7 @@
     <div class="slimscroll-menu">
 
         <!-- LOGO -->
-        <a href="#" class="logo text-center">
+        <a href="{{ url('/') }}" class="logo text-center">
                         <span class="logo-lg">
                             <img src="{{asset('')}}/assets/images/logos.png" alt="" height="16">
                         </span>
@@ -19,21 +19,10 @@
             <li class="side-nav-title side-nav-item">App</li>
 
             <li class="side-nav-item">
-                <a href="javascript: void(0);" class="side-nav-link">
+                <a href="{{ url('/') }}" class="side-nav-link">
                     <i class="dripicons-meter"></i>
-                    <span class="badge badge-success float-right">2</span>
                     <span> Dashboards </span>
                 </a>
-                <ul class="side-nav-second-level collapse" aria-expanded="false">
-                    @if(CUtil::apAdmin())
-                    <li>
-                        <a href="{{ url('home') }}">Revenue</a>
-                    </li>
-                    @endif
-                    <li>
-                        <a href="{{ url('orderdashboard') }}">Orders</a>
-                    </li>
-                </ul>
             </li>
 
             <li class="side-nav-item">
@@ -76,6 +65,9 @@
                 </a>
                 <ul class="side-nav-second-level" aria-expanded="false">
                     @if(CUtil::apAdmin())
+                    <li>
+                        <a href="{{ url('finance') }}">Finance Reports</a>
+                    </li>
                     <li>
                         <a href="{{ url('profitreport') }}">Profit Reports</a>
                     </li>

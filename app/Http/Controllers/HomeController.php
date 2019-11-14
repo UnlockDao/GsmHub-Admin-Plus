@@ -31,7 +31,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function finance(Request $request)
     {
         $datefilter = $request->datefilterh;
         $tg = explode(" - ", $datefilter);
@@ -81,10 +81,10 @@ class HomeController extends Controller
         $receiver = DB::table('paypal_receiver_details')->first();
         $paypalNvpService = new PaypalNVP($receiver->api_user_name, $receiver->api_signature, $receiver->api_password);
         $balance_payment = $paypalNvpService->CallGetBalance();
-        return view('home.home', compact('serveroder', 'imeioder', 'invoice', 'pendingoder', 'topservice', 'profitchart', 'ordercountchart', 'incomechart','revenuechart','balance_payment'));
+        return view('home.finance', compact('serveroder', 'imeioder', 'invoice', 'pendingoder', 'topservice', 'profitchart', 'ordercountchart', 'incomechart','revenuechart','balance_payment'));
     }
 
-    public function orderdashboard(Request $request)
+    public function index(Request $request)
     {
         $datefilter = $request->datefilterh;
         $tg = explode(" - ", $datefilter);
@@ -131,7 +131,7 @@ class HomeController extends Controller
         $ordercountchart = $this->ordercountchart($datefilter);
         $incomechart = $this->incomechart($datefilter);
         $revenuechart = $this->revenuechart($datefilter);
-        return view('home.orderdashboard', compact('serveroder', 'imeioder', 'invoice', 'pendingoder', 'topservice', 'profitchart', 'ordercountchart', 'incomechart','revenuechart'));
+        return view('home.index', compact('serveroder', 'imeioder', 'invoice', 'pendingoder', 'topservice', 'profitchart', 'ordercountchart', 'incomechart','revenuechart'));
     }
 
     public function pendingoder()

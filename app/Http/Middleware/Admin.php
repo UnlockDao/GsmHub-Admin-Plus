@@ -21,7 +21,7 @@ class Admin
             return $next($request);
 
         }
-        return redirect('orderdashboard');
+        return redirect('financedashboard');
 
     }
 }

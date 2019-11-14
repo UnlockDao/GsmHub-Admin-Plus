@@ -27,8 +27,8 @@ Route::get('/logout', function () {
 Route::get('login','Auth\LoginController@getLogin')->name('login');
 Route::post('login','Auth\LoginController@postLogin')->name('login');
 
-Route::get('home', 'HomeController@index')->middleware('admin');
-Route::get('orderdashboard', 'HomeController@orderdashboard')->name('orderdashboard');
+Route::get('/', 'HomeController@index')->middleware('admin');
+Route::get('finance', 'HomeController@finance')->name('financedashboard');
 
 
 //trang chủ
