@@ -10521,7 +10521,7 @@ body {
 .left-side-menu {
     width: 250px;
     z-index: 10;
-    background: linear-gradient(135deg, #0044cc 0, #007bff 60%);
+    background: #0044cc;
     bottom: 0;
     position: fixed;
     -webkit-transition: all .2s ease-out;
@@ -10665,7 +10665,7 @@ body {
     position: relative;
     width: 260px;
     color: #fff;
-    background: linear-gradient(135deg, #0044cc 0, #007bff 60%)
+    background: #0044cc
 }
 
 .enlarged .side-nav .side-nav-item:hover .side-nav-link span {
@@ -10680,7 +10680,7 @@ body {
     height: auto !important;
     padding: 5px 0;
     z-index: 9999;
-    background: linear-gradient(135deg, #0044cc 0, #007bff 60%)
+    background: #0044cc
 }
 
 .enlarged .side-nav .side-nav-item:hover > ul a {
