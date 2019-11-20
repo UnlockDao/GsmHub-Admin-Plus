@@ -28,7 +28,7 @@ Route::get('login','Auth\LoginController@getLogin')->name('login');
 Route::post('login','Auth\LoginController@postLogin')->name('login');
 
 Route::get('/', 'HomeController@index');
-Route::get('finance', 'HomeController@finance')->name('financedashboard');
+Route::get('finance', 'HomeController@finance')->middleware('admin')->name('financedashboard');
 
 
 //trang chủ
