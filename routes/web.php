@@ -27,7 +27,7 @@ Route::get('/logout', function () {
 Route::get('login','Auth\LoginController@getLogin')->name('login');
 Route::post('login','Auth\LoginController@postLogin')->name('login');
 
-Route::get('/', 'HomeController@index')->middleware('admin');
+Route::get('/', 'HomeController@index');
 Route::get('finance', 'HomeController@finance')->name('financedashboard');
 
 
@@ -115,3 +115,4 @@ Route::post('reloadprofit', 'ProfitCronController@reloadprofit');
 Route::POST('checkCreditSuppliers', 'CronApiController@checkCreditSuppliers');
 
 Route::get('check-transaction','Payment\CheckTransaction@index');
+Route::get('getbalance','CronApiController@getBalance');
