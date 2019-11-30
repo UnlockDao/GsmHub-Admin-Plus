@@ -21,7 +21,7 @@ Route::get('/', function () {
 
 Route::get('/logout', function () {
     Auth::logout();
-    return redirect('home');
+    return redirect('/');
 });
 
 Route::get('login','Auth\LoginController@getLogin')->name('login');
