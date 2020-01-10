@@ -1,5 +1,34 @@
 @extends('layouts.header')
 @section('content')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: "preLoadimei",
+                type: "get",
+                success: function (data) {
+                    $("#loaderimei").removeAttr('pk').hide();
+                },
+                error: function (x, e) {
+
+                }
+            });
+            $.ajax({
+                url: "preLoadservice",
+                type: "get",
+                success: function (data) {
+                    $("#loaderservice").removeAttr('pk').hide();
+                },
+                error: function (x, e) {
+
+                }
+            });
+        }, false);
+    </script>
     <style>
         .table .thead-light th {
             min-width: 100px;
@@ -24,7 +53,9 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box">
-                    <h4 class="page-title">Order Dashboard</h4>
+                    <h4 class="page-title">Order Dashboard
+                        <div class="spinner-grow text-success" role="status" id="loaderimei"></div>
+                        <div class="spinner-grow text-primary" role="status" id="loaderservice"></div></h4>
                 </div>
             </div>
         </div>
