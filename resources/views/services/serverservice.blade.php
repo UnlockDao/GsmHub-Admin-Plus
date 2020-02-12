@@ -24,6 +24,25 @@
             });
         }, false);
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: "preLoadservice",
+                type: "get",
+                success: function (data) {
+                    $("#loader").removeAttr('pk').hide();
+                },
+                error: function (x, e) {
+
+                }
+            });
+        }, false);
+    </script>
     <!-- Start Content-->
     <div class="container-fluid">
 
@@ -35,7 +54,10 @@
                         <a class="fancybox fancybox.iframe btn btn-info"
                            href="{{ asset('serversales') }}?group_name={{$cachesearch->group_name}}">Sales</a>
                     </div>
-                    <h4 class="page-title">Server Services</h4>
+                    <h4 class="page-title">Server Services
+                        <div class="spinner-grow text-success" role="status" id="loader">
+                        </div>
+                    </h4>
                 </div>
             </div>
         </div>
