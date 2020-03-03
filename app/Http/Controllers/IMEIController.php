@@ -8,6 +8,7 @@ use App\Models\Config;
 use App\Models\Currencie;
 use App\Models\Currenciepricing;
 use App\Models\Imeiservice;
+use App\Models\Imeiservicecredit;
 use App\Models\Imeiservicegroup;
 use App\Models\Imeiservicepricing;
 use App\Models\Supplier;
@@ -76,6 +77,12 @@ class IMEIController extends Controller
     {
         Imeiservice::findOrFail($id)->update($request->input());
         Imeiservicepricing::findOrFail($id)->update($request->input());
+        $currencies = Currencie::where('display_currency', 'Yes')->get();
+        foreach ($currencies as $c) {
+            Imeiservicecredit::where('service_id', $id)
+                ->where('currency', $c->currency_code)
+                ->update(['credit' => $request->credit * $c->exchange_rate_static]);
+        }
 
         $groupPrices = $request->input('groupPrice');
         $existsPriceIds = [];
