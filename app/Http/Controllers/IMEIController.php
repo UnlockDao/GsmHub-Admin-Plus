@@ -8,105 +8,100 @@ use App\Models\Config;
 use App\Models\Currencie;
 use App\Models\Currenciepricing;
 use App\Models\Imeiservice;
-use App\Models\Imeiservicecredit;
 use App\Models\Imeiservicegroup;
 use App\Models\Imeiservicepricing;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 
 class IMEIController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
 
     public function __construct()
     {
         $this->middleware('auth');
+        View::composer('services.imei.*', function ($view) {
+            $defaultcurrency = Currenciepricing::where('type', '1')->first();
+            $view->with('currenciesSite', Config::where('config_var', 'site_default_currency')->first());
+            $view->with('imeiGroup', Imeiservicegroup::get());
+            $view->with('userGroup', Clientgroup::where('status', 'active')->where('status', 'active')->orderBy('chietkhau')->get());
+            $view->with('clienDefault', Clientgroup::where('status', 'active')->where('chietkhau', '0')->first());
+            $view->with('supplier', Supplier::get());
+            $view->with('allCurrencies', Currencie::get());
+            $view->with('exchangeRate', Currencie::find($defaultcurrency->currency_id));
+        });
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request)
     {
-
-        //xử lí get dữ liệu về data tạm
-        $imei_service = Imeiservice::orderBy('id')->get();
-        foreach ($imei_service as $v) {
-            $check = Imeiservicepricing::where('id', $v->id)->first();
-            if ($check == null) {
-                $imei_service = new Imeiservicepricing();
-                $imei_service->id = $v->id;
-                $imei_service->save();
-            }
+        $group = Imeiservicegroup::orderBy('display_order', 'desc')->where('id', 'LIKE', $request->group_name)->get();
+        $service = Imeiservice::orderBy('service_name');
+        $service->where('status', 'LIKE', $request->status ?? 'active');
+        if ($request->type == 'api') {
+            $service->where('api', '>', '0');
         }
-        return redirect('/imei');
+        if ($request->type == 'manual') {
+            $service->where('api', '');
+        }
+        if ($request->supplier) {
+            $service->whereHas('imeipricing', function ($query) use ($request) {
+                $query->where('id_supplier', 'LIKE', $request->supplier);
+            });
+        }
+        $imeiService = $service->get();
+        return $this->render('services.imei.index', [
+            'imeiService' => $imeiService,
+            'cachesearch' => $request,
+            'group' => $group,
+        ]);
     }
 
-    public function runStart(){
+    public function edit($id)
+    {
+        $currenciessite = Config::where('config_var', 'site_default_currency')->first();
+        $imeiService = Imeiservice::find($id);
+        $imei = Imeiservicepricing::find($id);
+        $pricegroup = Clientgroupprice::orderBy('group_id', 'desc')->where('currency', $currenciessite->config_value)->where('service_type', 'imei')->where('service_id', $id)->get();
+
+
+        return $this->render('services.imei.edit', [
+            'imeiService' => $imeiService,
+            'imei' => $imei,
+            'pricegroup' => $pricegroup,
+        ]);
+    }
+
+
+    public function update($id, Request $request)
+    {
+        Imeiservice::findOrFail($id)->update($request->input());
+        Imeiservicepricing::findOrFail($id)->update($request->input());
+
+        $groupPrices = $request->input('groupPrice');
+        $existsPriceIds = [];
+        if (is_array($groupPrices)) {
+            foreach ($groupPrices as $price) {
+                if (@$price['id']) {
+                    $existsPriceIds[] = $idPrice = $price['id'];
+                    $modelOption = Clientgroupprice::findOrFail($idPrice);
+                    $modelOption->update([
+                        'discount' => $price['price'] - $request['credit'],
+                    ]);
+                }
+            }
+        }
+
+        return back()->with('msg', 'Update Price Sucessfuly!');
+    }
+
+    public function runStart()
+    {
         $this->checkNullUser();
         $this->checkdelete();
         $this->checkimei();
         $this->checkapi();
-        return 'done';
     }
 
-    public function imei(Request $request)
-    {
-        $currenciessite = Config::where('config_var', 'site_default_currency')->first();
-
-        //
-        $defaultcurrency = Currenciepricing::where('type', '1')->first();
-        $exchangerate = Currencie::find($defaultcurrency->currency_id);
-        //
-
-        $groupsearch = Imeiservicegroup::get();
-
-        $usergroup = Clientgroup::where('status', 'active')->where('status', 'active')->orderBy('chietkhau')->get();
-        $supplier = Supplier::get();
-        $suppliersearch = $request->supplier;
-        $cachesearch = $request;
-
-        $group = Imeiservicegroup::orderBy('display_order', 'desc')->where('id', 'LIKE', $request->group_name)->get();
-        if ($request->type == 'api') {
-            $imei_service = Imeiservice::orderBy('service_name')
-                ->where('status', 'LIKE', $request->status)
-                ->whereHas('imeipricing', function ($query) use ($suppliersearch) {
-                    if ($suppliersearch == !null) {
-                        $query->where('id_supplier', 'LIKE', $suppliersearch);
-                    }
-                })
-                ->where('api', '>', '0')
-                ->get();
-        } elseif ($request->type == 'manual') {
-            $imei_service = Imeiservice::orderBy('service_name')
-                ->where('status', 'LIKE', $request->status)
-                ->whereHas('imeipricing', function ($query) use ($suppliersearch) {
-                    if ($suppliersearch == !null) {
-                        $query->where('id_supplier', 'LIKE', $suppliersearch);
-                    }
-                })
-                ->where('api', '')
-                ->get();
-        } else {
-            $imei_service = Imeiservice::orderBy('service_name')
-                ->where('status', 'LIKE', $request->status)
-                ->whereHas('imeipricing', function ($query) use ($suppliersearch) {
-                    if ($suppliersearch == !null) {
-                        $query->where('id_supplier', 'LIKE', $suppliersearch);
-                    }
-                })
-                ->get();
-        }
-
-
-        return view('services.imeiservice', compact('imei_service', 'group', 'usergroup', 'exchangerate', 'groupsearch', 'supplier', 'cachesearch', 'currenciessite'));
-    }
 
     public function checkNullUser()
     {
@@ -177,75 +172,7 @@ class IMEIController extends Controller
         }
     }
 
-    public function show($id)
-    {
-        //get default currency site web
-        $currenciessite = Config::where('config_var', 'site_default_currency')->first();
 
-        $clien = Clientgroup::where('status', 'active')->get();
-        //find default currency
-        $defaultcurrency = Currenciepricing::where('type', '1')->first();
-        $exchangerate = Currencie::find($defaultcurrency->currency_id);
-        //find default price ck 0
-        $cliendefault = Clientgroup::where('status', 'active')->where('chietkhau', '0')->first();
-
-        $allcurrencies = Currencie::get();
-
-        $imei = Imeiservicepricing::find($id);
-        $nhacungcap = Supplier::get();
-
-        $imeiservice = Imeiservice::find($id);
-
-        $pricegroup = Clientgroupprice::orderBy('group_id', 'desc')->where('currency', $currenciessite->config_value)->where('service_type', 'imei')->where('service_id', $id)->get();
-
-        $group = Imeiservicegroup::orderBy('display_order', 'desc')->get();
-
-        return view('edit.editimei', compact('imei', 'nhacungcap', 'clien', 'pricegroup', 'exchangerate', 'cliendefault', 'allcurrencies', 'group'));
-    }
-
-    public function edit($id, Request $request)
-    {
-        $currencies = Currencie::where('display_currency', 'Yes')->get();
-        $gia = $request->purchasecost;
-        //lưu giá trị nhập vào bộ nhớ tạm
-        $imei = Imeiservicepricing::find($id);
-        $imei->purchasecost = $gia;
-        $imei->id_supplier = $request->id_supplier;
-        $imei->save();
-        //lấy dữ liệu nhập thủ công
-        $updateexchangerate = Imeiservice::where('id', $id)->update(['purchase_cost' => $request->purchasenet,
-            'credit' => $request->credit,
-            'process_time' => $request->process_time,
-            'time_unit' => $request->time_unit,
-            'imei_service_group_id' => $request->service_group,
-            'service_name' => $request->service_name]);
-
-
-        foreach ($currencies as $c) {
-            $updateimeiservicecredit = Imeiservicecredit::where('service_id', $id)
-                ->where('currency', $c->currency_code)
-                ->update(['credit' => $request->credit * $c->exchange_rate_static]);
-        }
-        //lấy dữ liệu imei server
-        $getimei = Imeiservice::find($id);
-        //gọi nhóm user
-        $group_user = Clientgroup::where('status', 'active')->get();
-        //ghi dữ liệu giá vào nhóm user
-        foreach ($group_user as $u) {
-            $idclient = $u->id;
-            $u = $request->input('giabanle' . $idclient);
-            $y = $u - $getimei->credit;
-
-            foreach ($currencies as $c) {
-                $updategiause = Clientgroupprice::where('group_id', $idclient)
-                    ->where('service_type', 'imei')
-                    ->where('currency', $c->currency_code)
-                    ->where('service_id', $id)
-                    ->update(['discount' => $y * $c->exchange_rate_static]);
-            }
-        }
-        return back();
-    }
 
     public function updatesupplier($id, Request $request)
     {

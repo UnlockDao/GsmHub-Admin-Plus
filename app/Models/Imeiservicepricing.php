@@ -12,7 +12,9 @@ class Imeiservicepricing extends Model
     protected $table = 'adminplus_imei_service';
     public $timestamps = false;
     protected $fillable = [
-        'id'
+        'id',
+        'id_supplier',
+        'purchasecost'
     ];
 
 	    public function imei()

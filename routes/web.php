@@ -34,10 +34,11 @@ Route::get('finance', 'HomeController@finance')->middleware('admin')->name('fina
 //trang chủ
 //imeiserver
 //hiển thị danh sách dịch vụ, tiền tệ
-Route::get('imei', 'IMEIController@imei');
+Route::get('imei', 'IMEIController@index');
 Route::get('preLoadimei', 'IMEIController@runStart');
 //hiển thị dịch vụ theo id
-Route::get('imei/{id}', 'IMEIController@show');
+Route::get('imei/{id}', 'IMEIController@edit');
+Route::post('imei/{id}/update', 'IMEIController@update')->name('admin.imei.update');
 //xóa dịch vụ imei
 Route::get('imeidelete/{id}', 'IMEIController@delete');
 //cập nhập giá nhập, giá bản lẻ tự động

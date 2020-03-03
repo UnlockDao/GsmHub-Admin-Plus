@@ -15,7 +15,8 @@ class Clientgroupprice extends Model
         'group_id',
         'service_id',
         'service_type',
-        'currency'
+        'currency',
+        'discount'
     ];
 
     public function chietkhau()

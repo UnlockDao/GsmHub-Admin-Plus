@@ -73,7 +73,7 @@
                                     <strong>Service Group</strong>
                                     <select class="form-control select2" data-toggle="select2" name="group_name">
                                         <option value="">...</option>
-                                        @foreach($groupsearch as $g )
+                                        @foreach($imeiGroup as $g )
                                             <option value="{{$g->id}}"
                                                     @if($cachesearch->group_name == $g->id) selected @endif>{{$g->group_name}}</option>
                                         @endforeach
@@ -117,8 +117,8 @@
                                     <strong>Currency</strong>
                                     <select class="form-control form-control-alternative" name="currency">
                                         <option value="">...</option>
-                                        <option value="{{$exchangerate->currency_code}}"
-                                                @if($cachesearch->currency == $exchangerate->currency_code)selected @endif>{{$exchangerate->currency_code}}</option>
+                                        <option value="{{$exchangeRate->currency_code}}"
+                                                @if($cachesearch->currency == $exchangeRate->currency_code)selected @endif>{{$exchangeRate->currency_code}}</option>
                                     </select>
                                 </div>
                                 <div class="col-md-2">
@@ -133,33 +133,35 @@
                             <thead class="text-primary" id="myHeader">
                             <th></th>
                             <th>Service Name</th>
-                            <th>Type</th>
-                            <th>Status</th>
                             <th>Supplier</th>
                             <th>PC</th>
                             <th>PC (Net)</th>
                             <th>Default</th>
-                            @foreach($usergroup as $u)
+                            @foreach($userGroup as $u)
                                 <th>{{$u->group_name}}</th>
                             @endforeach
                             @if(CUtil::apAdmin())
-                                <th></th>
-                                <th></th>
+                                <th colspan="3">Action</th>
                             @endif
                             </thead>
                             <tbody>
                             @foreach($group->where('imeigroup','<>','') as $g)
                                 <tr class="table-warning">
                                     <td><i class="ni ni-ungroup"></i></td>
-                                    <td colspan="9"><strong style="font-weight:700;">{{$g->group_name}}</strong></td>
-                                    @foreach($usergroup as $u)
+                                    <td colspan="8"><strong style="font-weight:700;">{{$g->group_name}}</strong></td>
+                                    @foreach($userGroup as $u)
                                         <td></td>
                                     @endforeach
                                 </tr>
-                                @foreach($imei_service as $v)
+                                @foreach($imeiService as $v)
                                     @if($v->imei_service_group_id == $g->id )
                                         <tr>
-                                            <td>{{$v->id}}</td>
+                                            <td>{{$v->id}}<br>
+                                                @if($v->api_id ==! null)<span
+                                                    class="badge badge-pill badge-success">API<span>  @else<span
+                                                            class="badge badge-pill badge-info">Manual<span>  @endif
+
+                                            </td>
                                             <td @if($v->status == 'soft_deleted' )style="text-decoration: line-through;"
                                                 @endif @if(!CUtil::apStaff())contenteditable="true" @endif
                                                 onBlur="saveToDatabase(this,'service_name','services','{{$v->id}}')"
@@ -170,20 +172,6 @@
                                                    data-original-title="{{$v->service_name}}"
                                                    @if($v->imeipricing->sale >0) data-badge="{{$v->imeipricing->sale}}"
                                                    @endif target="_blank">{{$v->service_name}}</a></td>
-                                            <td>@if($v->api_id ==! null)<span
-                                                        class="badge badge-pill badge-success">API<span>  @else<span
-                                                                class="badge badge-pill badge-info">Manual<span>  @endif
-                                            </td>
-                                            <td>
-                                                <div class="togglebutton">
-                                                    <label id="{{$v->id}}" class="custom-toggle">
-                                                        <input class="status"
-                                                               id="check{{$v->id}}" type="checkbox"
-                                                               @if($v->status == 'active' )checked="" @endif>
-                                                        <span class="custom-toggle-slider rounded-circle"></span>
-                                                    </label>
-                                                </div>
-                                            </td>
                                             <td>@if($v->imeipricing->nhacungcap ==! null)
                                                     @if (CUtil::issuperadmin())
                                                         {{$v->imeipricing->nhacungcap->name}}
@@ -196,21 +184,19 @@
                                             @if($v->api_id ==! null)
                                                 <td>@if($v->apiserverservices ==! null)<a data-toggle="tooltip"
                                                                                           data-placement="top"
-                                                                                          data-original-title="{{number_format($v->apiserverservices->credits*$exchangerate->exchange_rate_static)}} đ">{{number_format($v->apiserverservices->credits, 2)}}</a>@endif
+                                                                                          data-original-title="{{number_format($v->apiserverservices->credits*$exchangeRate->exchange_rate_static)}} đ">{{number_format($v->apiserverservices->credits, 2)}}</a>@endif
                                                 </td>
                                             @else
                                                 <td><a data-toggle="tooltip" data-placement="top"
-                                                       data-original-title="{{number_format($v->imeipricing->purchasecost*$exchangerate->exchange_rate_static)}} đ">{{ number_format($v->imeipricing->purchasecost, 2)}}</a>
+                                                       data-original-title="{{number_format($v->imeipricing->purchasecost*$exchangeRate->exchange_rate_static)}} đ">{{ number_format($v->imeipricing->purchasecost, 2)}}</a>
                                                 </td>
                                             @endif
 
 
                                             <td><a data-toggle="tooltip" data-placement="top"
-                                                   data-original-title="{{number_format($v->purchase_cost*$exchangerate->exchange_rate_static)}} đ">{{number_format($v->purchase_cost, 2)}}</a>
+                                                   data-original-title="{{number_format($v->purchase_cost*$exchangeRate->exchange_rate_static)}} đ">{{number_format($v->purchase_cost, 2)}}</a>
                                             </td>
-                                            <td @if(!CUtil::apStaff())contenteditable="true" @endif
-                                            onBlur="saveToDatabase(this,'credit','services','{{$v->id}}')"
-                                                onClick="showEdit(this);">
+                                            <td>
                                                 @if($v->purchase_cost == $v->credit)
                                                     <span class="badge badge-pill badge-warning">{{number_format($v->credit, 2)}}<span>
                                                 @elseif($v->purchase_cost > $v->credit)
@@ -218,31 +204,41 @@
                                                    @else
                                                                             <a data-toggle="tooltip"
                                                                                data-placement="top"
-                                                                               data-original-title="{{number_format($v->credit*$exchangerate->exchange_rate_static)}} đ">{{ number_format($v->credit, 2) }}</a>
+                                                                               data-original-title="{{number_format($v->credit*$exchangeRate->exchange_rate_static)}} đ">{{ number_format($v->credit, 2) }}</a>
                                                 @endif
                                             </td>
-                                            @foreach($usergroup as $u)
+                                            @foreach($userGroup as $u)
                                                 <td @if(!CUtil::apStaff())contenteditable="true" @endif
                                                 onBlur="saveToDatabase(this,'discount','price','{{$v->id}}','{{$u->id}}')"
                                                     onClick="showEdit(this);">
-                                                    @foreach($v->clientgroupprice->where('currency',$currenciessite->config_value)->where('service_type','imei')->where('group_id',$u->id) as $cl)
+                                                    @foreach($v->clientgroupprice->where('currency',$currenciesSite->config_value)->where('service_type','imei')->where('group_id',$u->id) as $cl)
                                                         @if(round($v->purchase_cost,2) == round($v->credit + $cl->discount,2))
                                                             <span class="badge badge-pill badge-warning"><a
                                                                         data-toggle="tooltip" data-placement="top"
-                                                                        data-original-title="{{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ">@if($cachesearch->currency == $exchangerate->currency_code) {{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}}  @else{{round($v->credit + $cl->discount,2)}}@endif</a><span>
+                                                                        data-original-title="{{number_format(($v->credit + $cl->discount)*$exchangeRate->exchange_rate_static)}} đ">@if($cachesearch->currency == $exchangeRate->currency_code) {{number_format(($v->credit + $cl->discount)*$exchangeRate->exchange_rate_static)}}  @else{{round($v->credit + $cl->discount,2)}}@endif</a><span>
                                                             @elseif(round($v->purchase_cost,4) > round($v->credit + $cl->discount,4))
                                                                         <span class="badge badge-pill badge-danger"><a
                                                                                     data-toggle="tooltip"
                                                                                     data-placement="top"
-                                                                                    data-original-title="{{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ">@if($cachesearch->currency == $exchangerate->currency_code) {{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}}  @else{{round($v->credit + $cl->discount,2)}}@endif</a><span>
+                                                                                    data-original-title="{{number_format(($v->credit + $cl->discount)*$exchangeRate->exchange_rate_static)}} đ">@if($cachesearch->currency == $exchangeRate->currency_code) {{number_format(($v->credit + $cl->discount)*$exchangeRate->exchange_rate_static)}}  @else{{round($v->credit + $cl->discount,2)}}@endif</a><span>
                                                                     @else
                                                                                     <a data-toggle="tooltip"
                                                                                        data-placement="top"
-                                                                                       data-original-title="{{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}} đ">@if($cachesearch->currency == $exchangerate->currency_code) {{number_format(($v->credit + $cl->discount)*$exchangerate->exchange_rate_static)}}  @else{{round($v->credit + $cl->discount,2)}}@endif</a>
+                                                                                       data-original-title="{{number_format(($v->credit + $cl->discount)*$exchangeRate->exchange_rate_static)}} đ">@if($cachesearch->currency == $exchangeRate->currency_code) {{number_format(($v->credit + $cl->discount)*$exchangeRate->exchange_rate_static)}}  @else{{round($v->credit + $cl->discount,2)}}@endif</a>
                                                         @endif
                                                     @endforeach</td>
                                             @endforeach
                                             @if(!CUtil::apStaff() )
+                                                <td>
+                                                    <div class="togglebutton">
+                                                        <label id="{{$v->id}}" class="custom-toggle">
+                                                            <input class="status"
+                                                                   id="check{{$v->id}}" type="checkbox"
+                                                                   @if($v->status == 'active' )checked="" @endif>
+                                                            <span class="custom-toggle-slider rounded-circle"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
                                                 <td>@if($v->status == 'active')<a
                                                             class="fancybox fancybox.iframe"
                                                             href="{{ asset('') }}imei/{{$v->id}}"><i
