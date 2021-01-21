@@ -28,7 +28,7 @@ class Run extends TextElement implements ITextElement
     /**
      * Get font.
      *
-     * @return Font
+     * @return null|\PhpOffice\PhpSpreadsheet\Style\Font
      */
     public function getFont()
     {
@@ -40,9 +40,9 @@ class Run extends TextElement implements ITextElement
      *
      * @param Font $pFont Font
      *
-     * @return ITextElement
+     * @return $this
      */
-    public function setFont(Font $pFont = null)
+    public function setFont(?Font $pFont = null)
     {
         $this->font = $pFont;
 

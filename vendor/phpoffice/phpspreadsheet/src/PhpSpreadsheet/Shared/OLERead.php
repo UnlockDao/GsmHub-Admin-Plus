@@ -94,10 +94,8 @@ class OLERead
      * Read the file.
      *
      * @param $pFilename string Filename
-     *
-     * @throws ReaderException
      */
-    public function read($pFilename)
+    public function read($pFilename): void
     {
         File::assertFile($pFilename);
 
@@ -182,7 +180,7 @@ class OLERead
 
         // read the directory stream
         $block = $this->rootStartBlock;
-        $this->entry = $this->_readData($block);
+        $this->entry = $this->readData($block);
 
         $this->readPropertySets();
     }
@@ -203,7 +201,7 @@ class OLERead
         $streamData = '';
 
         if ($this->props[$stream]['size'] < self::SMALL_BLOCK_THRESHOLD) {
-            $rootdata = $this->_readData($this->props[$this->rootentry]['startBlock']);
+            $rootdata = $this->readData($this->props[$this->rootentry]['startBlock']);
 
             $block = $this->props[$stream]['startBlock'];
 
@@ -243,7 +241,7 @@ class OLERead
      *
      * @return string Data for standard stream
      */
-    private function _readData($bl)
+    private function readData($bl)
     {
         $block = $bl;
         $data = '';
@@ -260,7 +258,7 @@ class OLERead
     /**
      * Read entries in the directory stream.
      */
-    private function readPropertySets()
+    private function readPropertySets(): void
     {
         $offset = 0;
 
@@ -326,10 +324,7 @@ class OLERead
      */
     private static function getInt4d($data, $pos)
     {
-        if (trim($data) == '') {
-            // No data provided
-            throw new ReaderException('Parameter data is empty.');
-        } elseif ($pos < 0) {
+        if ($pos < 0) {
             // Invalid position
             throw new ReaderException('Parameter pos=' . $pos . ' is invalid.');
         }

@@ -2,6 +2,7 @@
 
 namespace PhpOffice\PhpSpreadsheet\Collection;
 
+use Generator;
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Exception as PhpSpreadsheetException;
@@ -61,7 +62,6 @@ class Cells
      * Initialise this new cell collection.
      *
      * @param Worksheet $parent The worksheet for this cell collection
-     * @param CacheInterface $cache
      */
     public function __construct(Worksheet $parent, CacheInterface $cache)
     {
@@ -105,8 +105,6 @@ class Cells
      *
      * @param Cell $cell Cell to update
      *
-     * @throws PhpSpreadsheetException
-     *
      * @return Cell
      */
     public function update(Cell $cell)
@@ -119,7 +117,7 @@ class Cells
      *
      * @param string $pCoord Coordinate of the cell to delete
      */
-    public function delete($pCoord)
+    public function delete($pCoord): void
     {
         if ($pCoord === $this->currentCoordinate && $this->currentCell !== null) {
             $this->currentCell->detach();
@@ -153,6 +151,8 @@ class Cells
     {
         $sortKeys = [];
         foreach ($this->getCoordinates() as $coord) {
+            $column = '';
+            $row = 0;
             sscanf($coord, '%[A-Z]%d', $column, $row);
             $sortKeys[sprintf('%09d%3s', $row, $column)] = $coord;
         }
@@ -172,15 +172,16 @@ class Cells
         $col = ['A' => '1A'];
         $row = [1];
         foreach ($this->getCoordinates() as $coord) {
+            $c = '';
+            $r = 0;
             sscanf($coord, '%[A-Z]%d', $c, $r);
             $row[$r] = $r;
             $col[$c] = strlen($c) . $c;
         }
-        if (!empty($row)) {
-            // Determine highest column and row
-            $highestRow = max($row);
-            $highestColumn = substr(max($col), 1);
-        }
+
+        // Determine highest column and row
+        $highestRow = max($row);
+        $highestColumn = substr(max($col), 1);
 
         return [
             'row' => $highestRow,
@@ -205,6 +206,9 @@ class Cells
      */
     public function getCurrentColumn()
     {
+        $column = '';
+        $row = 0;
+
         sscanf($this->currentCoordinate, '%[A-Z]%d', $column, $row);
 
         return $column;
@@ -217,6 +221,9 @@ class Cells
      */
     public function getCurrentRow()
     {
+        $column = '';
+        $row = 0;
+
         sscanf($this->currentCoordinate, '%[A-Z]%d', $column, $row);
 
         return (int) $row;
@@ -232,7 +239,7 @@ class Cells
      */
     public function getHighestColumn($row = null)
     {
-        if ($row == null) {
+        if ($row === null) {
             $colRow = $this->getHighestRowAndColumn();
 
             return $colRow['column'];
@@ -240,6 +247,9 @@ class Cells
 
         $columnList = [1];
         foreach ($this->getCoordinates() as $coord) {
+            $c = '';
+            $r = 0;
+
             sscanf($coord, '%[A-Z]%d', $c, $r);
             if ($r != $row) {
                 continue;
@@ -247,7 +257,7 @@ class Cells
             $columnList[] = Coordinate::columnIndexFromString($c);
         }
 
-        return Coordinate::stringFromColumnIndex(max($columnList) + 1);
+        return Coordinate::stringFromColumnIndex(max($columnList));
     }
 
     /**
@@ -260,7 +270,7 @@ class Cells
      */
     public function getHighestRow($column = null)
     {
-        if ($column == null) {
+        if ($column === null) {
             $colRow = $this->getHighestRowAndColumn();
 
             return $colRow['row'];
@@ -268,6 +278,9 @@ class Cells
 
         $rowList = [0];
         foreach ($this->getCoordinates() as $coord) {
+            $c = '';
+            $r = 0;
+
             sscanf($coord, '%[A-Z]%d', $c, $r);
             if ($c != $column) {
                 continue;
@@ -333,9 +346,12 @@ class Cells
      *
      * @param string $row Row number to remove
      */
-    public function removeRow($row)
+    public function removeRow($row): void
     {
         foreach ($this->getCoordinates() as $coord) {
+            $c = '';
+            $r = 0;
+
             sscanf($coord, '%[A-Z]%d', $c, $r);
             if ($r == $row) {
                 $this->delete($coord);
@@ -348,9 +364,12 @@ class Cells
      *
      * @param string $column Column ID to remove
      */
-    public function removeColumn($column)
+    public function removeColumn($column): void
     {
         foreach ($this->getCoordinates() as $coord) {
+            $c = '';
+            $r = 0;
+
             sscanf($coord, '%[A-Z]%d', $c, $r);
             if ($c == $column) {
                 $this->delete($coord);
@@ -361,10 +380,8 @@ class Cells
     /**
      * Store cell data in cache for the current cell object if it's "dirty",
      * and the 'nullify' the current cell object.
-     *
-     * @throws PhpSpreadsheetException
      */
-    private function storeCurrentCell()
+    private function storeCurrentCell(): void
     {
         if ($this->currentCellIsDirty && !empty($this->currentCoordinate)) {
             $this->currentCell->detach();
@@ -388,8 +405,6 @@ class Cells
      * @param string $pCoord Coordinate of the cell to update
      * @param Cell $cell Cell to update
      *
-     * @throws PhpSpreadsheetException
-     *
      * @return \PhpOffice\PhpSpreadsheet\Cell\Cell
      */
     public function add($pCoord, Cell $cell)
@@ -411,9 +426,7 @@ class Cells
      *
      * @param string $pCoord Coordinate of the cell
      *
-     * @throws PhpSpreadsheetException
-     *
-     * @return \PhpOffice\PhpSpreadsheet\Cell\Cell Cell that was found, or null if not found
+     * @return null|\PhpOffice\PhpSpreadsheet\Cell\Cell Cell that was found, or null if not found
      */
     public function get($pCoord)
     {
@@ -446,7 +459,7 @@ class Cells
     /**
      * Clear the cell collection and disconnect from our parent.
      */
-    public function unsetWorksheetCells()
+    public function unsetWorksheetCells(): void
     {
         if ($this->currentCell !== null) {
             $this->currentCell->detach();
@@ -474,15 +487,12 @@ class Cells
     /**
      * Returns all known cache keys.
      *
-     * @return string[]
+     * @return Generator|string[]
      */
     private function getAllCacheKeys()
     {
-        $keys = [];
         foreach ($this->getCoordinates() as $coordinate) {
-            $keys[] = $this->cachePrefix . $coordinate;
+            yield $this->cachePrefix . $coordinate;
         }
-
-        return $keys;
     }
 }

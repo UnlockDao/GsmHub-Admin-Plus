@@ -17,7 +17,6 @@ use SimpleXMLElement;
 class Chart
 {
     /**
-     * @param SimpleXMLElement $component
      * @param string $name
      * @param string $format
      *
@@ -51,7 +50,6 @@ class Chart
     }
 
     /**
-     * @param SimpleXMLElement $chartElements
      * @param string $chartName
      *
      * @return \PhpOffice\PhpSpreadsheet\Chart\Chart
@@ -278,6 +276,7 @@ class Chart
                     break;
                 case 'ser':
                     $marker = null;
+                    $seriesIndex = '';
                     foreach ($seriesDetails as $seriesKey => $seriesDetail) {
                         switch ($seriesKey) {
                             case 'idx':
@@ -433,7 +432,7 @@ class Chart
     private static function parseRichText(SimpleXMLElement $titleDetailPart)
     {
         $value = new RichText();
-
+        $objText = null;
         foreach ($titleDetailPart as $titleDetailElementKey => $titleDetailElement) {
             if (isset($titleDetailElement->t)) {
                 $objText = $value->createTextRun((string) $titleDetailElement->t);
@@ -528,10 +527,9 @@ class Chart
     }
 
     /**
-     * @param Layout $plotArea
      * @param mixed $plotAttributes
      */
-    private static function setChartAttributes(Layout $plotArea, $plotAttributes)
+    private static function setChartAttributes(Layout $plotArea, $plotAttributes): void
     {
         foreach ($plotAttributes as $plotAttributeKey => $plotAttributeValue) {
             switch ($plotAttributeKey) {

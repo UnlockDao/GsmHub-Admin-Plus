@@ -54,9 +54,16 @@ class StringHelper
     private static $isIconvEnabled;
 
     /**
+     * iconv options.
+     *
+     * @var string
+     */
+    private static $iconvOptions = '//IGNORE//TRANSLIT';
+
+    /**
      * Build control characters array.
      */
-    private static function buildControlCharacters()
+    private static function buildControlCharacters(): void
     {
         for ($i = 0; $i <= 31; ++$i) {
             if ($i != 9 && $i != 10 && $i != 13) {
@@ -70,7 +77,7 @@ class StringHelper
     /**
      * Build SYLK characters array.
      */
-    private static function buildSYLKCharacters()
+    private static function buildSYLKCharacters(): void
     {
         self::$SYLKCharacters = [
             "\x1B 0" => chr(0),
@@ -243,42 +250,29 @@ class StringHelper
             return self::$isIconvEnabled;
         }
 
+        // Assume no problems with iconv
+        self::$isIconvEnabled = true;
+
         // Fail if iconv doesn't exist
         if (!function_exists('iconv')) {
             self::$isIconvEnabled = false;
-
-            return false;
-        }
-
-        // Sometimes iconv is not working, and e.g. iconv('UTF-8', 'UTF-16LE', 'x') just returns false,
-        if (!@iconv('UTF-8', 'UTF-16LE', 'x')) {
+        } elseif (!@iconv('UTF-8', 'UTF-16LE', 'x')) {
+            // Sometimes iconv is not working, and e.g. iconv('UTF-8', 'UTF-16LE', 'x') just returns false,
             self::$isIconvEnabled = false;
-
-            return false;
-        }
-
-        // Sometimes iconv_substr('A', 0, 1, 'UTF-8') just returns false in PHP 5.2.0
-        // we cannot use iconv in that case either (http://bugs.php.net/bug.php?id=37773)
-        if (!@iconv_substr('A', 0, 1, 'UTF-8')) {
+        } elseif (defined('PHP_OS') && @stristr(PHP_OS, 'AIX') && defined('ICONV_IMPL') && (@strcasecmp(ICONV_IMPL, 'unknown') == 0) && defined('ICONV_VERSION') && (@strcasecmp(ICONV_VERSION, 'unknown') == 0)) {
+            // CUSTOM: IBM AIX iconv() does not work
             self::$isIconvEnabled = false;
-
-            return false;
         }
 
-        // CUSTOM: IBM AIX iconv() does not work
-        if (defined('PHP_OS') && @stristr(PHP_OS, 'AIX') && defined('ICONV_IMPL') && (@strcasecmp(ICONV_IMPL, 'unknown') == 0) && defined('ICONV_VERSION') && (@strcasecmp(ICONV_VERSION, 'unknown') == 0)) {
-            self::$isIconvEnabled = false;
-
-            return false;
+        // Deactivate iconv default options if they fail (as seen on IMB i)
+        if (self::$isIconvEnabled && !@iconv('UTF-8', 'UTF-16LE' . self::$iconvOptions, 'x')) {
+            self::$iconvOptions = '';
         }
 
-        // If we reach here no problems were detected with iconv
-        self::$isIconvEnabled = true;
-
-        return true;
+        return self::$isIconvEnabled;
     }
 
-    private static function buildCharacterSets()
+    private static function buildCharacterSets(): void
     {
         if (empty(self::$controlCharacters)) {
             self::buildControlCharacters();
@@ -436,9 +430,7 @@ class StringHelper
         // characters
         $chars = self::convertEncoding($value, 'UTF-16LE', 'UTF-8');
 
-        $data = pack('vC', $ln, 0x0001) . $chars;
-
-        return $data;
+        return pack('vC', $ln, 0x0001) . $chars;
     }
 
     /**
@@ -453,7 +445,7 @@ class StringHelper
     public static function convertEncoding($value, $to, $from)
     {
         if (self::getIsIconvEnabled()) {
-            $result = iconv($from, $to . '//IGNORE//TRANSLIT', $value);
+            $result = iconv($from, $to . self::$iconvOptions, $value);
             if (false !== $result) {
                 return $result;
             }
@@ -611,7 +603,7 @@ class StringHelper
      *
      * @param string $pValue Character for decimal separator
      */
-    public static function setDecimalSeparator($pValue)
+    public static function setDecimalSeparator($pValue): void
     {
         self::$decimalSeparator = $pValue;
     }
@@ -644,7 +636,7 @@ class StringHelper
      *
      * @param string $pValue Character for thousands separator
      */
-    public static function setThousandsSeparator($pValue)
+    public static function setThousandsSeparator($pValue): void
     {
         self::$thousandsSeparator = $pValue;
     }
@@ -682,7 +674,7 @@ class StringHelper
      *
      * @param string $pValue Character for currency code
      */
-    public static function setCurrencyCode($pValue)
+    public static function setCurrencyCode($pValue): void
     {
         self::$currencyCode = $pValue;
     }

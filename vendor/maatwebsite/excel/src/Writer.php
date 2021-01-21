@@ -2,24 +2,25 @@
 
 namespace Maatwebsite\Excel;
 
-use PhpOffice\PhpSpreadsheet\Cell\Cell;
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Writer\Csv;
-use Maatwebsite\Excel\Concerns\WithTitle;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use Maatwebsite\Excel\Concerns\WithCharts;
+use Maatwebsite\Excel\Cache\CacheManager;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
 use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
+use Maatwebsite\Excel\Concerns\WithProperties;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\BeforeExport;
 use Maatwebsite\Excel\Events\BeforeWriting;
-use Maatwebsite\Excel\Concerns\MapsCsvSettings;
-use Maatwebsite\Excel\Concerns\WithMultipleSheets;
-use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
-use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
-use PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder;
+use Maatwebsite\Excel\Factories\WriterFactory;
+use Maatwebsite\Excel\Files\RemoteTemporaryFile;
+use Maatwebsite\Excel\Files\TemporaryFile;
+use Maatwebsite\Excel\Files\TemporaryFileFactory;
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class Writer
 {
-    use DelegatedMacroable, HasEventBus, MapsCsvSettings;
+    use DelegatedMacroable, HasEventBus;
 
     /**
      * @var Spreadsheet
@@ -32,22 +33,16 @@ class Writer
     protected $exportable;
 
     /**
-     * @var string
+     * @var TemporaryFileFactory
      */
-    protected $tmpPath;
+    protected $temporaryFileFactory;
 
     /**
-     * @var string
+     * @param TemporaryFileFactory $temporaryFileFactory
      */
-    protected $file;
-
-    /**
-     * New Writer instance.
-     */
-    public function __construct()
+    public function __construct(TemporaryFileFactory $temporaryFileFactory)
     {
-        $this->tmpPath = config('excel.exports.temp_path', sys_get_temp_dir());
-        $this->applyCsvSettings(config('excel.exports.csv', []));
+        $this->temporaryFileFactory = $temporaryFileFactory;
 
         $this->setDefaultValueBinder();
     }
@@ -56,9 +51,10 @@ class Writer
      * @param object $export
      * @param string $writerType
      *
-     * @return string
+     * @return TemporaryFile
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    public function export($export, string $writerType): string
+    public function export($export, string $writerType): TemporaryFile
     {
         $this->open($export);
 
@@ -71,7 +67,7 @@ class Writer
             $this->addNewSheet()->export($sheetExport);
         }
 
-        return $this->write($export, $this->tempFile(), $writerType);
+        return $this->write($export, $this->temporaryFileFactory->makeLocal(null, strtolower($writerType)), $writerType);
     }
 
     /**
@@ -95,139 +91,75 @@ class Writer
             Cell::setValueBinder($export);
         }
 
+        $this->handleDocumentProperties($export);
+
         $this->raise(new BeforeExport($this, $this->exportable));
 
-        if ($export instanceof WithTitle) {
-            $this->spreadsheet->getProperties()->setTitle($export->title());
-        }
-
         return $this;
     }
 
     /**
-     * @param string $tempFile
-     * @param string $writerType
+     * @param TemporaryFile $tempFile
+     * @param string        $writerType
      *
-     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
      * @return Writer
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
      */
-    public function reopen(string $tempFile, string $writerType)
+    public function reopen(TemporaryFile $tempFile, string $writerType)
     {
         $reader            = IOFactory::createReader($writerType);
-        $this->spreadsheet = $reader->load($tempFile);
+        $this->spreadsheet = $reader->load($tempFile->sync()->getLocalPath());
 
         return $this;
     }
 
     /**
-     * @param object $export
-     * @param string $fileName
-     * @param string $writerType
+     * @param object        $export
+     * @param TemporaryFile $temporaryFile
+     * @param string        $writerType
      *
-     * @return string
+     * @return TemporaryFile
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    public function write($export, string $fileName, string $writerType)
+    public function write($export, TemporaryFile $temporaryFile, string $writerType): TemporaryFile
     {
         $this->exportable = $export;
 
+        $this->spreadsheet->setActiveSheetIndex(0);
+
         $this->raise(new BeforeWriting($this, $this->exportable));
 
-        if ($export instanceof WithCustomCsvSettings) {
-            $this->applyCsvSettings($export->getCsvSettings());
+        $writer = WriterFactory::make(
+            $writerType,
+            $this->spreadsheet,
+            $export
+        );
+
+        $writer->save(
+            $path = $temporaryFile->getLocalPath()
+        );
+
+        if ($temporaryFile instanceof RemoteTemporaryFile) {
+            $temporaryFile->updateRemote();
         }
-
-        $writer = IOFactory::createWriter($this->spreadsheet, $writerType);
-
-        if ($export instanceof WithCharts) {
-            $writer->setIncludeCharts(true);
-        }
-
-        if ($writer instanceof Csv) {
-            $writer->setDelimiter($this->delimiter);
-            $writer->setEnclosure($this->enclosure);
-            $writer->setLineEnding($this->lineEnding);
-            $writer->setUseBOM($this->useBom);
-            $writer->setIncludeSeparatorLine($this->includeSeparatorLine);
-            $writer->setExcelCompatibility($this->excelCompatibility);
-        }
-
-        $writer->save($fileName);
 
         $this->spreadsheet->disconnectWorksheets();
         unset($this->spreadsheet);
+        app(CacheManager::class)->flush();
 
-        return $fileName;
+        return $temporaryFile;
     }
 
     /**
      * @param int|null $sheetIndex
      *
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @return Sheet
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function addNewSheet(int $sheetIndex = null)
     {
         return new Sheet($this->spreadsheet->createSheet($sheetIndex));
-    }
-
-    /**
-     * @param string $delimiter
-     *
-     * @return Writer
-     */
-    public function setDelimiter(string $delimiter)
-    {
-        $this->delimiter = $delimiter;
-
-        return $this;
-    }
-
-    /**
-     * @param string $enclosure
-     *
-     * @return Writer
-     */
-    public function setEnclosure(string $enclosure)
-    {
-        $this->enclosure = $enclosure;
-
-        return $this;
-    }
-
-    /**
-     * @param string $lineEnding
-     *
-     * @return Writer
-     */
-    public function setLineEnding(string $lineEnding)
-    {
-        $this->lineEnding = $lineEnding;
-
-        return $this;
-    }
-
-    /**
-     * @param bool $includeSeparatorLine
-     *
-     * @return Writer
-     */
-    public function setIncludeSeparatorLine(bool $includeSeparatorLine)
-    {
-        $this->includeSeparatorLine = $includeSeparatorLine;
-
-        return $this;
-    }
-
-    /**
-     * @param bool $excelCompatibility
-     *
-     * @return Writer
-     */
-    public function setExcelCompatibility(bool $excelCompatibility)
-    {
-        $this->excelCompatibility = $excelCompatibility;
-
-        return $this;
     }
 
     /**
@@ -243,24 +175,18 @@ class Writer
      */
     public function setDefaultValueBinder()
     {
-        Cell::setValueBinder(new DefaultValueBinder);
+        Cell::setValueBinder(
+            app(config('excel.value_binder.default', DefaultValueBinder::class))
+        );
 
         return $this;
     }
 
     /**
-     * @return string
-     */
-    public function tempFile(): string
-    {
-        return $this->tmpPath . DIRECTORY_SEPARATOR . 'laravel-excel-' . str_random(16);
-    }
-
-    /**
      * @param int $sheetIndex
      *
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @return Sheet
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function getSheetByIndex(int $sheetIndex)
     {
@@ -275,5 +201,55 @@ class Writer
     public function hasConcern($concern): bool
     {
         return $this->exportable instanceof $concern;
+    }
+
+    /**
+     * @param object $export
+     */
+    protected function handleDocumentProperties($export)
+    {
+        $properties = config('excel.exports.properties', []);
+
+        if ($export instanceof WithProperties) {
+            $properties = array_merge($properties, $export->properties());
+        }
+
+        if ($export instanceof WithTitle) {
+            $properties = array_merge($properties, ['title' => $export->title()]);
+        }
+
+        $props = $this->spreadsheet->getProperties();
+
+        foreach (array_filter($properties) as $property => $value) {
+            switch ($property) {
+                case 'title':
+                    $props->setTitle($value);
+                    break;
+                case 'description':
+                    $props->setDescription($value);
+                    break;
+                case 'creator':
+                    $props->setCreator($value);
+                    break;
+                case 'lastModifiedBy':
+                    $props->setLastModifiedBy($value);
+                    break;
+                case 'subject':
+                    $props->setSubject($value);
+                    break;
+                case 'keywords':
+                    $props->setKeywords($value);
+                    break;
+                case 'category':
+                    $props->setCategory($value);
+                    break;
+                case 'manager':
+                    $props->setManager($value);
+                    break;
+                case 'company':
+                    $props->setCompany($value);
+                    break;
+            }
+        }
     }
 }

@@ -147,10 +147,10 @@ class Mailable implements MailableContract, Renderable
      */
     public function send(MailerContract $mailer)
     {
-        $this->withLocale($this->locale, function () use ($mailer) {
+        return $this->withLocale($this->locale, function () use ($mailer) {
             Container::getInstance()->call([$this, 'build']);
 
-            $mailer->send($this->buildView(), $this->buildViewData(), function ($message) {
+            return $mailer->send($this->buildView(), $this->buildViewData(), function ($message) {
                 $this->buildFrom($message)
                      ->buildRecipients($message)
                      ->buildSubject($message)
@@ -203,20 +203,26 @@ class Mailable implements MailableContract, Renderable
      * Render the mailable into a view.
      *
      * @return \Illuminate\View\View
+     *
+     * @throws \ReflectionException
      */
     public function render()
     {
-        Container::getInstance()->call([$this, 'build']);
+        return $this->withLocale($this->locale, function () {
+            Container::getInstance()->call([$this, 'build']);
 
-        return Container::getInstance()->make('mailer')->render(
-            $this->buildView(), $this->buildViewData()
-        );
+            return Container::getInstance()->make('mailer')->render(
+                $this->buildView(), $this->buildViewData()
+            );
+        });
     }
 
     /**
      * Build the view for the message.
      *
      * @return array|string
+     *
+     * @throws \ReflectionException
      */
     protected function buildView()
     {
@@ -244,6 +250,8 @@ class Mailable implements MailableContract, Renderable
      * Build the Markdown view for the message.
      *
      * @return array
+     *
+     * @throws \ReflectionException
      */
     protected function buildMarkdownView()
     {
@@ -265,6 +273,8 @@ class Mailable implements MailableContract, Renderable
      * Build the view data for the message.
      *
      * @return array
+     *
+     * @throws \ReflectionException
      */
     public function buildViewData()
     {
@@ -543,7 +553,7 @@ class Mailable implements MailableContract, Renderable
     }
 
     /**
-     * Determine if the given recipient is set on the mailable.
+     * Determine if the given replyTo is set on the mailable.
      *
      * @param  object|array|string  $address
      * @param  string|null  $name
@@ -746,7 +756,7 @@ class Mailable implements MailableContract, Renderable
      * Attach a file to the message from storage.
      *
      * @param  string  $path
-     * @param  string  $name
+     * @param  string|null  $name
      * @param  array  $options
      * @return $this
      */
@@ -760,7 +770,7 @@ class Mailable implements MailableContract, Renderable
      *
      * @param  string  $disk
      * @param  string  $path
-     * @param  string  $name
+     * @param  string|null  $name
      * @param  array  $options
      * @return $this
      */

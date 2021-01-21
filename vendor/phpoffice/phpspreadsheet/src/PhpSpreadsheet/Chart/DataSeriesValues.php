@@ -60,9 +60,9 @@ class DataSeriesValues
     private $dataValues = [];
 
     /**
-     * Fill color.
+     * Fill color (can be array with colors if dataseries have custom colors).
      *
-     * @var string
+     * @var string|string[]
      */
     private $fillColor;
 
@@ -82,7 +82,7 @@ class DataSeriesValues
      * @param int $pointCount
      * @param mixed $dataValues
      * @param null|mixed $marker
-     * @param null|string $fillColor
+     * @param null|string|string[] $fillColor
      */
     public function __construct($dataType = self::DATASERIES_TYPE_NUMBER, $dataSource = null, $formatCode = null, $pointCount = 0, $dataValues = [], $marker = null, $fillColor = null)
     {
@@ -115,9 +115,7 @@ class DataSeriesValues
      *                                    DataSeriesValues::DATASERIES_TYPE_NUMBER
      *                                        Normally used for chart data values
      *
-     * @throws Exception
-     *
-     * @return DataSeriesValues
+     * @return $this
      */
     public function setDataType($dataType)
     {
@@ -144,7 +142,7 @@ class DataSeriesValues
      *
      * @param string $dataSource
      *
-     * @return DataSeriesValues
+     * @return $this
      */
     public function setDataSource($dataSource)
     {
@@ -168,7 +166,7 @@ class DataSeriesValues
      *
      * @param string $marker
      *
-     * @return DataSeriesValues
+     * @return $this
      */
     public function setPointMarker($marker)
     {
@@ -192,7 +190,7 @@ class DataSeriesValues
      *
      * @param string $formatCode
      *
-     * @return DataSeriesValues
+     * @return $this
      */
     public function setFormatCode($formatCode)
     {
@@ -214,7 +212,7 @@ class DataSeriesValues
     /**
      * Get fill color.
      *
-     * @return string HEX color
+     * @return string|string[] HEX color or array with HEX colors
      */
     public function getFillColor()
     {
@@ -224,18 +222,38 @@ class DataSeriesValues
     /**
      * Set fill color for series.
      *
-     * @param string $color HEX color
+     * @param string|string[] $color HEX color or array with HEX colors
      *
      * @return   DataSeriesValues
      */
     public function setFillColor($color)
     {
-        if (!preg_match('/^[a-f0-9]{6}$/i', $color)) {
-            throw new Exception('Invalid hex color for chart series');
+        if (is_array($color)) {
+            foreach ($color as $colorValue) {
+                $this->validateColor($colorValue);
+            }
+        } else {
+            $this->validateColor($color);
         }
         $this->fillColor = $color;
 
         return $this;
+    }
+
+    /**
+     * Method for validating hex color.
+     *
+     * @param string $color value for color
+     *
+     * @return bool true if validation was successful
+     */
+    private function validateColor($color)
+    {
+        if (!preg_match('/^[a-f0-9]{6}$/i', $color)) {
+            throw new Exception(sprintf('Invalid hex color for chart series (color: "%s")', $color));
+        }
+
+        return true;
     }
 
     /**
@@ -253,7 +271,7 @@ class DataSeriesValues
      *
      * @param int $width
      *
-     * @return DataSeriesValues
+     * @return $this
      */
     public function setLineWidth($width)
     {
@@ -271,7 +289,7 @@ class DataSeriesValues
     public function isMultiLevelSeries()
     {
         if (count($this->dataValues) > 0) {
-            return is_array($this->dataValues[0]);
+            return is_array(array_values($this->dataValues)[0]);
         }
 
         return null;
@@ -324,7 +342,7 @@ class DataSeriesValues
      *
      * @param array $dataValues
      *
-     * @return DataSeriesValues
+     * @return $this
      */
     public function setDataValues($dataValues)
     {
@@ -334,7 +352,7 @@ class DataSeriesValues
         return $this;
     }
 
-    public function refresh(Worksheet $worksheet, $flatten = true)
+    public function refresh(Worksheet $worksheet, $flatten = true): void
     {
         if ($this->dataSource !== null) {
             $calcEngine = Calculation::getInstance($worksheet->getParent());
@@ -348,17 +366,13 @@ class DataSeriesValues
             if ($flatten) {
                 $this->dataValues = Functions::flattenArray($newDataValues);
                 foreach ($this->dataValues as &$dataValue) {
-                    if ((!empty($dataValue)) && ($dataValue[0] == '#')) {
+                    if (is_string($dataValue) && !empty($dataValue) && $dataValue[0] == '#') {
                         $dataValue = 0.0;
                     }
                 }
                 unset($dataValue);
             } else {
-                $cellRange = explode('!', $this->dataSource);
-                if (count($cellRange) > 1) {
-                    list(, $cellRange) = $cellRange;
-                }
-
+                [$worksheet, $cellRange] = Worksheet::extractSheetTitle($this->dataSource, true);
                 $dimensions = Coordinate::rangeDimension(str_replace('$', '', $cellRange));
                 if (($dimensions[0] == 1) || ($dimensions[1] == 1)) {
                     $this->dataValues = Functions::flattenArray($newDataValues);
