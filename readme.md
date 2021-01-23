@@ -1,4 +1,3 @@
-/opt/plesk/php/7.2/bin/php /usr/lib64/plesk-9.0/composer.phar install
+composer install --optimize-autoloader --no-dev
 
-
-/opt/plesk/php/7.2/bin/php artisan key:generate
+php artisan key:generate
