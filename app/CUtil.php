@@ -14,7 +14,7 @@ class CUtil
     public static function apAdmin()
     {
         $users = Auth::user()->admin;
-        if($users->supplier_access == 'Admin'){
+        if($users->supplier_access == 'Admin' || $users->user_id == 1){
             return true;
         }else{
             return false;

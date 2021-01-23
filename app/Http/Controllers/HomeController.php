@@ -13,6 +13,7 @@ use DatePeriod;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\SQL;
 
 class HomeController extends Controller
 {
@@ -24,6 +25,10 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+
+        // Check DB
+        $sql = new SQL();
+        $sql->run();
     }
 
     /**

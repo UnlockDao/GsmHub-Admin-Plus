@@ -13,10 +13,10 @@
 use App\Http\Controllers\SQL;
 use Illuminate\Support\Facades\Auth;
 
-Route::get('/', function () {
+Route::get('/init', function () {
     $sql = new SQL();
     $sql->run();
-    return redirect('home');
+    return redirect('/');
 });
 
 Route::get('/logout', function () {
