@@ -166,7 +166,7 @@
                                                 onClick="showEdit(this);">
                                                 <a @if($v->serverservicequantityrange->isEmpty() &&$v->serverservicetypewiseprice->isEmpty())
                                                    style="color: red; background: yellow"
-                                                   @endif href="https://s-unlock.com/admin/server-service/edit/{{$v->id}}"
+                                                   @endif href="{{env('GSMHUB_URL')}}/admin/server-service/edit/{{$v->id}}"
                                                    target="_blank" data-toggle="tooltip" data-placement="top"
                                                    data-original-title="{{$v->service_name}}">{{$v->service_name}}</a>
                                             </td>

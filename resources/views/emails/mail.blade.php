@@ -319,7 +319,7 @@
                                                     <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                                                         <tbody>
                                                         <tr>
-                                                            <td> <a href="http://s-unlock.com" target="_blank">Active</a> </td>
+                                                            <td> <a href="{{env('GSMHUB_URL')}}" target="_blank">Active</a> </td>
                                                         </tr>
                                                         </tbody>
                                                     </table>
@@ -348,7 +348,7 @@
                         </tr>
                         <tr>
                             <td class="content-block powered-by">
-                                Powered by <a href="http://s-unlock.com">S-Unlock.com</a>.
+                                Powered by <a href="{{env('GSMHUB_URL')}}">{{env('GSMHUB_URL')}}</a>.
                             </td>
                         </tr>
                     </table>

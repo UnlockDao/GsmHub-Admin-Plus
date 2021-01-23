@@ -166,7 +166,7 @@
                                                 @endif @if(!CUtil::apStaff())contenteditable="true" @endif
                                                 onBlur="saveToDatabase(this,'service_name','services','{{$v->id}}')"
                                                 onClick="showEdit(this);">
-                                                <a href="https://s-unlock.com/admin/imei-service/edit/{{$v->id}}"
+                                                <a href="{{env('GSMHUB_URL')}}/admin/imei-service/edit/{{$v->id}}"
                                                    class="max-lines @if($v->imeipricing->sale >0) badge1 @endif"
                                                    data-toggle="tooltip" data-placement="top"
                                                    data-original-title="{{$v->service_name}}"

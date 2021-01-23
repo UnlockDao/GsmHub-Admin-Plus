@@ -69,9 +69,9 @@
                                 <div class="col">
                                     <h5 class="card-title text-uppercase text-muted mb-0">IMEI Service Status</h5>
                                     <span class="h2 font-weight-bold mb-0"><a
-                                                href="https://s-unlock.com/admin/order-history/service-wise"
+                                                href="{{env('GSMHUB_URL')}}/admin/order-history/service-wise"
                                                 target="_blank">New: {{current($pendingoder['ImeiServiceOrder'])}}</a> | <a
-                                                href="https://s-unlock.com/admin/order-history/reply-accepted-order?type=quick"
+                                                href="{{env('GSMHUB_URL')}}/admin/order-history/reply-accepted-order?type=quick"
                                                 target="_blank">Accepted: {{next($pendingoder['ImeiServiceOrder'])}}</a></span>
                                 </div>
                                 <div class="col-auto">
@@ -94,9 +94,9 @@
                                 <div class="col">
                                     <h5 class="card-title text-uppercase text-muted mb-0">Server Service Status</h5>
                                     <span class="h2 font-weight-bold mb-0"><a
-                                                href="https://s-unlock.com/admin/server-order-history/service-wise"
+                                                href="{{env('GSMHUB_URL')}}/admin/server-order-history/service-wise"
                                                 target="_blank">New: {{current($pendingoder['ServerServiceOrder'])}}</a> | <a
-                                                href="https://s-unlock.com/admin/server-order-history/reply-accepted-order?type=quick"
+                                                href="{{env('GSMHUB_URL')}}/admin/server-order-history/reply-accepted-order?type=quick"
                                                 target="_blank">Accepted: {{next($pendingoder['ServerServiceOrder'])}}</a></span>
                                 </div>
                                 <div class="col-auto">

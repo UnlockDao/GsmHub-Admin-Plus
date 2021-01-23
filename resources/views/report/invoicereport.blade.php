@@ -164,7 +164,7 @@
                                                        <pre>{{$v->paypal_transaction->paypal_post_vars }}</pre>
                                         @endif</td>
                                     @endif
-                                    <td scope="row"><a href="https://s-unlock.com/admin/payment/view-invoice/{{$v->id}}" target="_blank" class="btn btn-sm btn-primary">View</a></td>
+                                    <td scope="row"><a href="{{env('GSMHUB_URL')}}/admin/payment/view-invoice/{{$v->id}}" target="_blank" class="btn btn-sm btn-primary">View</a></td>
                                 </tr>
                                 <?php $credit += $v->invoice_amount ?>
                                 <?php $count += 1 ?>
