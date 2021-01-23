@@ -84,8 +84,11 @@ class HomeController extends Controller
         $incomechart = $this->incomechart($datefilter);
         $revenuechart = $this->revenuechart($datefilter);
         $receiver = DB::table('paypal_receiver_details')->first();
-        $paypalNvpService = new PaypalNVP($receiver->api_user_name, $receiver->api_signature, $receiver->api_password);
-        $balance_payment = $paypalNvpService->CallGetBalance();
+        $balance_payment = null;
+        if($receiver) {
+            $paypalNvpService = new PaypalNVP($receiver->api_user_name, $receiver->api_signature, $receiver->api_password);
+            $balance_payment = $paypalNvpService->CallGetBalance();
+        }
         return view('home.finance', compact('serveroder', 'imeioder', 'invoice', 'pendingoder', 'topservice', 'profitchart', 'ordercountchart', 'incomechart','revenuechart','balance_payment'));
     }
 
