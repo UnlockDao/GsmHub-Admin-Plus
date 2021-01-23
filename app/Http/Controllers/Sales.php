@@ -103,7 +103,7 @@ class Sales
                     foreach ($currencies as $cu) {
                         Imeiservicecredit::where('service_id', $c)
                             ->where('currency', $cu->currency_code)
-                            ->update(['credit' => $saveimeipricing->pricingdefault_sale * $cu->exchange_rate_static]);
+                            ->update(['credit' => $saveimeipricing->pricingdefault_sale * Utility::exchangeRateStatic($cu->currency_code)]);
                     }
                     if ($cliendefault == !null) {
                         foreach ($currencies as $cs) {
@@ -111,7 +111,7 @@ class Sales
                                 ->where('service_type', 'imei')
                                 ->where('currency', $cs->currency_code)
                                 ->where('service_id', $i->id)
-                                ->update(['discount' => ($saveimeipricing->pricing_sale - $i->credit) * $cs->exchange_rate_static]);
+                                ->update(['discount' => ($saveimeipricing->pricing_sale - $i->credit) * Utility::exchangeRateStatic($cs->currency_code)]);
                         }
                         foreach ($cliengroup as $clg) {
                             $imeiprice = Clientgroupprice::where('service_id', $i->id)->where('group_id', $cliendefault->id)->where('currency', $currenciessite->config_value)->first();
@@ -124,7 +124,7 @@ class Sales
                                         ->where('service_type', 'imei')
                                         ->where('currency', $c->currency_code)
                                         ->where('service_id', $i->id)
-                                        ->update(['discount' => $y * $c->exchange_rate_static]);
+                                        ->update(['discount' => $y * Utility::exchangeRateStatic($c->currency_code)]);
                                 }
                             }
                         }
@@ -145,14 +145,14 @@ class Sales
                             foreach ($currencies as $cu) {
                                 Imeiservicecredit::where('service_id', $c)
                                     ->where('currency', $cu->currency_code)
-                                    ->update(['credit' => ($saveimeipricing->pricingdefault_sale * ((100 - $sales) / 100)) * $cu->exchange_rate_static]);
+                                    ->update(['credit' => ($saveimeipricing->pricingdefault_sale * ((100 - $sales) / 100)) * Utility::exchangeRateStatic($cu->currency_code)]);
                             }
                             foreach ($currencies as $cs) {
                                 Clientgroupprice::where('group_id', $cliendefault->id)
                                     ->where('service_type', 'imei')
                                     ->where('currency', $cs->currency_code)
                                     ->where('service_id', $i->id)
-                                    ->update(['discount' => (($saveimeipricing->pricing_sale * ((100 - $sales) / 100)) - $i->credit) * $cs->exchange_rate_static]);
+                                    ->update(['discount' => (($saveimeipricing->pricing_sale * ((100 - $sales) / 100)) - $i->credit) * Utility::exchangeRateStatic($cs->currency_code)]);
                             }
                         }
                         if ($type == 2) {
@@ -161,7 +161,7 @@ class Sales
                             foreach ($currencies as $cu) {
                                 Imeiservicecredit::where('service_id', $c)
                                     ->where('currency', $cu->currency_code)
-                                    ->update(['credit' => ($saveimeipricing->pricingdefault_sale - ((($saveimeipricing->pricingdefault_sale - $i->purchase_cost) / 100) * $sales)) * $cu->exchange_rate_static]);
+                                    ->update(['credit' => ($saveimeipricing->pricingdefault_sale - ((($saveimeipricing->pricingdefault_sale - $i->purchase_cost) / 100) * $sales)) * Utility::exchangeRateStatic($cu->currency_code)]);
                             }
                             foreach ($currencies as $cs) {
                                 $xx = ($saveimeipricing->pricing_sale - ((($saveimeipricing->pricing_sale - $i->purchase_cost) / 100) * $sales));
@@ -169,7 +169,7 @@ class Sales
                                     ->where('service_type', 'imei')
                                     ->where('currency', $cs->currency_code)
                                     ->where('service_id', $i->id)
-                                    ->update(['discount' => (($xx - $i->credit) * $cs->exchange_rate_static)]);
+                                    ->update(['discount' => (($xx - $i->credit) * Utility::exchangeRateStatic($cs->currency_code))]);
                             }
                         }
                         foreach ($cliengroup as $clg) {
@@ -183,7 +183,7 @@ class Sales
                                         ->where('service_type', 'imei')
                                         ->where('currency', $c->currency_code)
                                         ->where('service_id', $i->id)
-                                        ->update(['discount' => $y * $c->exchange_rate_static]);
+                                        ->update(['discount' => $y * Utility::exchangeRateStatic($c->currency_code)]);
                                 }
                             }
                         }
@@ -265,7 +265,7 @@ class Sales
                             foreach ($currencies as $c) {
                                 $run = Serverserviceusercredit::where('server_service_range_id', $cr)
                                     ->where('currency', $c->currency_code)
-                                    ->update(['pricingdefault_sale' => $racredit->credit * $c->exchange_rate_static]);
+                                    ->update(['pricingdefault_sale' => $racredit->credit * Utility::exchangeRateStatic($c->currency_code)]);
                             }
                         }
                         $ra->sale = $request->sales;
@@ -274,10 +274,10 @@ class Sales
                             $run2 = Serverserviceclientgroupcredit::where('server_service_range_id', $cr)
                                 ->where('client_group_id', $cliendefault->id)
                                 ->where('currency', $c->currency_code)
-                                ->update(['credit' => $ra->pricing_sale * $c->exchange_rate_static]);
+                                ->update(['credit' => $ra->pricing_sale * Utility::exchangeRateStatic($c->currency_code)]);
                             $run3 = Serverserviceusercredit::where('server_service_range_id', $cr)
                                 ->where('currency', $c->currency_code)
-                                ->update(['credit' => $racredit->pricingdefault_sale * $c->exchange_rate_static]);
+                                ->update(['credit' => $racredit->pricingdefault_sale * Utility::exchangeRateStatic($c->currency_code)]);
                         }
 
                         $this->updatrangeserver($cr);
@@ -289,7 +289,7 @@ class Sales
                             foreach ($currencies as $c) {
                                 $run = Serverserviceusercredit::where('server_service_range_id', $cr)
                                     ->where('currency', $c->currency_code)
-                                    ->update(['pricingdefault_sale' => $racredit->credit * $c->exchange_rate_static]);
+                                    ->update(['pricingdefault_sale' => $racredit->credit * Utility::exchangeRateStatic($c->currency_code)]);
                             }
                         }
                         $ra->sale = $request->sales;
@@ -300,10 +300,10 @@ class Sales
                                 $run = Serverserviceclientgroupcredit::where('server_service_range_id', $cr)
                                     ->where('client_group_id', $cliendefault->id)
                                     ->where('currency', $c->currency_code)
-                                    ->update(['credit' => ($ra->pricing_sale * ((100 - $sales) / 100)) * $c->exchange_rate_static]);
+                                    ->update(['credit' => ($ra->pricing_sale * ((100 - $sales) / 100)) * Utility::exchangeRateStatic($c->currency_code)]);
                                 $run2 = Serverserviceusercredit::where('server_service_range_id', $cr)
                                     ->where('currency', $c->currency_code)
-                                    ->update(['credit' => ($racredit->pricingdefault_sale * ((100 - $sales) / 100)) * $c->exchange_rate_static]);
+                                    ->update(['credit' => ($racredit->pricingdefault_sale * ((100 - $sales) / 100)) * Utility::exchangeRateStatic($c->currency_code)]);
                             }
 
                         }
@@ -313,10 +313,10 @@ class Sales
                                 $run = Serverserviceclientgroupcredit::where('server_service_range_id', $cr)
                                     ->where('client_group_id', $cliendefault->id)
                                     ->where('currency', $c->currency_code)
-                                    ->update(['credit' => $xx * $c->exchange_rate_static]);
+                                    ->update(['credit' => $xx * Utility::exchangeRateStatic($c->currency_code)]);
                                 $run2 = Serverserviceusercredit::where('server_service_range_id', $cr)
                                     ->where('currency', $c->currency_code)
-                                    ->update(['credit' => ($racredit->pricingdefault_sale - ((($racredit->pricingdefault_sale - $ra->serverservicequantityrange->purchase_cost) / 100) * $sales)) * $c->exchange_rate_static]);
+                                    ->update(['credit' => ($racredit->pricingdefault_sale - ((($racredit->pricingdefault_sale - $ra->serverservicequantityrange->purchase_cost) / 100) * $sales)) * Utility::exchangeRateStatic($c->currency_code)]);
 
                             }
 
@@ -397,7 +397,7 @@ class Sales
                             $update = Serverserviceclientgroupcredit::where('server_service_range_id', $ra->server_service_range_id)
                                 ->where('client_group_id', $clg->id)
                                 ->where('currency', $cu->currency_code)
-                                ->update(['credit' => $chietkhau * $cu->exchange_rate_static]);
+                                ->update(['credit' => $chietkhau * Utility::exchangeRateStatic($cu->currency_code)]);
                         }
                     }
                 }

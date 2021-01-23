@@ -96,7 +96,7 @@ class Export
                 foreach ($currencies as $c) {
                     Imeiservicecredit::where('service_id', $request->id)
                         ->where('currency', $c->currency_code)
-                        ->update(['credit' => $request->value * $c->exchange_rate_static]);
+                        ->update(['credit' => $request->value * Utility::exchangeRateStatic($c->currency_code)]);
                 }
             }
             if ($request->column == 'service_group') {
@@ -123,14 +123,14 @@ class Export
                 $exchangerate = Currencie::where('currency_code', 'VND')->first();
                 $imeiprice = Imeiservicepricing::where('id_supplier', $request->value)->find($request->id);
                 if ($imeiprice->imei->api_id == !null && $imeiprice->imei->apiserverservices == !null) {
-                    $giatransactionfee = ($imeiprice->nhacungcap->exchangerate * $imeiprice->imei->apiserverservices->credits) / $exchangerate->exchange_rate_static + (($imeiprice->imei->apiserverservices->credits / 100) * $imeiprice->nhacungcap->transactionfee);
+                    $giatransactionfee = ($imeiprice->nhacungcap->exchangerate * $imeiprice->imei->apiserverservices->credits) / Utility::exchangeRateStatic($exchangerate->currency_code) + (($imeiprice->imei->apiserverservices->credits / 100) * $imeiprice->nhacungcap->transactionfee);
                     Imeiservice::where('id', $request->id)->update(['purchase_cost' => $giatransactionfee]);
                 } else {
                     $defaultcurrency = Currenciepricing::where('type', '1')->first();
                     $exchangerate = Currencie::find($defaultcurrency->currency_id);
                     $c = Imeiservicepricing::find($request->id);
                     if ($c->nhacungcap == !null) {
-                        $giatransactionfee = ($c->nhacungcap->exchangerate * $c->purchasecost) / $exchangerate->exchange_rate_static + (($c->purchasecost / 100) * $c->nhacungcap->transactionfee);
+                        $giatransactionfee = ($c->nhacungcap->exchangerate * $c->purchasecost) / Utility::exchangeRateStatic($exchangerate->currency_code) + (($c->purchasecost / 100) * $c->nhacungcap->transactionfee);
                         Imeiservice::where('id', $c->id)->update(['purchase_cost' => $giatransactionfee]);
                         $this->repriceimei($request->id);
                     }
@@ -146,7 +146,7 @@ class Export
                 $exchangerate = Currencie::find($defaultcurrency->currency_id);
                 $c = Imeiservicepricing::find($request->id);
                 if ($c->nhacungcap == !null) {
-                    $giatransactionfee = ($c->nhacungcap->exchangerate * $c->purchasecost) / $exchangerate->exchange_rate_static + (($c->purchasecost / 100) * $c->nhacungcap->transactionfee);
+                    $giatransactionfee = ($c->nhacungcap->exchangerate * $c->purchasecost) / Utility::exchangeRateStatic($exchangerate->currency_code) + (($c->purchasecost / 100) * $c->nhacungcap->transactionfee);
                     Imeiservice::where('id', $c->id)->update(['purchase_cost' => $giatransactionfee]);
                     $this->repriceimei($request->id);
                 }
@@ -160,7 +160,7 @@ class Export
                     ->where('service_type', 'imei')
                     ->where('currency', $c->currency_code)
                     ->where('service_id', $request->id)
-                    ->update(['discount' => $y * $c->exchange_rate_static]);
+                    ->update(['discount' => $y * Utility::exchangeRateStatic($c->currency_code)]);
             }
             if ($cliendefault->id == $request->idgr) {
                 foreach ($cliengroup as $clg) {
@@ -174,7 +174,7 @@ class Export
                                 ->where('service_type', 'imei')
                                 ->where('currency', $c->currency_code)
                                 ->where('service_id', $getimei->id)
-                                ->update(['discount' => $y * $c->exchange_rate_static]);
+                                ->update(['discount' => $y * Utility::exchangeRateStatic($c->currency_code)]);
                         }
                     }
                 }
@@ -203,7 +203,7 @@ class Export
                         ->where('service_type', 'imei')
                         ->where('currency', $c->currency_code)
                         ->where('service_id', $getimei->id)
-                        ->update(['discount' => $y * $c->exchange_rate_static]);
+                        ->update(['discount' => $y * Utility::exchangeRateStatic($c->currency_code)]);
                 }
             }
         }

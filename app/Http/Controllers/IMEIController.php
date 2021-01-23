@@ -81,7 +81,7 @@ class IMEIController extends Controller
         foreach ($currencies as $c) {
             Imeiservicecredit::where('service_id', $id)
                 ->where('currency', $c->currency_code)
-                ->update(['credit' => $request->credit * $c->exchange_rate_static]);
+                ->update(['credit' => $request->credit * Utility::exchangeRateStatic($c->currency_code)]);
         }
 
         $groupPrices = $request->input('groupPrice');
@@ -162,13 +162,13 @@ class IMEIController extends Controller
             if ($c->imei->api_id == !null) {
                 if ($c->nhacungcap == !null) {
                     if ($c->imei->apiserverservices) {
-                        $giatransactionfee = ($c->nhacungcap->exchangerate * $c->imei->apiserverservices->credits) / $exchangerate->exchange_rate_static + (($c->imei->apiserverservices->credits / 100) * $c->nhacungcap->transactionfee);
+                        $giatransactionfee = ($c->nhacungcap->exchangerate * $c->imei->apiserverservices->credits) / Utility::exchangeRateStatic($exchangerate->currency_code) + (($c->imei->apiserverservices->credits / 100) * $c->nhacungcap->transactionfee);
                         $updategiatransactionfee = Imeiservice::where('id', $c->id)->update(['purchase_cost' => $giatransactionfee]);
                     }
                 }
             } elseif ($c->imei->purchasecost == !null) {
                 if ($c->nhacungcap == !null) {
-                    $giatransactionfee = ($c->nhacungcap->exchangerate * $c->purchasecost) / $exchangerate->exchange_rate_static + (($c->purchasecost / 100) * $c->nhacungcap->transactionfee);
+                    $giatransactionfee = ($c->nhacungcap->exchangerate * $c->purchasecost) / Utility::exchangeRateStatic($exchangerate->currency_code) + (($c->purchasecost / 100) * $c->nhacungcap->transactionfee);
                     $updategiatransactionfee = Imeiservice::where('id', $c->id)->update(['purchase_cost' => $giatransactionfee]);
                 }
             }
@@ -192,7 +192,7 @@ class IMEIController extends Controller
         $exchangerate = Currencie::where('currency_code', 'VND')->first();
         $imeiprice = Imeiservicepricing::where('id_supplier', $request->id_supplier)->find($id);
         if ($imeiprice->imei->api_id == !null && $imeiprice->imei->apiserverservices == !null) {
-            $giatransactionfee = ($imeiprice->nhacungcap->exchangerate * $imeiprice->imei->apiserverservices->credits) / $exchangerate->exchange_rate_static + (($imeiprice->imei->apiserverservices->credits / 100) * $imeiprice->nhacungcap->transactionfee);
+            $giatransactionfee = ($imeiprice->nhacungcap->exchangerate * $imeiprice->imei->apiserverservices->credits) / Utility::exchangeRateStatic($exchangerate->currency_code) + (($imeiprice->imei->apiserverservices->credits / 100) * $imeiprice->nhacungcap->transactionfee);
             $updategiatransactionfee = Imeiservice::where('id', $id)->update(['purchase_cost' => $giatransactionfee]);
         }
 

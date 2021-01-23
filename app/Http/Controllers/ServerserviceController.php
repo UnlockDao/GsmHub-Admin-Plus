@@ -53,7 +53,7 @@ class ServerserviceController extends Controller
                             if( $sr->serverserviceusercredit->where('currency',$currenciessite->config_value)->first() ==! null){
                             $create = Serverserviceclientgroupcredit::firstOrCreate(['server_service_range_id' => $sr->id,
                                 'client_group_id' => $cg->id,
-                                'credit' => $sr->serverserviceusercredit->where('currency',$currenciessite->config_value)->first()->credit* $c->exchange_rate_static,
+                                'credit' => $sr->serverserviceusercredit->where('currency',$currenciessite->config_value)->first()->credit* Utility::exchangeRateStatic($c->currency_code),
                                 'currency' => $c->currency_code]);
                             }
                         }
@@ -159,7 +159,7 @@ class ServerserviceController extends Controller
                 $serverservice = Serverservice::find($sr->id);
                 $tipurchasecost = $serverservice->servicepricing->nhacungcap->exchangerate;
                 $transactionfeegd = $serverservice->servicepricing->nhacungcap->transactionfee;
-                $exchangerategoc = $exchangerate->exchange_rate_static;
+                $exchangerategoc = Utility::exchangeRateStatic($exchangerate->currency_code);
                 if (!$serverservice->serverservicequantityrange->isEmpty()) {
                     if ($serverservice->api_id == !null) {
                         $purchasecost = $serverservice->apiserverservices->credits;
@@ -239,7 +239,7 @@ class ServerserviceController extends Controller
                              $update = Serverserviceclientgroupcredit::where('server_service_range_id',$ra->server_service_range_id)
                                                                     ->where('client_group_id', $cli->id)
                                                                     ->where('currency',$cu->currency_code)
-                                                                    ->update(['credit' => $u* $cu->exchange_rate_static]);
+                                                                    ->update(['credit' => $u* Utility::exchangeRateStatic($cu->currency_code)]);
                     }
                 }
 
@@ -248,7 +248,7 @@ class ServerserviceController extends Controller
             $c = $request->input('credit_'.$ra->server_service_range_id);
             if ($c == !null) {
                 foreach ($currencies as $cu) {
-                    $credit= Serverserviceusercredit::where('server_service_range_id',$ra->server_service_range_id)->where('currency',$cu->currency_code)->update(['credit' => $c * $cu->exchange_rate_static]);
+                    $credit= Serverserviceusercredit::where('server_service_range_id',$ra->server_service_range_id)->where('currency',$cu->currency_code)->update(['credit' => $c * Utility::exchangeRateStatic($cu->currency_code)]);
                 }
             }
         }
@@ -261,7 +261,7 @@ class ServerserviceController extends Controller
             foreach ($currencies as $cu) {
                 $server_service_user_credit = new Serverserviceusercredit();
                 $server_service_user_credit->server_service_range_id = $newquantityrange->id;
-                $server_service_user_credit->credit = $request->credit_new * $cu->exchange_rate_static;
+                $server_service_user_credit->credit = $request->credit_new * Utility::exchangeRateStatic($cu->currency_code);
                 $server_service_user_credit->currency = $cu->currency_code;
                 $server_service_user_credit->save();
             }
@@ -272,7 +272,7 @@ class ServerserviceController extends Controller
                         $addcredituser = new Serverserviceclientgroupcredit();
                         $addcredituser->server_service_range_id = $newquantityrange->id;
                         $addcredituser->client_group_id = $cli->id;
-                        $addcredituser->credit = $newcredituser * $cu->exchange_rate_static;
+                        $addcredituser->credit = $newcredituser * Utility::exchangeRateStatic($cu->currency_code);
                         $addcredituser->currency = $cu->currency_code;
                         $addcredituser->save();
                     }
