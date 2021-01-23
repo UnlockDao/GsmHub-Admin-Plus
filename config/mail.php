@@ -12,11 +12,11 @@ return [
     | your application here. By default, Laravel is setup for SMTP mail.
     |
     | Supported: "smtp", "sendmail", "mailgun", "mandrill", "ses",
-    |            "sparkpost", "log", "array"
+    |            "sparkpost", "postmark", "log", "array"
     |
     */
 
-    'driver' => 'smtp',
+    'driver' => env('MAIL_DRIVER', 'smtp'),
 
     /*
     |--------------------------------------------------------------------------
@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'host' => 'smtp.elasticemail.com',
+    'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
 
     /*
     |--------------------------------------------------------------------------
@@ -42,7 +42,7 @@ return [
     |
     */
 
-    'port' => 2525,
+    'port' => env('MAIL_PORT', 587),
 
     /*
     |--------------------------------------------------------------------------
@@ -56,8 +56,8 @@ return [
     */
 
     'from' => [
-        'address' => 'admin@mccorp.vn',
-        'name' => 'MCcorp',
+        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+        'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
     /*
@@ -71,7 +71,7 @@ return [
     |
     */
 
-    'encryption' => 'tls',
+    'encryption' => env('MAIL_ENCRYPTION', 'tls'),
 
     /*
     |--------------------------------------------------------------------------
@@ -84,9 +84,9 @@ return [
     |
     */
 
-    'username' => 'admin@mccorp.vn',
+    'username' => env('MAIL_USERNAME'),
 
-    'password' => '6b5aebda-0c99-4c25-9667-828ba46d676c',
+    'password' => env('MAIL_PASSWORD'),
 
     /*
     |--------------------------------------------------------------------------
@@ -119,5 +119,18 @@ return [
             resource_path('views/vendor/mail'),
         ],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Log Channel
+    |--------------------------------------------------------------------------
+    |
+    | If you are using the "log" driver, you may specify the logging channel
+    | if you prefer to keep mail messages separate from other log entries
+    | for simpler reading. Otherwise, the default channel will be used.
+    |
+    */
+
+    'log_channel' => env('MAIL_LOG_CHANNEL'),
 
 ];
