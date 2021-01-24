@@ -9,6 +9,7 @@
 namespace App\Http\Middleware;
 
 
+use App\Models\Administrator;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,12 +17,16 @@ class Admin
 {
     public function handle($request, Closure $next)
     {
-        $users = Auth::user()->admin;
-        if($users->user_id == 1 || $users->supplier_access == 'Admin' ){
-            return $next($request);
+        $user_id = Auth::id();
 
+        $admin = Administrator::where('user_id', $user_id)
+            ->where('administrator_role_id', '>', '0')
+            ->where('role_adminplus', 1)
+            ->where('supplier_access', 'Admin')->first();
+
+        if ($user_id == 1 || $admin) {
+            return $next($request);
         }
         return redirect('/');
-
     }
 }

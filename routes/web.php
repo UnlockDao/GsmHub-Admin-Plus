@@ -67,7 +67,7 @@ Route::get('supplier', 'SupplierController@index')->middleware('admin');
 Route::post('supplier/{id}', 'SupplierController@edit')->middleware('admin');
 Route::post('addsupplier', 'SupplierController@add')->middleware('admin');
 Route::post('supplierquickedit', 'SupplierController@quickedit')->middleware('admin');
-Route::get('supplier/{id}', 'SupplierController@show')->middleware('admin')->middleware('admin');
+Route::get('supplier/{id}', 'SupplierController@show')->middleware('admin');
 Route::get('supplierdelete/{id}', 'SupplierController@delete')->middleware('admin');
 
 
@@ -89,9 +89,10 @@ Route::post('serverservicewise/{id}', 'ServerserviceController@editwise');
 Route::get('service/{squirrel}/{any}', 'ServerserviceController@status');
 Route::get('serverdelete/{id}', 'ServerserviceController@delete');
 
-Route::get('role', 'Auth\LoginController@role')->middleware('admin', 'auth');
-Route::get('role/{squirrel}/{any}', 'Auth\LoginController@status');
-Route::post('supplier_access', 'Auth\LoginController@supplier_access');
+Route::get('role', 'Auth\RoleController@role')->middleware('admin');
+Route::get('role/{squirrel}/{any}', 'Auth\RoleController@status')->middleware('admin');
+Route::post('supplier_access', 'Auth\RoleController@supplier_access')->middleware('admin');
+
 //Invoice Report
 Route::get('invoicereport', 'InvoiceReportController@index');
 //Utility
