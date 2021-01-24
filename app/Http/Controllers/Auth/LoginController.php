@@ -4,53 +4,19 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Administrator;
-use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Validator;
 
 class LoginController extends Controller
 {
+    use AuthenticatesUsers;
 
-    public function getLogin()
+    /** @var string */
+    protected $redirectTo = "/";
+
+    public function __construct()
     {
-        return view('auth.login');
+        $this->middleware('guest')->except('logout');
     }
-
-    public function postLogin(Request $request)
-    {
-        $col = 'user_name';
-        if ($this->checkEmail($request->email)) {
-            $col = 'email';
-        }
-        $users = User::where($col, $request->email)->where('user_access', 'Admin')->first();
-        if ($users == !null) {
-            $admin = Administrator::where('user_id', $users->user_id)->where('administrator_role_id', '!=',
-                '0')->where('role_adminplus', '1')->first();
-
-            if ($admin == !null) {
-                $md5passwd = md5($request->password . $users->bba_token);
-                if ($md5passwd == $users->password) {
-                    Auth::login($users);
-                    return redirect('/');
-                } else {
-                    return redirect('/');
-                }
-            } else {
-                return redirect('/');
-            }
-        } else {
-            return redirect('/');
-        }
-    }
-
-    public function checkEmail($email): bool
-    {
-        $find1 = strpos($email, '@');
-        $find2 = strpos($email, '.');
-        return ($find1 !== false && $find2 !== false && $find2 > $find1);
-    }
-
 
     public function role()
     {
@@ -79,7 +45,6 @@ class LoginController extends Controller
             }
             exit();
         }
-        return;
     }
 
 

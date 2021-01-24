@@ -10,6 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 use App\Http\Controllers\SQL;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,13 +20,9 @@ Route::get('/init', function () {
     return redirect('/');
 });
 
-Route::get('/logout', function () {
-    Auth::logout();
-    return redirect('/');
-});
-
-Route::get('login','Auth\LoginController@getLogin')->name('login');
-Route::post('login','Auth\LoginController@postLogin')->name('login');
+Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+Route::post('login', 'Auth\LoginController@login')->name('post-login');
+Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
 Route::get('/', 'HomeController@index');
 Route::get('finance', 'HomeController@finance')->middleware('admin')->name('financedashboard');
@@ -92,7 +89,7 @@ Route::post('serverservicewise/{id}', 'ServerserviceController@editwise');
 Route::get('service/{squirrel}/{any}', 'ServerserviceController@status');
 Route::get('serverdelete/{id}', 'ServerserviceController@delete');
 
-Route::get('role', 'Auth\LoginController@role')->middleware('admin','auth');
+Route::get('role', 'Auth\LoginController@role')->middleware('admin', 'auth');
 Route::get('role/{squirrel}/{any}', 'Auth\LoginController@status');
 Route::post('supplier_access', 'Auth\LoginController@supplier_access');
 //Invoice Report
@@ -115,5 +112,5 @@ Route::get('runcronrange', 'ProfitCronController@runcronrange');
 Route::post('reloadprofit', 'ProfitCronController@reloadprofit');
 Route::POST('checkCreditSuppliers', 'CronApiController@checkCreditSuppliers');
 
-Route::get('check-transaction','Payment\CheckTransaction@index');
-Route::get('getbalance','CronApiController@getBalance');
+Route::get('check-transaction', 'Payment\CheckTransaction@index');
+Route::get('getbalance', 'CronApiController@getBalance');

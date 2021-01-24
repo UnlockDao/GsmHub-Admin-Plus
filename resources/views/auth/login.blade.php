@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <title>Pricing - S-Unlock</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- App favicon -->
     <link rel="shortcut icon" href="assets/images/favicon.ico">
 
     <!-- App css -->
-    <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
-    <link href="assets/css/app.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/app.min.css" rel="stylesheet" type="text/css"/>
 
 </head>
 
@@ -35,27 +35,42 @@
                             <p class="text-muted mb-4">Enter your email address and password to access admin panel.</p>
                         </div>
 
-                        <form method="POST" action="{{ route('login') }}">
+                        <form method="POST" action="{{ route('post-login') }}" role="form">
                             @csrf
                             <div class="form-group">
                                 <label for="emailaddress">Email address</label>
-                                <input class="form-control" name="email" type="text" id="emailaddress" required="" placeholder="Enter your username">
+                                <input id="email" type="text" class="form-control @error('email') is-invalid @enderror"
+                                       name="email" value="{{ old('email') }}" placeholder="{{ __('E-Mail Address') }}"
+                                       required autocomplete="email" autofocus>
+                                @error('email')
+                                <span class="d-block invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
                             </div>
 
                             <div class="form-group">
                                 <label for="password">Password</label>
-                                <input class="form-control" name="password" type="password" required="" id="password" placeholder="Enter your password">
+                                <input id="password" type="password"
+                                       class="form-control @error('password') is-invalid @enderror" name="password"
+                                       placeholder="{{ __('Password') }}" required autocomplete="current-password">
+                                @error('password')
+                                <span class="d-block invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
                             </div>
 
                             <div class="form-group mb-3">
                                 <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" name="remember" class="custom-control-input" id="checkbox-signin" {{ old('remember') ? 'checked' : '' }}>
+                                    <input type="checkbox" name="remember" class="custom-control-input"
+                                           id="checkbox-signin" {{ old('remember') ? 'checked' : '' }}>
                                     <label class="custom-control-label" for="checkbox-signin">Remember me</label>
                                 </div>
                             </div>
 
                             <div class="form-group mb-0 text-center">
-                                <button class="btn btn-primary" type="submit"> Log In </button>
+                                <button class="btn btn-primary" type="submit"> Log In</button>
                             </div>
 
                         </form>
