@@ -27,6 +27,7 @@ Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('/', 'HomeController@index');
 Route::get('finance', 'HomeController@finance')->middleware('admin')->name('financedashboard');
 
+//Route::get('test', 'SupplierController@updateApiServiceSupplier');
 
 //trang chủ
 //imeiserver
@@ -69,7 +70,7 @@ Route::post('addsupplier', 'SupplierController@add')->middleware('admin');
 Route::post('supplierquickedit', 'SupplierController@quickedit')->middleware('admin');
 Route::get('supplier/{id}', 'SupplierController@show')->middleware('admin');
 Route::get('supplierdelete/{id}', 'SupplierController@delete')->middleware('admin');
-
+Route::get('update-api-service-supplier', 'SupplierController@updateApiServiceSupplier')->middleware('admin');
 
 //thêm sửa xóa currencie
 Route::get('currencie', 'CurrencieController@index')->middleware('admin');

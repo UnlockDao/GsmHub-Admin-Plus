@@ -22,7 +22,7 @@ class Serverservicetypewiseprice extends Model
     }
     public function adminplus_service()
     {
-        return $this->belongsTo('App\Models\Serviceservicepricing','server_service_id','id');
+        return $this->belongsTo('App\Models\Serverservicepricing','server_service_id','id');
     }
     public function apiservicetypewisepriceid()
     {

@@ -13,7 +13,7 @@ use App\Models\Serverservicequantityrange;
 use App\Models\Serverservicetypewisegroupprice;
 use App\Models\Serverservicetypewiseprice;
 use App\Models\Serverserviceusercredit;
-use App\Models\Serviceservicepricing;
+use App\Models\Serverservicepricing;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 
@@ -123,14 +123,14 @@ class ServerserviceController extends Controller
     {
         $server_services = Serverservice::orderBy('id')->get();
         foreach ($server_services as $v) {
-            $add = Serviceservicepricing::firstOrCreate(['id'=>$v->id]);
+            $add = Serverservicepricing::firstOrCreate(['id' =>$v->id]);
 
         }
-        $server_servicesdel = Serviceservicepricing::get();
+        $server_servicesdel = Serverservicepricing::get();
         foreach ($server_servicesdel as $v) {
             $check = Serverservice::where('id', $v->id)->first();
             if ($check == null) {
-                Serviceservicepricing::where('id', $v->id)->delete();
+                Serverservicepricing::where('id', $v->id)->delete();
             }
         }
     }
@@ -153,7 +153,7 @@ class ServerserviceController extends Controller
     {
         $defaultcurrency = Currenciepricing::where('type', '1')->first();
         $exchangerate = Currencie::find($defaultcurrency->currency_id);
-        $serviceservicepricing = Serviceservicepricing::get();
+        $serviceservicepricing = Serverservicepricing::get();
         foreach ($serviceservicepricing as $sr) {
             if ($sr->id_supplier == !null) {
                 $serverservice = Serverservice::find($sr->id);
@@ -208,7 +208,7 @@ class ServerserviceController extends Controller
 
     public function updatesupplier($id, Request $request)
     {
-        $imei = Serviceservicepricing::find($id);
+        $imei = Serverservicepricing::find($id);
         $imei->id_supplier = $request->id_supplier;
         $imei->save();
         return back();
@@ -218,7 +218,7 @@ class ServerserviceController extends Controller
     {
 
         //lưu giá trị nhập vào bộ nhớ tạm
-        $servicepricing = Serviceservicepricing::find($id);
+        $servicepricing = Serverservicepricing::find($id);
         $servicepricing->purchasecost = $request->purchase_cost;
         $servicepricing->id_supplier = $request->id_supplier;
         $servicepricing->save();
@@ -287,7 +287,7 @@ class ServerserviceController extends Controller
     {
 
         //save infoserver service
-        $servicepricing = Serviceservicepricing::find($id);
+        $servicepricing = Serverservicepricing::find($id);
         $servicepricing->id_supplier = $request->id_supplier;
         $servicepricing->save();
         $purchasecostnet = Serverservice::find($id);

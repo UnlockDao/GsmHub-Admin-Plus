@@ -29,6 +29,7 @@ class SQL extends Migration
                 $table->string('name');
                 $table->double('exchangerate');
                 $table->double('transactionfee');
+                $table->string('api_server_details_id');
             });
         }
 

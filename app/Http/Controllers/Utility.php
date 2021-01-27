@@ -14,7 +14,7 @@ use App\Models\Serverservice;
 use App\Models\Serverserviceclientgroupcredit;
 use App\Models\Serverservicetypewisegroupprice;
 use App\Models\Serverservicetypewiseprice;
-use App\Models\Serviceservicepricing;
+use App\Models\Serverservicepricing;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 
@@ -337,8 +337,8 @@ class Utility
     {
         $defaultcurrency = Currenciepricing::where('type', '1')->first();
         $exchangerate = Currencie::find($defaultcurrency->currency_id);
-        $serviceservicepricing = Serviceservicepricing::get();
-        foreach ($serviceservicepricing as $sr) {
+        $serverservicepricing = Serverservicepricing::get();
+        foreach ($serverservicepricing as $sr) {
             if ($sr->id_supplier == !null) {
                 $serverservice = Serverservice::find($sr->id);
                 $tipurchasecost = $serverservice->servicepricing->nhacungcap->exchangerate;

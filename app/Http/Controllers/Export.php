@@ -18,7 +18,7 @@ use App\Models\Serverservicegroup;
 use App\Models\Serverservicetypewisegroupprice;
 use App\Models\Serverservicetypewiseprice;
 use App\Models\Serverserviceusercredit;
-use App\Models\Serviceservicepricing;
+use App\Models\Serverservicepricing;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 
@@ -235,7 +235,7 @@ class Export
             }
             $serverservice->save();
             if ($request->column == 'id_supplier') {
-                $servicepricing = Serviceservicepricing::find($request->id);
+                $servicepricing = Serverservicepricing::find($request->id);
                 $servicepricing->id_supplier = $request->value;
                 $servicepricing->save();
             }

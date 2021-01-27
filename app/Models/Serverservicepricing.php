@@ -7,7 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 
-class Serviceservicepricing extends Model
+class Serverservicepricing extends Model
 {
     protected $table = 'adminplus_service_service';
     public $timestamps = false;

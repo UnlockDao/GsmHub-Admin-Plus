@@ -40,12 +40,12 @@
                                     <th>Name</th>
                                     <th>Username</th>
                                     <th>Password</th>
-                                    <th>Site</th>
+                                    <th>URL</th>
                                     <th>API Key</th>
-                                    <th>Info</th>
                                     <th>Exchange rate</th>
                                     <th>Transaction fee %</th>
-
+                                    <th>API Server ID</th>
+                                    <th>Notes</th>
                                     </thead>
                                     <tbody>
                                     @foreach($supplier as $v)
@@ -64,18 +64,20 @@
                                                 onBlur="saveToDatabase(this,'site_url','{{$v->id}}')"
                                                 onClick="showEdit(this);">{{$v->site_url}}</td>
                                             <td contenteditable="true"
-                                            <td contenteditable="true"
                                                 onBlur="saveToDatabase(this,'api_key','{{$v->id}}')"
                                                 onClick="showEdit(this);">{{$v->api_key}}</td>
-                                            <td contenteditable="true"
-                                                onBlur="saveToDatabase(this,'info','{{$v->id}}')"
-                                                onClick="showEdit(this);">{!! $v->info !!}</td>
                                             <td contenteditable="true"
                                                 onBlur="saveToDatabase(this,'exchangerate','{{$v->id}}')"
                                                 onClick="showEdit(this);">{{ $v->exchangerate }}</td>
                                             <td contenteditable="true"
                                                 onBlur="saveToDatabase(this,'transactionfee','{{$v->id}}')"
                                                 onClick="showEdit(this);">{{$v->transactionfee}}</td>
+                                            <td contenteditable="true"
+                                                onBlur="saveToDatabase(this,'api_server_details_id','{{$v->id}}')"
+                                                onClick="showEdit(this);">{!! $v->api_server_details_id !!}</td>
+                                            <td contenteditable="true"
+                                                onBlur="saveToDatabase(this,'info','{{$v->id}}')"
+                                                onClick="showEdit(this);">{!! $v->info !!}</td>
                                         </tr>
                                     @endforeach
                                     </tbody>
@@ -89,17 +91,35 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group bmd-form-group">
-                                                <label class="bmd-label-floating">Name
-                                                    Supplier</label>
+                                                <label class="bmd-label-floating">Supplier Name</label>
                                                 <input type="text" name="name" placeholder="Name"
                                                        class="form-control" autocomplete="off"
                                                        required="">
                                             </div>
                                         </div>
                                         <div class="col-md-12">
+                                            <label class="bmd-label-floating">Website</label>
+                                            <input type="text" name="site_url" class="form-control"
+                                                   value="" placeholder="URL"
+                                                   autocomplete="off" required>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label class="bmd-label-floating">Username</label>
+                                            <input type="text" name="site_username"
+                                                   class="form-control"
+                                                   value="" placeholder="Username"
+                                                   autocomplete="off" required>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label class="bmd-label-floating">Password</label>
+                                            <input type="text" name="site_password"
+                                                   class="form-control"
+                                                   value="" placeholder="Password"
+                                                   autocomplete="off" required>
+                                        </div>
+                                        <div class="col-md-12">
                                             <div class="form-group bmd-form-group">
-                                                <label class="bmd-label-floating">Exchange
-                                                    rate</label>
+                                                <label class="bmd-label-floating">Exchange Rate</label>
                                                 <input type="text" name="exchangerate"
                                                        placeholder="Exchange rate"
                                                        class="form-control" autocomplete="off"
@@ -108,39 +128,23 @@
                                         </div>
                                         <div class="col-md-12">
                                             <div class="form-group bmd-form-group">
-                                                <label class="bmd-label-floating">Transaction
-                                                    fee</label>
+                                                <label class="bmd-label-floating">Transaction fee</label>
                                                 <input type="number" name="transactionfee"
                                                        placeholder="Transaction fee"
                                                        class="form-control"
                                                        autocomplete="off" required="">
                                             </div>
                                         </div>
-                                        <hr>
                                         <div class="col-md-12">
-                                            <label class="bmd-label-floating">Username</label>
-                                            <input type="text" name="site_username"
-                                                   class="form-control"
-                                                   value="" placeholder="site_username"
-                                                   autocomplete="off" required>
+                                            <label class="bmd-label-floating">API Server ID </label>
+                                            <input type="text" name="api_server_details_id" class="form-control"
+                                                   value="" placeholder=""
+                                                   autocomplete="off">
                                         </div>
                                         <div class="col-md-12">
-                                            <label class="bmd-label-floating">Password</label>
-                                            <input type="text" name="site_password"
-                                                   class="form-control"
-                                                   value="" placeholder="site_password"
-                                                   autocomplete="off" required>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label class="bmd-label-floating">Website</label>
-                                            <input type="text" name="site_url" class="form-control"
-                                                   value="" placeholder="site_url"
-                                                   autocomplete="off" required>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label class="bmd-label-floating">Info</label>
+                                            <label class="bmd-label-floating">Notes</label>
                                             <textarea class="form-control" name="info" rows="3"
-                                                      placeholder="Write info text here ..."></textarea>
+                                                      placeholder="Write some info here ..."></textarea>
                                         </div>
                                     </div>
                                     <br>
@@ -154,27 +158,27 @@
                     </div>
                 </div>
 
-    <script>
-        function showEdit(editableObj) {
-            $(editableObj).css("background", "#FFF");
-        }
+                <script>
+                    function showEdit(editableObj) {
+                        $(editableObj).css("background", "#FFF");
+                    }
 
-        function saveToDatabase(editableObj, column, id) {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $(editableObj).css("background", "#FFF url(loaderIcon.gif) no-repeat right");
-            $.ajax({
-                url: "supplierquickedit",
-                type: "POST",
-                data: {column: column, editval: editableObj.innerHTML, id: id},
-                success: function (data) {
-                    $(editableObj).css("background", "#FDFDFD");
-                }
-            });
-        }
-    </script>
+                    function saveToDatabase(editableObj, column, id) {
+                        $.ajaxSetup({
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            }
+                        });
+                        $(editableObj).css("background", "#FFF url(loaderIcon.gif) no-repeat right");
+                        $.ajax({
+                            url: "supplierquickedit",
+                            type: "POST",
+                            data: {column: column, editval: editableObj.innerHTML, id: id},
+                            success: function (data) {
+                                $(editableObj).css("background", "#FDFDFD");
+                            }
+                        });
+                    }
+                </script>
 
 @endsection
