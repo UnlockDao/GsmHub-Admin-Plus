@@ -78,6 +78,7 @@ class SupplierController extends Controller
         //cập nhập phí+ tỉ giá
         $utility = new Utility();
         $utility->Repricing($type = 'supplier', $id);
+
         return redirect('/supplier');
     }
 
@@ -89,13 +90,9 @@ class SupplierController extends Controller
         }
         if ($request->column == 'transactionfee') {
             $supplier->transactionfee = $request->editval;
-            $utility = new Utility();
-            $utility->Repricing($type = 'supplier', $request->id);
         }
         if ($request->column == 'exchangerate') {
             $supplier->exchangerate = $request->editval;
-            $utility = new Utility();
-            $utility->Repricing($type = 'supplier', $request->id);
         }
         if ($request->column == 'site_username') {
             $supplier->site_username = $request->editval;
@@ -119,6 +116,10 @@ class SupplierController extends Controller
 
         if ($supplier->api_server_details_id != null && $supplier->api_server_details_id != "") {
             $this->updateApiServiceSupplier($request->id);
+        }
+        if ($request->column == 'transactionfee' || $request->column == 'exchangerate') {
+            $utility = new Utility();
+            $utility->Repricing($type = 'supplier', $request->id);
         }
 
         return $request;
