@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddApiServerDetailsIdToAdminplusSupplierTable extends Migration
+class AddDiscountToClientGroupTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddApiServerDetailsIdToAdminplusSupplierTable extends Migration
      */
     public function up()
     {
-        Schema::table('adminplus_supplier', function (Blueprint $table) {
-            $table->string('api_server_details_id')->nullable()->after('api_key');
+        Schema::table('client_group', function (Blueprint $table) {
+            $table->integer('discount')->default(0);
         });
     }
 
@@ -25,8 +25,8 @@ class AddApiServerDetailsIdToAdminplusSupplierTable extends Migration
      */
     public function down()
     {
-        Schema::table('adminplus_supplier', function (Blueprint $table) {
-            $table->dropColumn(['api_server_details_id']);
+        Schema::table('client_group', function (Blueprint $table) {
+            $table->dropColumn(['discount']);
         });
     }
 }
